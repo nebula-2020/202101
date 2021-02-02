@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .btn{
+            background-color:#08f;
+            color:#fff;
+            margin:10px;
+            cursor:pointer;
+            display:inline-block;
+        }
+        .input{
+            border: #08f solid 1px;
+            line-height:2em;
+            min-height:2em;
+        }
+    </style>
+</head>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<body>
+    <span class="btn" onclick="post()">
+        获取验证码</span>
+    </span>
+    <div id="code" class="input" contenteditable="true"></div>
+    <span class="btn"  onclick="post1()">
+        注册
+    </span>
+    <span class="btn" onclick="post2()">
+        登录
+    </span>
+</body>
+
+</html>
+<script>
+    value=''
+    key=Math.random()
+    phone="008618648386666"
+    function post() {
+        $.post("codeReg", {
+                phone:phone,
+                js:key
+            },
+            function (data, status) {
+                value= JSON.parse(data)[phone]
+                console.log(JSON.parse(data)+'\n'+JSON.parse(data)[String(phone)]+'\n'+value+'\n'+key)
+            });
+    }
+    function post1(code){
+        $.post("codeSignUp", {
+                phone:phone,
+                pwd:'ni3oc2hu9r',
+                server:value,
+                js:key,
+                name:'名字',
+                code: document.getElementById("code").innerHTML,
+            },
+            function (data, status) {
+            });
+    }
+    function post2(code){
+        $.post("codeSignIn", {
+                phone:phone,
+                pwd:'ni3oc2hu9r',
+                account:'',
+                ipv4:0,
+                ipv6:[-128,-128,-128,127],
+                mac:[-128,-128,-128,127],
+                gps:'loc',
+                server:value,
+                js:key,
+                code: document.getElementById("code").innerHTML,
+            },
+            function (data, status) {
+            });
+    }
+</script>
