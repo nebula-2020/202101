@@ -17,6 +17,7 @@ import java.util.*;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.entity.SignInInfo;
 import com.example.demo.service.*;
 
 /**
@@ -33,6 +34,7 @@ public class UserController
 {
     public final long MSEC_60000 = 60000;
     public final long MSEC_1000 = 1000;
+    private final short UBYTE_MAX = 0xff;
     /**
      * 描述一分钟等于多少秒。
      */
@@ -89,7 +91,9 @@ public class UserController
      */
     public final String KEY_GPS = "gps";
     @Autowired
-    private SignUpService service;
+    private SignUpService signUpService;
+    @Autowired
+    private SignInService signInService;
     @Autowired
     private SmsService sms;
     private final CommonTool tool = new CommonTool();
@@ -142,7 +146,7 @@ public class UserController
                 if (sms.verify(requestMap, sessionMap))// 密钥匹配
                 {
                     // 验证成功
-                    boolean res = service.signUp(phone, pwd, name);// 注册账号
+                    boolean res = signUpService.signUp(phone, pwd, name);// 注册账号
                     session.invalidate();// 销毁session
                     JSONObject json = new JSONObject();
                     json.put(phone, res);// true表示注册成功
@@ -179,11 +183,11 @@ public class UserController
     {
         JSONObject ret = new JSONObject();
 
-        if (!tool.containsNullOrEmpty(phone, key))
+        // 60秒内不能重发，得等上一个session失效
+        if (true)
         {
 
-            // 60秒内不能重发，得等上一个session失效
-            if (tool.isNullOrEmpty((String)session.getAttribute(KEY_PHONE)))
+            if (!tool.containsNullOrEmpty(phone, key))
             {
 
                 try
@@ -211,10 +215,194 @@ public class UserController
                 {
                     e.printStackTrace();
                 }
-            } // 结束：if(tool.isNullOrEmpty((String)session.getAttribute(KEY_PHONE)))
-        } // 结束：if (!tool.containsNullOrEmpty(phone, key))
+            } // 结束：if (!tool.containsNullOrEmpty(phone, key))
+        } // 结束：if(true)
 
         return ret.toJSONString();
     }
 
+    /**
+     * 构造账号登录信息的实体，登录用。
+     * 
+     * @param ipv4 IPv4地址，大端模式
+     * @param ipv6 IPv6地址，大端模式
+     * @param mac 物理地址，大端模式
+     * @param gps 地理位置
+     * @param method 登陆方式
+     * @return 账号登录信息的实体。
+     */
+    protected SignInInfo valsToInfo(
+            List<Byte> ipv4, List<Byte> ipv6, List<Byte> mac, String gps,
+            SignInMethod method
+    )
+    {
+        byte[] ipv6Array =tool.toByteArray(ipv6);
+        byte[] macArray = tool.toByteArray(mac);
+        byte[] ipv4Array = tool.toByteArray(ipv4);
+        long ipv4Value = 0;
+
+        for (int i = 0; i < ipv4Array.length; i++)
+        {
+            ipv4Value <<= Byte.SIZE;
+            ipv4Value |= (ipv4Array[i] & UBYTE_MAX);
+        } // 结束：for (int i = 0; i <ipv4Array.length; i++)
+        SignInInfo info = new SignInInfo();
+        info.setIpv4(ipv4Value);
+        info.setIpv6(ipv6Array);
+        info.setMac(macArray);
+        info.setGps(gps);
+
+        if (method == null)
+        {
+            info.setMethod(SignInMethod.UNKNOWN.getValue());
+        }
+        else
+        {
+            info.setMethod(method.getValue());
+        } // 结束：if (method == null)
+        return info;
+    }
+
+    /**
+     * 密码登录。
+     * <p>
+     * 账号和手机号有一个非空即可。
+     * 
+     * @param phone 手机号
+     * @param account 账号
+     * @param pwd 密码
+     * @param ipv4 IPv4地址，大端模式
+     * @param ipv6 IPv6地址，大端模式
+     * @param mac 物理地址，大端模式
+     * @param gps 地理位置
+     * @param session 提供一种方法，以跨对网站的多个页面请求或访问识别用户，并存储有关该用户的信息
+     * @return JSON字符串，用户手机号为键对应值表示登录成功与否。
+     */
+    @RequestMapping("passwordSignIn")
+    @ResponseBody
+    protected String passwordSignIn(
+            @RequestParam(
+                    value = KEY_PHONE,
+                    required = false
+            ) String phone,
+            @RequestParam(
+                    value = KEY_ACCOUNT,
+                    required = false
+            ) String account, @RequestParam(value = KEY_PASSWORD) String pwd,
+            @RequestParam(value = KEY_IPV4) List<Byte> ipv4,
+            @RequestParam(value = KEY_IPV6) List<Byte> ipv6,
+            @RequestParam(value = KEY_MAC) List<Byte> mac,
+            @RequestParam(value = KEY_GPS) String gps, HttpSession session
+    )
+    {
+        String ret = "";
+
+        if (!tool.isNullOrEmpty(phone, account))
+        {
+
+            try
+            {
+                SignInInfo info =
+                        valsToInfo(ipv4, ipv6, mac, gps, SignInMethod.PASSWORD);
+
+                // 布尔值描述数据库操作成功与否
+                boolean res =
+                        signInService.signIn(phone, account, pwd, false, info);
+
+                if (res)
+                {
+                    JSONObject json = new JSONObject();
+                    json.put(phone, res);
+                    System.out.print(json);
+                    ret = json.toJSONString();
+                } // 结束：if(res)
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+            }
+        } // 结束：if (!tool.isNullOrEmpty(phone, account))
+
+        return ret;
+
+    }
+
+    /**
+     * 短信验证登录。
+     * 
+     * @param phone 手机号
+     * @param key 客户端随机代码
+     * @param code 短信验证码
+     * @param sec 服务器随机代码
+     * @param ipv4 IPv4地址，大端模式
+     * @param ipv6 IPv6地址，大端模式
+     * @param mac 物理地址，大端模式
+     * @param gps 地理位置
+     * @param session 提供一种方法，以跨对网站的多个页面请求或访问识别用户，并存储有关该用户的信息
+     * @return JSON字符串，用户手机号为键对应值表示登录成功与否。
+     */
+    @RequestMapping("codeSignIn")
+    @ResponseBody
+    protected String codeSignIn(
+            @RequestParam(value = KEY_PHONE) String phone,
+            @RequestParam(value = KEY_KEY) String key,
+            @RequestParam(value = KEY_CODE) String code,
+            @RequestParam(value = KEY_SECRET) String sec,
+            @RequestParam(value = KEY_IPV4) List<Byte> ipv4,
+            @RequestParam(value = KEY_IPV6) List<Byte> ipv6,
+            @RequestParam(value = KEY_MAC) List<Byte> mac,
+            @RequestParam(value = KEY_GPS) String gps, HttpSession session
+    )
+    {
+        String ret = "";
+
+        if (!tool.isNullOrEmpty(phone))
+        {
+
+            try
+            {
+
+                Map<String, Object> sessionMap = new HashMap<>();
+                Iterator<String> iterator =
+                        session.getAttributeNames().asIterator();
+
+                while (iterator.hasNext())
+                {
+                    String attrName = iterator.next();
+                    Object sessionObject = session.getAttribute(attrName);
+                    sessionMap.put(attrName, sessionObject);
+                } // 结束：while (iterator.hasNext())
+
+                Long now = System.currentTimeMillis();
+                Map<String, Object> requestMap =
+                        sms.getMap(phone, code, key, sec, now);
+
+                if (sms.verify(requestMap, sessionMap))// 密钥匹配
+                {
+                    SignInInfo info =
+                            valsToInfo(ipv4, ipv6, mac, gps, SignInMethod.SMS);
+
+                    // 布尔值描述数据库操作成功与否
+                    boolean res =
+                            signInService.signIn(phone, null, null, true, info);
+
+                    if (res)
+                    {
+                        JSONObject json = new JSONObject();
+                        json.put(phone, res);
+                        System.out.print(json);
+                        ret = json.toJSONString();
+                    } // 结束：if(res)
+                } // 结束：if (sms.verify(requestMap, sessionMap))
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        } // 结束：if (!tool.isNullOrEmpty(phone))
+        return ret;
+    }
 }
