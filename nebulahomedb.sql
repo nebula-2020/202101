@@ -132,6 +132,7 @@ CREATE TABLE `article` (
  `createtime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
  `title` char(63) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
  `del` bit(1) NOT NULL DEFAULT b'0' COMMENT '文章是否已经删除',
+ `draft` bit(1) NOT NULL DEFAULT b'0' COMMENT '文章是否为草稿',
  `type` int NULL COMMENT '人工智能为文章贴的类别标签',
  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;

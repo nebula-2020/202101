@@ -44,6 +44,7 @@ public class ArticleInfo {
     
     @Column(
             name = "text",
+            nullable = false,
             insertable = true,
             updatable = true
     )

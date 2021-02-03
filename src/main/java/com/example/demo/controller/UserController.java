@@ -2,7 +2,7 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-02
+ * 修改时间：2021-02-03
  */
 package com.example.demo.controller;
 
@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.SignInInfo;
 import com.example.demo.service.*;
+import com.example.demo.entity.*;
 
 /**
  * 用户控制器。

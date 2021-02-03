@@ -62,6 +62,13 @@ public class Article {
     )
     private Boolean del;
     @Column(
+            name = "del",
+            nullable = true,
+            insertable = true,
+            updatable = true
+    )
+    private Boolean draft;
+    @Column(
             name = "type",
             nullable = true,
             insertable = true,
