@@ -39,8 +39,8 @@ CREATE TABLE `user` (
 DROP TABLE IF EXISTS `userstatus`;
 CREATE TABLE `userstatus` (
  `id` bigint UNSIGNED NOT NULL,
- `lock` tinyint(1) NOT NULL DEFAULT 0 COMMENT '挂失标志',
- `ban` tinyint(1) NOT NULL DEFAULT 0 COMMENT '冻结标志',
+ `lock` bit(1) NOT NULL DEFAULT 0 COMMENT '挂失标志',
+ `ban` bit(1) NOT NULL DEFAULT 0 COMMENT '冻结标志',
  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
@@ -52,7 +52,7 @@ CREATE TABLE `userstatus` (
 DROP TABLE IF EXISTS `userdetails`;
 CREATE TABLE `userdetails` (
  `id` bigint UNSIGNED NOT NULL,
- `sex` tinyint(1) NULL DEFAULT NULL COMMENT '性别',
+ `sex` bit(1) NULL DEFAULT NULL COMMENT '性别',
  `com` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所在公司',
  `address` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '住址',
  `college` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所在学校',
@@ -89,8 +89,8 @@ CREATE TABLE `topic` (
  `name` char(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '话题名称',
  `maxsize` tinyint UNSIGNED NOT NULL DEFAULT 99 COMMENT '用户容量',
  `createtime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '发起时间',
- `ban` tinyint(1) NOT NULL DEFAULT 0 COMMENT '冻结标志',
- `del` tinyint(1) NOT NULL DEFAULT 0 COMMENT '删除标志',
+ `ban` bit(1) NOT NULL DEFAULT b'0' COMMENT '冻结标志',
+ `del` bit(1) NOT NULL DEFAULT b'0' COMMENT '删除标志',
  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
@@ -116,7 +116,7 @@ CREATE TABLE `topicuser` (
  `topicid` bigint UNSIGNED NOT NULL,
  `userid` bigint UNSIGNED NOT NULL,
  `jointime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
- `del` tinyint(1) NOT NULL DEFAULT 0 COMMENT '用户进入话题后退出仍有记录',
+ `del` bit(1) NOT NULL DEFAULT b'0' COMMENT '用户进入话题后退出仍有记录',
  PRIMARY KEY (`topicid`, `userid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
@@ -131,7 +131,7 @@ CREATE TABLE `article` (
  `authorid` bigint UNSIGNED NULL DEFAULT NULL,
  `createtime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
  `title` char(63) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
- `del` tinyint(1) NOT NULL DEFAULT 0 COMMENT '文章是否已经删除',
+ `del` bit(1) NOT NULL DEFAULT b'0' COMMENT '文章是否已经删除',
  `type` int NULL COMMENT '人工智能为文章贴的类别标签',
  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
@@ -243,7 +243,7 @@ CREATE TABLE `msg` (
  `senderid` bigint UNSIGNED NOT NULL,
  `datetime` datetime NOT NULL,
  `text` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
- `del` tinyint(1) NOT NULL DEFAULT 0,
+ `del` bit(1) NOT NULL DEFAULT b'0',
  PRIMARY KEY (`userid`, `senderid`, `datetime`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
@@ -259,7 +259,7 @@ CREATE TABLE `report` (
  `senderid` bigint UNSIGNED NOT NULL,
  `datetime` datetime NOT NULL,
  `cause` tinyint NOT NULL,
- `del` tinyint(1) NOT NULL DEFAULT 0,
+ `del` bit(1) NOT NULL DEFAULT b'0',
  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
@@ -274,7 +274,7 @@ CREATE TABLE `blacklist` (
  `blackid` bigint UNSIGNED NOT NULL,
  `firstblack` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
  `lastblack` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
- `del` tinyint(1) NOT NULL DEFAULT 0,
+ `del` bit(1) NOT NULL DEFAULT 0,
  PRIMARY KEY (`userid`, `blackid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
