@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import com.example.demo.entity.*;
 
 import org.springframework.data.jpa.repository.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.lettuce.core.dynamic.annotation.Param;
 
@@ -37,6 +38,8 @@ public interface ArticleInfoRepository
      * @param now 修改时间
      * @return 变更行数。
      */
+    @Transactional
+    @Modifying
     @Query(
             value = "UPDATE `articleinf` SET "
                     + "`modifytime`=:now,`source`=:source,`text`=:text"

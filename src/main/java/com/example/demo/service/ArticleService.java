@@ -17,14 +17,20 @@ import com.example.demo.entity.ArticleInfo;
 import com.example.demo.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
- * @author
+ * 文章提交修改和删除服务。
+ * 
+ * @author 刘可
  * @version 1.0.0.0
+ * @see verify
  * @see updateArticle
  * @see deleteArticle
  * @since 2021-02-04
  */
+
+@Service("articleService")
 public class ArticleService extends ComService
 {
     @Autowired

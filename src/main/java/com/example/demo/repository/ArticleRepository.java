@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import com.example.demo.entity.*;
 
 import org.springframework.data.jpa.repository.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.lettuce.core.dynamic.annotation.Param;
 
@@ -34,6 +35,8 @@ public interface ArticleRepository extends JpaRepository<Article, BigInteger>,
      * @param draft 是否为草稿
      * @return 变更行数。
      */
+    @Transactional
+    @Modifying
     @Query(
             value = "UPDATE `article` SET "
                     + "`title`=:title,`draft`=:draft,`type`=:type WHERE id=:id",
@@ -51,6 +54,8 @@ public interface ArticleRepository extends JpaRepository<Article, BigInteger>,
      * @param del 是否为草稿
      * @return 变更行数。
      */
+    @Transactional
+    @Modifying
     @Query(
             value = "UPDATE `article` SET `del`=:del WHERE id=:id",
             nativeQuery = true
