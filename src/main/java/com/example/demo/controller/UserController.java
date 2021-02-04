@@ -2,7 +2,7 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-03
+ * 修改时间：2021-02-04
  */
 package com.example.demo.controller;
 
@@ -28,7 +28,7 @@ import com.example.demo.entity.*;
  * @version 1.0.0.0
  * @see signUp
  * @see codeReguest
- * @since 2021-02-02
+ * @since 2021-02-04
  */
 @Controller
 public class UserController
@@ -78,7 +78,7 @@ public class UserController
     /**
      * IPv4。
      */
-    public final String KEY_IPV4 = "ipv4";
+    public final String KEY_IPV4 = "ipv4[]";
     /**
      * IPv6。
      */

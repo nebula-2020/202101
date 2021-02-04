@@ -33,6 +33,11 @@
     <span class="btn" onclick="post2()">
         登录
     </span>
+    <hr>
+    
+    <span class="btn" onclick="post3()">
+        提交
+    </span>
 </body>
 
 </html>
@@ -67,13 +72,25 @@
                 phone:phone,
                 pwd:'ni3oc2hu9r',
                 account:'',
-                ipv4:0,
+                ipv4:[0],
                 ipv6:[-128,-128,-128,127],
                 mac:[-128,-128,-128,127],
                 gps:'loc',
                 server:value,
                 js:key,
                 code: document.getElementById("code").innerHTML,
+            },
+            function (data, status) {
+            });
+    }
+    function post3(code){
+        $.post("updateArticle", {
+                phone:phone,
+                pwd:'ni3oc2hu9r',
+                md:'qweasdzxc',
+                title:'liin76i,9p97t543vm3`',
+                source:'[-128,-128,-128,127]',
+                draft:false
             },
             function (data, status) {
             });

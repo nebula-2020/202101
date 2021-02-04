@@ -2,7 +2,7 @@
  * 文件名：SignInService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-02
+ * 修改时间：2021-02-04
  */
 package com.example.demo.service;
 
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  * @author 刘可
  * @version 1.0.0.0
  * @see signIn
- * @since 2021-02-02
+ * @since 2021-02-04
  */
 @Service("signInService")
 public class SignInService extends ComService
@@ -32,6 +32,27 @@ public class SignInService extends ComService
     UserBaseInfoRepository baseRepo;
     @Autowired
     SignInInfoRepository signInRepo;
+
+    /**
+     * 手机号密码验证。
+     * <p>
+     * 此方法不变更数据表。
+     * 
+     * @param phone 手机号
+     * @param pwd 密码
+     * @return 描述验证成功与否
+     */
+    public boolean verify(String phone, String pwd)
+    {
+
+        if (tool.containsNullOrEmpty(phone, pwd))
+        {
+            throw new NullPointerException();
+        } // 结束：if (tool.containsNullOrEmpty(phone, pwd))
+        UserBaseInfo user = baseRepo.findByPhone(phone);
+
+        return user != null && tool.isStrSame(pwd, user.getPassword());
+    }
 
     /**
      * 用户登录服务。
