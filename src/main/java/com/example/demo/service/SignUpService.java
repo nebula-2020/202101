@@ -2,7 +2,7 @@
  * 文件名：SignUpService.java
  * 描述：用于用户注册账号时验证和修改数据库。
  * 修改人：刘可
- * 修改时间：2021-02-01
+ * 修改时间：2021-02-04
  */
 package com.example.demo.service;
 
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  * @author 刘可
  * @version 1.0.0.0
  * @see signUp
- * @since 2021-02-01
+ * @since 2021-02-04
  */
 @Service("signUpService")
 public class SignUpService extends ComService
@@ -52,7 +52,7 @@ public class SignUpService extends ComService
         if (tool.containsNullOrEmpty(phone, pwd, name))
         {
             throw new NullPointerException();
-        } // 结束：if (StrTool.containsNullOrEmpty(phone,pwd,name))
+        } // 结束：if (tool.containsNullOrEmpty(phone, pwd, name))
 
         boolean ret = false;
 
@@ -70,7 +70,6 @@ public class SignUpService extends ComService
                 user.setAccount(phone);
                 user.setPassword(pwd);
                 user = baseRepo.save(user);
-                user = baseRepo.findByPhone(phone);
                 BigInteger id = user.getId();// 获取第一个用此手机号注册的用户之id
 
                 if (id != null && id.compareTo(BigInteger.valueOf(0)) > 0)// 判断id是否大于0
