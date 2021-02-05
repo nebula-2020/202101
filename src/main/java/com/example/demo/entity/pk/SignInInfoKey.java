@@ -2,9 +2,9 @@
  * 文件名：SignInInfoKey.java
  * 描述：数据表联合主键
  * 修改人：刘可
- * 修改时间：2021-02-02
+ * 修改时间：2021-02-05
  */
- package com.example.demo.entity;
+ package com.example.demo.entity.pk;
 
 import java.io.Serializable;
 import java.math.BigInteger;

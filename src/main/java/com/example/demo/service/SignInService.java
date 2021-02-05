@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 
 import com.example.demo.entity.*;
+import com.example.demo.entity.pk.SignInInfoKey;
 import com.example.demo.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;

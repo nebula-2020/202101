@@ -2,10 +2,11 @@
  * 文件名：SignInInfo.java
  * 描述：数据表signindata的实体
  * 修改人：刘可
- * 修改时间：2021-02-02
+ * 修改时间：2021-02-05
  */
 package com.example.demo.entity;
 
+import com.example.demo.entity.pk.*;
 import javax.persistence.*;
 import lombok.*;
 @EqualsAndHashCode
@@ -20,7 +21,7 @@ import lombok.*;
  * 记录用户登录时间、地址和位置。
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-0
+ * @since 2021-02-02
  */
 public class SignInInfo
 {

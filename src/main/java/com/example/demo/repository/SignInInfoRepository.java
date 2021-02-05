@@ -4,9 +4,10 @@
  * 修改人：刘可
  * 修改时间：2021-02-02
  */
- package com.example.demo.repository;
+package com.example.demo.repository;
 
 import com.example.demo.entity.*;
+import com.example.demo.entity.pk.SignInInfoKey;
 
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Component;
