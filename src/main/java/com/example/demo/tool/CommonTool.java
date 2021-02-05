@@ -2,7 +2,7 @@
  * 文件名：CommonTool.java
  * 描述：常见工具。
  * 修改人：刘可
- * 修改时间：2021-01-31
+ * 修改时间：2021-02-05
  */
 package com.example.demo.tool;
 
@@ -14,6 +14,15 @@ import java.util.*;
  *
  * @author 刘可
  * @version 1.0.0.0
+ * @see supportTo
+ * @see isNullOrEmpty
+ * @see containsNullOrEmpty
+ * @see containsNull
+ * @see isNull
+ * @see toByteArray
+ * @see isStrSame
+ * @see isBigIntSame
+ * @since 2021-02-05
  */
 public final class CommonTool
 {
@@ -296,10 +305,10 @@ public final class CommonTool
     public boolean isBigIntSame(BigInteger integer, BigInteger anotherInteger)
     {
 
-        if (integer != null && anotherInteger != null)
+        if (integer == null || anotherInteger == null)
         {
             return false;
-        } // 结束： if (containsNullOrEmpty(str, anotherStr))
+        } // 结束：if (integer == null && anotherInteger == null)
 
         boolean ret = integer.compareTo(anotherInteger) == 0;
         return ret;

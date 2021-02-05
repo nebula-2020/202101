@@ -2,10 +2,11 @@
  * 文件名：SignInService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-04
+ * 修改时间：2021-02-05
  */
 package com.example.demo.service;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 import com.example.demo.entity.*;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
  * @author 刘可
  * @version 1.0.0.0
  * @see signIn
- * @since 2021-02-04
+ * @since 2021-02-05
  */
 @Service("signInService")
 public class SignInService extends ComService
@@ -40,9 +41,9 @@ public class SignInService extends ComService
      * 
      * @param phone 手机号
      * @param pwd 密码
-     * @return 描述验证成功与否
+     * @return 验证成功则返回用户ID，否则返回<code>null</code>。
      */
-    public boolean verify(String phone, String pwd)
+    public BigInteger verify(String phone, String pwd)
     {
 
         if (tool.containsNullOrEmpty(phone, pwd))
@@ -50,8 +51,13 @@ public class SignInService extends ComService
             throw new NullPointerException();
         } // 结束：if (tool.containsNullOrEmpty(phone, pwd))
         UserBaseInfo user = baseRepo.findByPhone(phone);
+        BigInteger ret = null;
 
-        return user != null && tool.isStrSame(pwd, user.getPassword());
+        if (user != null && tool.isStrSame(pwd, user.getPassword()))
+        {
+            ret = user.getId();
+        } // 结束：if(user != null && tool.isStrSame(pwd, user.getPassword()))
+        return ret;
     }
 
     /**
