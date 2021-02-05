@@ -2,7 +2,7 @@
  * 文件名：UserBaseInfoRepository.java
  * 描述：单表存储库
  * 修改人：刘可
- * 修改时间：2021-02-02
+ * 修改时间：2021-02-05
  */
 package com.example.demo.repository;
 
@@ -51,8 +51,9 @@ public interface UserBaseInfoRepository
             value = "UPDATE `user` SET `personalid`=:account WHERE `id`=:id",
             nativeQuery = true
     )
-    int updateAccountById(@Param("id") BigInteger id,
-            @Param("account") String account);
+    int updateAccountById(
+            @Param("id") BigInteger id, @Param("account") String account
+    );
 
     @Transactional
     @Modifying
@@ -60,7 +61,9 @@ public interface UserBaseInfoRepository
             value = "UPDATE `user` SET `phone`=:phone,`password`=:pwd WHERE `id`=:id",
             nativeQuery = true
     )
-    int updatePhoneAndPasswordById(@Param("id") BigInteger id,
-            @Param("phone") String phone, @Param("pwd") String password);
+    int updatePhoneAndPasswordById(
+            @Param("id") BigInteger id, @Param("phone") String phone,
+            @Param("pwd") String password
+    );
 
 }

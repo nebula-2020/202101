@@ -2,7 +2,7 @@
  * 文件名：Article.java
  * 描述：数据表article的实体。
  * 修改人：刘可
- * 修改时间：2021-02-04
+ * 修改时间：2021-02-05
  */
 package com.example.demo.entity;
 
@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 import lombok.*;
+
 /**
  * 文章的实体。
  * 
@@ -25,7 +26,8 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name = "article")
-public class Article {
+public class Article
+{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(

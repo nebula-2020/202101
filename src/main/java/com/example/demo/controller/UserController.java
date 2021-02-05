@@ -2,7 +2,7 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-04
+ * 修改时间：2021-02-05
  */
 package com.example.demo.controller;
 
@@ -237,7 +237,7 @@ public class UserController
             SignInMethod method
     )
     {
-        byte[] ipv6Array =tool.toByteArray(ipv6);
+        byte[] ipv6Array = tool.toByteArray(ipv6);
         byte[] macArray = tool.toByteArray(mac);
         byte[] ipv4Array = tool.toByteArray(ipv4);
         long ipv4Value = 0;

@@ -9,6 +9,7 @@ package com.example.demo.entity;
 import com.example.demo.entity.pk.*;
 import javax.persistence.*;
 import lombok.*;
+
 @EqualsAndHashCode
 @ToString
 @Getter
@@ -19,6 +20,7 @@ import lombok.*;
  * 账号登录信息的实体。
  * <p>
  * 记录用户登录时间、地址和位置。
+ * 
  * @author 刘可
  * @version 1.0.0.0
  * @since 2021-02-02

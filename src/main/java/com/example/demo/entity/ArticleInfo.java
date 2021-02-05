@@ -1,8 +1,8 @@
 /*
  * 文件名：ArticleInfo.java
- * 描述：数据表article的实体。
+ * 描述：数据表articleinf的实体。
  * 修改人：刘可
- * 修改时间：2021-02-03
+ * 修改时间：2021-02-05
  */
 package com.example.demo.entity;
 
@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 import lombok.*;
+
 /**
  * 文章信息。
  * <p>
@@ -27,7 +28,8 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name = "articleinf")
-public class ArticleInfo {
+public class ArticleInfo
+{
     @Id
     @Column(
             name = "id",
@@ -41,7 +43,7 @@ public class ArticleInfo {
             updatable = true
     )
     private Timestamp modifyTime;
-    
+
     @Column(
             name = "text",
             nullable = false,

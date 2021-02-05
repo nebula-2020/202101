@@ -2,7 +2,7 @@
  * 文件名：UserDetailsRepository.java
  * 描述：单表存储库
  * 修改人：刘可
- * 修改时间：2021-02-02
+ * 修改时间：2021-02-05
  */
 package com.example.demo.repository;
 
@@ -28,7 +28,7 @@ import com.example.demo.entity.UserDetails;
         idClass = BigInteger.class
 )
 public interface UserDetailsRepository
-extends JpaRepository<UserDetails, BigInteger>,
-JpaSpecificationExecutor<UserDetails>
+        extends JpaRepository<UserDetails, BigInteger>,
+        JpaSpecificationExecutor<UserDetails>
 {
 }

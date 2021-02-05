@@ -2,7 +2,7 @@
  * 文件名：SmsService.java
  * 描述：发送验证码相关服务。
  * 修改人：刘可
- * 修改时间：2021-02-01
+ * 修改时间：2021-02-05
  */
 package com.example.demo.service;
 
@@ -13,6 +13,7 @@ import com.example.demo.tool.Rand;
 import com.rainbow.sms.Client;
 
 import org.springframework.stereotype.Service;
+
 /**
  * 提供短信验证服务。
  * 
@@ -59,14 +60,14 @@ public class SmsService extends ComService
      * 用预设的键来构造表。
      * 
      * @param phone 收件方手机号
-     * @param code  短信验证码
-     * @param key   手机端传来的代码
-     * @param sec   服务器生成的代码
-     * @param time  验证码有效时间
+     * @param code 短信验证码
+     * @param key 手机端传来的代码
+     * @param sec 服务器生成的代码
+     * @param time 验证码有效时间
      * @return 表，传给<code>verify</code>用。
      */
-    public final Map<String, Object> getMap(String phone, String code,
-            String key, String sec, long now)
+    public final Map<String, Object>
+            getMap(String phone, String code, String key, String sec, long now)
     {
         Map<String, Object> ret = new HashMap<>();
         ret.put(KEY_PHONE, phone);
@@ -81,13 +82,14 @@ public class SmsService extends ComService
      * 发送短信。
      * 
      * @param phone 收件方手机号
-     * @param key   手机端传来的代码
-     * @param sec   服务器生成的代码
-     * @param time  验证码有效时间
+     * @param key 手机端传来的代码
+     * @param sec 服务器生成的代码
+     * @param time 验证码有效时间
      * @return 将写入session的数据。
      */
-    public Map<String, Object> send(String phone, String key, String sec,
-            long time) throws NullPointerException
+    public Map<String, Object>
+            send(String phone, String key, String sec, long time)
+                    throws NullPointerException
     {
         Map<String, Object> ret = new HashMap<>();
 
@@ -111,8 +113,8 @@ public class SmsService extends ComService
             do
             {
                 Map<String, Object> params = new HashMap<>();
-                Integer mask = 0xffff;//限制验证码位
-                String code = Integer.toHexString(mask & random.nextInt());//得到一个四位的不分大小写的数字字母字串
+                Integer mask = 0xffff;// 限制验证码位
+                String code = Integer.toHexString(mask & random.nextInt());// 得到一个四位的不分大小写的数字字母字串
                 Calendar t = Calendar.getInstance();// 验证码有效时间
                 t.setTimeInMillis(time);
 
@@ -167,8 +169,8 @@ public class SmsService extends ComService
      * @param session 包括客户端和服务器生成的两段代码、验证码、手机号和验证码发送时间
      * @return 描述验证是否通过。
      */
-    public boolean verify(Map<String, Object> request,
-            Map<String, Object> session)
+    public boolean
+            verify(Map<String, Object> request, Map<String, Object> session)
     {
 
         boolean ret = true;

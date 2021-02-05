@@ -24,7 +24,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 @Configuration // <beans>
 @ComponentScan(basePackages =
-{ "pers.nebula.nebulahome" }) // 需要扫描的包
+{
+        "pers.nebula.nebulahome"
+}) // 需要扫描的包
 @PropertySource("application.properties")
 @EnableJpaRepositories
 @EnableTransactionManagement // 开启spring对事务注解的支持

@@ -5,6 +5,7 @@
  * 修改时间：2021-02-05
  */
 package com.example.demo.entity;
+
 import com.example.demo.entity.pk.*;
 
 import javax.persistence.EmbeddedId;
@@ -15,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
 /**
  * 赞。
  * 

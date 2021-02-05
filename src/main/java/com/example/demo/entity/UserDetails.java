@@ -2,7 +2,7 @@
  * 文件名：UserDetails.java
  * 描述：数据表userdetails的实体。
  * 修改人：刘可
- * 修改时间：2021-02-01
+ * 修改时间：2021-02-05
  */
 package com.example.demo.entity;
 
@@ -15,9 +15,9 @@ import lombok.*;
 
 /**
  * 表明账号详细信息的实体。
- * 
  * 包括用户性别、公司、学校、住址、生日、简介。
  * 根据相关字段为所有对象继承的<code>toString</code>、<code>equals</code>和<code>hashCode</code>方法生成实现。
+ * 
  * @author 刘可
  * @version 1.0.0.0
  * @since 2021-02-01
