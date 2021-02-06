@@ -2,7 +2,7 @@
  * 文件名：ArticleController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-05
+ * 修改时间：2021-02-06
  */
 package com.example.demo.controller;
 
@@ -23,7 +23,8 @@ import com.example.demo.service.*;
  * @author 刘可
  * @version 1.0.0.0
  * @see updateArticle
- * @since 2021-02-04
+ * @see deleteArticle
+ * @since 2021-02-06
  */
 @Controller
 public class ArticleController
@@ -89,7 +90,7 @@ public class ArticleController
                 if (!tool.isNullOrEmpty(idStr))
                 {
                     articleId = new BigInteger(idStr);
-                }
+                } // 结束：if (!tool.isNullOrEmpty(idStr))
 
                 try
                 {
@@ -109,8 +110,61 @@ public class ArticleController
                 finally
                 {
                 }
-            }
-        }
+            } // 结束：if (userId!=null&&userId.compareTo(BigInteger.ZERO)>0)
+        } // 结束：if(!tool.containsNullOrEmpty(text, title))
         return ret;
+    }
+
+    /**
+     * 删除文章。
+     * 
+     * @param idStr 文章ID
+     * @param phone 作者手机号
+     * @param pwd 作者密码
+     * @return JSON字符串，用户手机号为键对应值表示删除成功与否。
+     */
+    @RequestMapping("deleteArticle")
+    @ResponseBody
+    protected String deleteArticle(
+            @RequestParam(value = KEY_ARTICLE) String idStr,
+            @RequestParam(value = KEY_USER) String phone,
+            @RequestParam(value = KEY_PASSWORD) String pwd
+    )
+    {
+        String ret = "";
+
+        if (!tool.isNullOrEmpty(idStr))
+        {
+            BigInteger userId = signInService.verify(phone, pwd);
+
+            if (userId != null && userId.compareTo(BigInteger.ZERO) > 0)
+            {
+                // 用户存在且匹配
+                BigInteger articleId = null;
+
+                if (!tool.isNullOrEmpty(idStr))
+                {
+                    articleId = new BigInteger(idStr);
+                } // 结束：if (!tool.isNullOrEmpty(idStr))
+
+                try
+                {
+                    boolean res =
+                            articleService.deleteArticle(userId, articleId);
+                    JSONObject json = new JSONObject();
+                    json.put(phone, res);
+                    System.out.println(json);// debug
+                    ret = json.toJSONString();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                finally
+                {
+                }
+            } // 结束：if(userId!=null&&userId.compareTo(BigInteger.ZERO)>0)
+        } // 结束：if(!tool.isNullOrEmpty(idStr))
+        return ret;//
     }
 }

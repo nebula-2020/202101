@@ -2,7 +2,7 @@
  * 文件名：ArticleService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-04
+ * 修改时间：2021-02-06
  */
 
 package com.example.demo.service;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
  * @see verify
  * @see updateArticle
  * @see deleteArticle
- * @since 2021-02-04
+ * @since 2021-02-06
  */
 
 @Service("articleService")
@@ -119,9 +119,9 @@ public class ArticleService extends ComService
         {
             Article article = verify(authorId, articleId);
 
-            if (article == null)
+            if (article == null || article.getDel())
             {
-                // 文章作者与提交更改的用户不同，更改失败
+                // 文章作者与提交更改的用户不同或已经删除，更改失败
                 ret = false;
             }
             else if (article.getId() == null)
@@ -138,6 +138,7 @@ public class ArticleService extends ComService
                 article.setAuthorId(authorId);
                 article.setDraft(draft);
                 article.setTitle(title);
+                article.setType(0);
 
                 ArticleInfo info = new ArticleInfo();
                 info.setSource(source);
@@ -158,7 +159,7 @@ public class ArticleService extends ComService
                 articleRepo.updateOne(articleId, title, type, isDraft);
                 infoRepo.updateOne(articleId, source, text, now);
                 ret = true;
-            } // 结束：if (article == null)
+            } // 结束： if (article == null||article.getDel())
         }
         catch (Exception e)
         {
@@ -174,12 +175,10 @@ public class ArticleService extends ComService
      * 给文章加上删除标记。
      * 
      * @param authorId 作者ID
-     * @param id 文章ID
+     * @param articleId 文章ID
      * @return 删除成功与否。
      */
-    public boolean deleteArticle(
-            BigInteger authorId, BigInteger articleId, BigInteger id
-    )
+    public boolean deleteArticle(BigInteger authorId, BigInteger articleId)
     {
 
         if (tool.containsNull(authorId, articleId))
@@ -194,7 +193,7 @@ public class ArticleService extends ComService
 
             if (article != null && article.getId() != null)
             {
-                articleRepo.deleteOne(id, true);
+                articleRepo.deleteOne(articleId, true);
                 ret = true;
             } // 结束：if (article != null && article.getId() != null)
         }
