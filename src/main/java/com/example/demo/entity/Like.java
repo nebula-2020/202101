@@ -2,7 +2,7 @@
  * 文件名：Like.java
  * 描述：数据表like的实体。
  * 修改人：刘可
- * 修改时间：2021-02-05
+ * 修改时间：2021-02-08
  */
 package com.example.demo.entity;
 
@@ -22,7 +22,7 @@ import lombok.ToString;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-05
+ * @since 2021-02-08
  */
 @EqualsAndHashCode
 @ToString

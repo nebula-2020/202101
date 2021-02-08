@@ -335,22 +335,26 @@ CREATE OR REPLACE ALGORITHM = MERGE DEFINER = `root`@`localhost` SQL SECURITY IN
 	`userinfo`.`point` AS `point`,
 	`userinfo`.`signature` AS `signature`,
 	`userinfo`.`icon` AS `icon` 
-FROM (
+FROM 
+(
+    (
         (
+            `user`
+            JOIN `userstatus` ON 
             (
-				`user`
-				JOIN `userstatus` ON (
-						`user`.`id` = `userstatus`.`id` 
-                    )
+                `user`.`id` = `userstatus`.`id` 
             )
-			JOIN `userinfo` ON (
-					`user`.`id` = `userinfo`.`id` 
-			)
         )
-		JOIN `userdetails` ON (
-				`user`.`id` = `userdetails`.`id` 
-			)
-    ) 
+        JOIN `userinfo` ON 
+        (
+            `user`.`id` = `userinfo`.`id` 
+        )
+    )
+    JOIN `userdetails` ON 
+    (
+        `user`.`id` = `userdetails`.`id` 
+    )
+) 
 WHERE (`user`.`id` = `userstatus`.`id`);
 
 CREATE OR REPLACE ALGORITHM = UNDEFINED DEFINER = `root`@`localhost` SQL SECURITY DEFINER VIEW `nebulahomedb`.`userdata` AS SELECT
@@ -362,16 +366,19 @@ CREATE OR REPLACE ALGORITHM = UNDEFINED DEFINER = `root`@`localhost` SQL SECURIT
 	`userinfo`.`icon` AS `icon`,
 	`userinfo`.`signature` AS `signature`,
 	`userinfo`.`name` AS `name` 
-FROM (
+FROM 
+(
+    (
+        `user`
+        JOIN `userinfo` ON 
         (
-			`user`
-			JOIN `userinfo` ON (
-					`user`.`id` = `userinfo`.`id` 
-				)
+            `user`.`id` = `userinfo`.`id` 
         )
-		JOIN `userstatus` ON (
-			`user`.`id` = `userstatus`.`id` 
-	    )
-    );
+    )
+    JOIN `userstatus` ON 
+    (
+        `user`.`id` = `userstatus`.`id` 
+    )
+);
 
 SET FOREIGN_KEY_CHECKS = 1;
