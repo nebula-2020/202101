@@ -2,7 +2,7 @@
  * 文件名：ArticleService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-06
+ * 修改时间：2021-02-08
  */
 
 package com.example.demo.service;
@@ -14,6 +14,9 @@ import java.util.Optional;
 
 import com.example.demo.entity.Article;
 import com.example.demo.entity.ArticleInfo;
+import com.example.demo.entity.Visit;
+import com.example.demo.entity.VisitInfo;
+import com.example.demo.entity.pk.ArticleTimeKey;
 import com.example.demo.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,9 @@ import org.springframework.stereotype.Service;
  * @see verify
  * @see updateArticle
  * @see deleteArticle
- * @since 2021-02-06
+ * @see getArticle
+ * @see visitArticle
+ * @since 2021-02-08
  */
 
 @Service("articleService")
@@ -37,6 +42,10 @@ public class ArticleService extends ComService
     ArticleInfoRepository infoRepo;
     @Autowired
     ArticleRepository articleRepo;
+    @Autowired
+    VisitRepository visitRepo;
+    @Autowired
+    VisitInfoRepository visitInfoRepo;
 
     /**
      * 文章验证。
@@ -202,6 +211,70 @@ public class ArticleService extends ComService
             e.printStackTrace();
             ret = false;
         }
+        return ret;
+    }
+
+    /**
+     * 获取文章内容。
+     * 
+     * @param articleId 文章ID
+     * @return 文章内容。
+     */
+    public ArticleInfo getArticle(BigInteger articleId)
+    {
+
+        if (articleId == null || articleId.compareTo(BigInteger.ZERO) <= 0)
+        {
+            return null;
+        } // 结束：if(article==null||article.getId().compareTo(BigInteger.......
+        ArticleInfo ret = infoRepo.getOne(articleId);
+        return ret;
+    }
+
+    /**
+     * 获取文章内容并添加访问记录。
+     * 
+     * @param articleId 文章ID
+     * @param userId 访客账号ID
+     * @param mac 访客物理地址
+     * @param ipv6 IPv6
+     * @param ipv4 IPv4
+     * @return 文章内容。
+     */
+    public ArticleInfo visitArticle(
+            BigInteger articleId, BigInteger userId, Long ipv4, byte[] ipv6,
+            byte[] mac
+    )
+    {
+        // 设置返回值
+        ArticleInfo ret = getArticle(articleId);
+
+        if (ret == null)
+        {
+            return null;
+        } // 结束：if (ret == null)
+
+        // 设置主键
+        ArticleTimeKey primaryKey = new ArticleTimeKey();
+        primaryKey.setArticleId(articleId);
+        primaryKey.setDate(new Timestamp(System.currentTimeMillis()));
+
+        // 设置访问记录
+        Visit visit = new Visit();
+        visit.setPrimaryKey(primaryKey);
+        visit.setVisitorId(userId);
+
+        // 设置访问信息
+        VisitInfo info = new VisitInfo();
+        info.setIpv4(ipv4);
+        info.setIpv6(ipv6);
+        info.setMac(mac);
+        info.setPrimaryKey(primaryKey);
+
+        // 插入
+        visitRepo.save(visit);
+        visitInfoRepo.save(info);
+
         return ret;
     }
 }

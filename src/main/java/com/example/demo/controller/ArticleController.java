@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.tool.*;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.entity.ArticleInfo;
 import com.example.demo.service.*;
 
 /**
@@ -33,20 +35,47 @@ public class ArticleController
     private ArticleService articleService;
     @Autowired
     private SignInService signInService;
+    private final CommonTool tool = new CommonTool();
     /**
-     * 用户。
+     * 用户手机号。
      */
     public final String KEY_USER = "phone";
     /**
-     * 用户
+     * 用户密码。
      */
     public final String KEY_PASSWORD = "pwd";
+    /**
+     * 文章ID。
+     */
     public final String KEY_ARTICLE = "id";
+    /**
+     * 文章标题。
+     */
     public final String KEY_TITLE = "title";
+    /**
+     * 内容。
+     */
     public final String KEY_TEXT = "md";
+    /**
+     * 转载源。
+     */
     public final String KEY_SOURCE = "source";
+    /**
+     * 是否为草稿。
+     */
     public final String KEY_DRAFT = "draft";
-    private final CommonTool tool = new CommonTool();
+    /**
+     * IPv4。
+     */
+    public final String KEY_IPV4 = "ipv4[]";
+    /**
+     * IPv6。
+     */
+    public final String KEY_IPV6 = "ipv6[]";
+    /**
+     * 物理地址。
+     */
+    public final String KEY_MAC = "mac[]";
 
     /**
      * 提交文章。
@@ -164,6 +193,68 @@ public class ArticleController
                 {
                 }
             } // 结束：if(userId!=null&&userId.compareTo(BigInteger.ZERO)>0)
+        } // 结束：if(!tool.isNullOrEmpty(idStr))
+        return ret;//
+    }
+
+    /**
+     * 删除文章。
+     * 
+     * @param idStr 文章ID
+     * @param phone 作者手机号
+     * @param pwd 作者密码
+     * @return JSON字符串，用户手机号为键对应值表示删除成功与否。
+     */
+    @RequestMapping("article")
+    @ResponseBody
+    protected String visitArticle(
+            @RequestParam(value = KEY_ARTICLE) String idStr,
+            @RequestParam(value = KEY_USER) String phone,
+            @RequestParam(value = KEY_IPV4) List<Byte> ipv4,
+            @RequestParam(value = KEY_IPV6) List<Byte> ipv6,
+            @RequestParam(value = KEY_MAC) List<Byte> mac
+    )
+    {
+        String ret = "";
+
+        if (!tool.isNullOrEmpty(idStr))
+        {
+            BigInteger userId = signInService.phone2Id(phone);
+
+            // 用户存在且匹配
+            BigInteger articleId = null;
+
+            if (!tool.isNullOrEmpty(idStr))
+            {
+                articleId = new BigInteger(idStr);
+            } // 结束：if (!tool.isNullOrEmpty(idStr))
+
+            try
+            {
+                byte[] ipv6Array = tool.toByteArray(ipv6);
+                byte[] macArray = tool.toByteArray(mac);
+                byte[] ipv4Array = tool.toByteArray(ipv4);
+                ArticleInfo res = articleService.visitArticle(
+                        articleId, userId, tool.bytes2Ipv4(ipv4Array),
+                        ipv6Array, macArray
+                );
+
+                if (res != null)
+                {
+                    JSONObject json = new JSONObject();
+                    json.put(KEY_TEXT, res.getText());
+                    json.put(KEY_SOURCE, res.getSource());
+                    json.put(KEY_ARTICLE, res.getId());
+                    ret = json.toJSONString();
+                }//结束： if (res != null)
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+            }
         } // 结束：if(!tool.isNullOrEmpty(idStr))
         return ret;//
     }

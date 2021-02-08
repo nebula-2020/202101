@@ -2,7 +2,7 @@
  * 文件名：CommonTool.java
  * 描述：常见工具。
  * 修改人：刘可
- * 修改时间：2021-02-05
+ * 修改时间：2021-02-08
  */
 package com.example.demo.tool;
 
@@ -22,10 +22,14 @@ import java.util.*;
  * @see toByteArray
  * @see isStrSame
  * @see isBigIntSame
- * @since 2021-02-05
+ * @see bytes2Ipv4
+ * @since 2021-02-08
  */
 public final class CommonTool
 {
+    private final byte IPV4_LEN = 4;
+    private final short UBYTE_MAX = 0xff;
+
     /**
      * 补给方法。
      * 
@@ -314,4 +318,26 @@ public final class CommonTool
         return ret;
     }
 
+    /**
+     * 字节数组与IPv4地址转换方法，数组长度不足则返回<code>null</code>，过长则超出部分不参与运算。
+     * 
+     * @param ipv4Array 表示IP地址的数组
+     * @return 长整型IP地址。
+     */
+    public Long bytes2Ipv4(byte[] ipv4Array)
+    {
+        Long ret = null;
+
+        if (ipv4Array.length >= IPV4_LEN)
+        {
+            ret = 0L;
+
+            for (int i = 0; i < IPV4_LEN; i++)
+            {
+                ret <<= Byte.SIZE;
+                ret |= (ipv4Array[i] & UBYTE_MAX);
+            } // 结束：for (int i = 0; i <ipv4Array.length; i++)
+        } // 结束：if(ipv4Array.length>=ipv4Len){
+        return ret;
+    }
 }

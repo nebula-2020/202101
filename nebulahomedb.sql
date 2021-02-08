@@ -133,7 +133,7 @@ CREATE TABLE `article` (
  `title` char(63) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
  `del` bit(1) NOT NULL DEFAULT b'0' COMMENT '文章是否已经删除',
  `draft` bit(1) NOT NULL DEFAULT b'0' COMMENT '文章是否为草稿',
- `type` int NULL COMMENT '人工智能为文章贴的类别标签',
+ `type` int NOT NULL COMMENT '人工智能为文章贴的类别标签',
  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
@@ -146,7 +146,7 @@ DROP TABLE IF EXISTS `articleinf`;
 CREATE TABLE `articleinf` (
  `id` bigint UNSIGNED NOT NULL,
  `modifytime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
- `text` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+ `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
  `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '原帖链接，空值表示原创',
  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;

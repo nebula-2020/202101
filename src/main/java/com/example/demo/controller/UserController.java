@@ -35,7 +35,6 @@ public class UserController
 {
     public final long MSEC_60000 = 60000;
     public final long MSEC_1000 = 1000;
-    private final short UBYTE_MAX = 0xff;
     /**
      * 描述一分钟等于多少秒。
      */
@@ -240,13 +239,7 @@ public class UserController
         byte[] ipv6Array = tool.toByteArray(ipv6);
         byte[] macArray = tool.toByteArray(mac);
         byte[] ipv4Array = tool.toByteArray(ipv4);
-        long ipv4Value = 0;
-
-        for (int i = 0; i < ipv4Array.length; i++)
-        {
-            ipv4Value <<= Byte.SIZE;
-            ipv4Value |= (ipv4Array[i] & UBYTE_MAX);
-        } // 结束：for (int i = 0; i <ipv4Array.length; i++)
+        Long ipv4Value = tool.bytes2Ipv4(ipv4Array);
         SignInInfo info = new SignInInfo();
         info.setIpv4(ipv4Value);
         info.setIpv6(ipv6Array);

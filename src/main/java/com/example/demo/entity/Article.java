@@ -2,7 +2,7 @@
  * 文件名：Article.java
  * 描述：数据表article的实体。
  * 修改人：刘可
- * 修改时间：2021-02-05
+ * 修改时间：2021-02-08
  */
 package com.example.demo.entity;
 
@@ -18,7 +18,7 @@ import lombok.*;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-04
+ * @since 2021-02-08
  */
 @EqualsAndHashCode
 @ToString
@@ -73,7 +73,7 @@ public class Article
     private Boolean draft;
     @Column(
             name = "type",
-            nullable = true,
+            nullable = false,
             insertable = true,
             updatable = true
     )
