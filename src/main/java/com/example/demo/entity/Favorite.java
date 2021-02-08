@@ -31,11 +31,11 @@ public class Favorite
 {
 
     @EmbeddedId
-    UserArticleKey key;
+   private UserArticleKey key;
     @Column(
             name = "createtime",
             insertable = false,
             updatable = false
     )
-    Timestamp createtime;
+   private Timestamp createtime;
 }
