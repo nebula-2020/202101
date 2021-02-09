@@ -2,7 +2,7 @@
  * 文件名：Comment.java
  * 描述：数据表comment的实体。
  * 修改人：刘可
- * 修改时间：2021-02-05
+ * 修改时间：2021-02-09
  */
 package com.example.demo.entity;
 
@@ -20,7 +20,7 @@ import lombok.*;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-05
+ * @since 2021-02-09
  */
 @EqualsAndHashCode
 @ToString
@@ -66,4 +66,11 @@ public class Comment
             length = 255
     )
     private String text;
+    @Column(
+            name = "del",
+            nullable = false,
+            insertable = false,
+            updatable = true
+    )
+    private Boolean del;
 }
