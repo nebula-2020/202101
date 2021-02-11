@@ -36,13 +36,13 @@ public class MsgKey implements Serializable
             insertable = true,
             updatable = false
     )
-    private BigInteger userid;
+    private BigInteger userId;
     @Column(
             name = "senderid",
             insertable = true,
             updatable = false
     )
-    private BigInteger senderid;
+    private BigInteger senderId;
 
     @Column(
             name = "datetime",
