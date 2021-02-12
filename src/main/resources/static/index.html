@@ -66,17 +66,21 @@
                 console.log(JSON.parse(data)+'\n'+JSON.parse(data)[String(phone)]+'\n'+value+'\n'+key)
             });
     }
-    function post1(code){
-        $.post("codeSignUp", {
-                phone:phone,
-                pwd:'ni3oc2hu9r',
-                server:value,
-                js:key,
-                name:'名字',
+    function post1(code) {
+        $.ajax({
+            url: "codeSignUp", type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json;charset=UTF-8', data: JSON.stringify({
+                phone: phone,
+                pwd: 'ni3oc2hu9r',
+                server: value,
+                js: key,
+                name: '名字',
                 code: document.getElementById("code").innerHTML,
-            },
-            function (data, status) {
-            });
+            }),
+            success: function (data, status) {
+            }
+        });
     }
     function post2(code){
         $.post("codeSignIn", {

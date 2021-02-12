@@ -15,6 +15,8 @@ package com.example.demo.tool;
  * @since 2021-02-12
  */
 public abstract class CommonTag {
+    public static final String UTF_8 = "utf-8";
+    
     public static final String ARTICLE_ID = "aid";
     /**
      * 手机号。

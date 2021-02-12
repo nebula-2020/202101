@@ -92,15 +92,17 @@ public class UserController extends CommonController
     @RequestMapping("codeSignUp")
     @ResponseBody
     protected String signUp(
-            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
-            @RequestParam(value = KEY_KEY) String key,
-            @RequestParam(value = KEY_CODE) String code,
-            @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd,
-            @RequestParam(value = KEY_NAME) String name,
-            @RequestParam(value = KEY_SECRET) String sec, HttpSession session
+            @RequestBody(required = false) String request, HttpSession session
     )
     {
         String ret = "";
+        JSONObject json = JSONObject.parseObject(request);
+        String phone = json.getString(CommonTag.KEY_PHONE);
+        String key = json.getString(KEY_KEY);
+        String code = json.getString(KEY_CODE);
+        String pwd = json.getString(CommonTag.KEY_PASSWORD);
+        String name = json.getString(KEY_NAME);
+        String sec = json.getString(KEY_SECRET);
 
         if (!tool.containsNullOrEmpty(phone, key, code, pwd, name, sec))
         {
@@ -127,10 +129,10 @@ public class UserController extends CommonController
                     // 验证成功
                     boolean res = signUpService.signUp(phone, pwd, name);// 注册账号
                     session.invalidate();// 销毁session
-                    JSONObject json = new JSONObject();
-                    json.put(phone, res);// true表示注册成功
-                    System.out.println(json);// debug
-                    ret = json.toJSONString();
+                    JSONObject result = new JSONObject();
+                    result.put(phone, res);// true表示注册成功
+                    System.out.println(result);// debug
+                    ret = result.toJSONString();
                 }
             }
             catch (Exception e)
