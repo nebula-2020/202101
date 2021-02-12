@@ -2,7 +2,7 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-05
+ * 修改时间：2021-02-12
  */
 package com.example.demo.controller;
 
@@ -28,10 +28,10 @@ import com.example.demo.entity.*;
  * @version 1.0.0.0
  * @see signUp
  * @see codeReguest
- * @since 2021-02-04
+ * @since 2021-02-12
  */
 @Controller
-public class UserController
+public class UserController extends CommonController
 {
     public final long MSEC_60000 = 60000;
     public final long MSEC_1000 = 1000;
@@ -41,10 +41,6 @@ public class UserController
     public final long MIN2SEC = 60;
     public final String UNIT_OF_TIME = "分钟";
     public final String PROJECT_NAME = "星云社区";
-    /**
-     * 手机号。
-     */
-    public final String KEY_PHONE = "phone";
     /**
      * 服务器随机代码。
      */
@@ -65,27 +61,11 @@ public class UserController
      * 昵称。
      */
     public final String KEY_NAME = "name";
-    /**
-     * 密码。
-     */
-    public final String KEY_PASSWORD = "pwd";
 
     /**
      * 账号。
      */
     public final String KEY_ACCOUNT = "account";
-    /**
-     * IPv4。
-     */
-    public final String KEY_IPV4 = "ipv4[]";
-    /**
-     * IPv6。
-     */
-    public final String KEY_IPV6 = "ipv6[]";
-    /**
-     * 物理地址。
-     */
-    public final String KEY_MAC = "mac[]";
     /**
      * 地理位置。
      */
@@ -96,7 +76,6 @@ public class UserController
     private SignInService signInService;
     @Autowired
     private SmsService sms;
-    private final CommonTool tool = new CommonTool();
 
     /**
      * 用户注册。
@@ -113,10 +92,10 @@ public class UserController
     @RequestMapping("codeSignUp")
     @ResponseBody
     protected String signUp(
-            @RequestParam(value = KEY_PHONE) String phone,
+            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
             @RequestParam(value = KEY_KEY) String key,
             @RequestParam(value = KEY_CODE) String code,
-            @RequestParam(value = KEY_PASSWORD) String pwd,
+            @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd,
             @RequestParam(value = KEY_NAME) String name,
             @RequestParam(value = KEY_SECRET) String sec, HttpSession session
     )
@@ -177,7 +156,7 @@ public class UserController
     @RequestMapping("codeReg")
     @ResponseBody
     protected String codeReguest(
-            @RequestParam(value = KEY_PHONE) String phone,
+            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
             @RequestParam(value = KEY_KEY) String key, HttpSession session
     )
     {
@@ -276,16 +255,17 @@ public class UserController
     @ResponseBody
     protected String passwordSignIn(
             @RequestParam(
-                    value = KEY_PHONE,
+                    value = CommonTag.KEY_PHONE,
                     required = false
             ) String phone,
             @RequestParam(
                     value = KEY_ACCOUNT,
                     required = false
-            ) String account, @RequestParam(value = KEY_PASSWORD) String pwd,
-            @RequestParam(value = KEY_IPV4) List<Byte> ipv4,
-            @RequestParam(value = KEY_IPV6) List<Byte> ipv6,
-            @RequestParam(value = KEY_MAC) List<Byte> mac,
+            ) String account,
+            @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd,
+            @RequestParam(value = CommonTag.KEY_IPV4) List<Byte> ipv4,
+            @RequestParam(value = CommonTag.KEY_IPV6) List<Byte> ipv6,
+            @RequestParam(value = CommonTag.KEY_MAC) List<Byte> mac,
             @RequestParam(value = KEY_GPS) String gps, HttpSession session
     )
     {
@@ -341,13 +321,13 @@ public class UserController
     @RequestMapping("codeSignIn")
     @ResponseBody
     protected String codeSignIn(
-            @RequestParam(value = KEY_PHONE) String phone,
+            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
             @RequestParam(value = KEY_KEY) String key,
             @RequestParam(value = KEY_CODE) String code,
             @RequestParam(value = KEY_SECRET) String sec,
-            @RequestParam(value = KEY_IPV4) List<Byte> ipv4,
-            @RequestParam(value = KEY_IPV6) List<Byte> ipv6,
-            @RequestParam(value = KEY_MAC) List<Byte> mac,
+            @RequestParam(value = CommonTag.KEY_IPV4) List<Byte> ipv4,
+            @RequestParam(value = CommonTag.KEY_IPV6) List<Byte> ipv6,
+            @RequestParam(value = CommonTag.KEY_MAC) List<Byte> mac,
             @RequestParam(value = KEY_GPS) String gps, HttpSession session
     )
     {

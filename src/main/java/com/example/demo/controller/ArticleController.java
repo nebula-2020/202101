@@ -2,7 +2,7 @@
  * 文件名：ArticleController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-06
+ * 修改时间：2021-02-12
  */
 package com.example.demo.controller;
 
@@ -10,14 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.tool.*;
-
 import java.math.BigInteger;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.ArticleInfo;
 import com.example.demo.service.*;
+import com.example.demo.tool.CommonTag;
 
 /**
  * 文章控制器。
@@ -26,24 +25,15 @@ import com.example.demo.service.*;
  * @version 1.0.0.0
  * @see updateArticle
  * @see deleteArticle
- * @since 2021-02-06
+ * @since 2021-02-12
  */
 @Controller
-public class ArticleController
+public class ArticleController extends CommonController
 {
     @Autowired
     private ArticleService articleService;
     @Autowired
     private SignInService signInService;
-    private final CommonTool tool = new CommonTool();
-    /**
-     * 用户手机号。
-     */
-    public final String KEY_USER = "phone";
-    /**
-     * 用户密码。
-     */
-    public final String KEY_PASSWORD = "pwd";
     /**
      * 文章ID。
      */
@@ -64,18 +54,6 @@ public class ArticleController
      * 是否为草稿。
      */
     public final String KEY_DRAFT = "draft";
-    /**
-     * IPv4。
-     */
-    public final String KEY_IPV4 = "ipv4[]";
-    /**
-     * IPv6。
-     */
-    public final String KEY_IPV6 = "ipv6[]";
-    /**
-     * 物理地址。
-     */
-    public final String KEY_MAC = "mac[]";
 
     /**
      * 提交文章。
@@ -95,8 +73,9 @@ public class ArticleController
             @RequestParam(
                     value = KEY_ARTICLE,
                     required = false
-            ) String idStr, @RequestParam(value = KEY_USER) String phone,
-            @RequestParam(value = KEY_PASSWORD) String pwd,
+            ) String idStr,
+            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
+            @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd,
             @RequestParam(value = KEY_DRAFT) Boolean isDraft,
             @RequestParam(
                     value = KEY_SOURCE,
@@ -156,8 +135,8 @@ public class ArticleController
     @ResponseBody
     protected String deleteArticle(
             @RequestParam(value = KEY_ARTICLE) String idStr,
-            @RequestParam(value = KEY_USER) String phone,
-            @RequestParam(value = KEY_PASSWORD) String pwd
+            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
+            @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd
     )
     {
         String ret = "";
@@ -209,10 +188,10 @@ public class ArticleController
     @ResponseBody
     protected String visitArticle(
             @RequestParam(value = KEY_ARTICLE) String idStr,
-            @RequestParam(value = KEY_USER) String phone,
-            @RequestParam(value = KEY_IPV4) List<Byte> ipv4,
-            @RequestParam(value = KEY_IPV6) List<Byte> ipv6,
-            @RequestParam(value = KEY_MAC) List<Byte> mac
+            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
+            @RequestParam(value = CommonTag.KEY_IPV4) List<Byte> ipv4,
+            @RequestParam(value = CommonTag.KEY_IPV6) List<Byte> ipv6,
+            @RequestParam(value = CommonTag.KEY_MAC) List<Byte> mac
     )
     {
         String ret = "";
@@ -246,7 +225,7 @@ public class ArticleController
                     json.put(KEY_SOURCE, res.getSource());
                     json.put(KEY_ARTICLE, res.getId());
                     ret = json.toJSONString();
-                }//结束： if (res != null)
+                } // 结束： if (res != null)
             }
             catch (Exception e)
             {
