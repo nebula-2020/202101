@@ -2,7 +2,7 @@
  * 文件名：ArticleController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-12
+ * 修改时间：2021-02-14
  */
 package com.example.demo.controller;
 
@@ -16,7 +16,7 @@ import java.util.List;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.ArticleInfo;
 import com.example.demo.service.*;
-import com.example.demo.tool.CommonTag;
+import com.example.demo.constant.*;
 
 /**
  * 文章控制器。

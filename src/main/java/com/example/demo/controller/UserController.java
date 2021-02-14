@@ -2,7 +2,7 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-12
+ * 修改时间：2021-02-14
  */
 package com.example.demo.controller;
 
@@ -10,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.demo.constant.*;
 import com.example.demo.tool.*;
 
 import java.util.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.entity.SignInInfo;
@@ -28,7 +30,7 @@ import com.example.demo.entity.*;
  * @version 1.0.0.0
  * @see signUp
  * @see codeReguest
- * @since 2021-02-12
+ * @since 2021-02-14
  */
 @Controller
 public class UserController extends CommonController
@@ -41,6 +43,7 @@ public class UserController extends CommonController
     public final long MIN2SEC = 60;
     public final String UNIT_OF_TIME = "分钟";
     public final String PROJECT_NAME = "星云社区";
+    public final String PHONE_REGEXP = "\\d{15}";
     /**
      * 服务器随机代码。
      */
@@ -89,20 +92,18 @@ public class UserController extends CommonController
      * @param session 提供一种方法，以跨对网站的多个页面请求或访问识别用户，并存储有关该用户的信息
      * @return JSON字符串，用户手机号为键对应布尔值描述注册成功与否。
      */
-    @RequestMapping("codeSignUp")
+    @RequestMapping("user/codeSignUp")
     @ResponseBody
     protected String signUp(
-            @RequestBody(required = false) String request, HttpSession session
+            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
+            @RequestParam(value = KEY_KEY) String key,
+            @RequestParam(value = KEY_CODE) String code,
+            @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd,
+            @RequestParam(value = KEY_NAME) String name,
+            @RequestParam(value = KEY_SECRET) String sec, HttpSession session
     )
     {
         String ret = "";
-        JSONObject json = JSONObject.parseObject(request);
-        String phone = json.getString(CommonTag.KEY_PHONE);
-        String key = json.getString(KEY_KEY);
-        String code = json.getString(KEY_CODE);
-        String pwd = json.getString(CommonTag.KEY_PASSWORD);
-        String name = json.getString(KEY_NAME);
-        String sec = json.getString(KEY_SECRET);
 
         if (!tool.containsNullOrEmpty(phone, key, code, pwd, name, sec))
         {
@@ -155,11 +156,14 @@ public class UserController extends CommonController
      * @param session 提供一种方法，以跨对网站的多个页面请求或访问识别用户，并存储有关该用户的信息
      * @return JSON字符串，用户手机号为键对应值表示服务器随机代码。
      */
-    @RequestMapping("codeReg")
+    @RequestMapping("user/codeReg")
     @ResponseBody
     protected String codeReguest(
-            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
-            @RequestParam(value = KEY_KEY) String key, HttpSession session
+            @NotEmpty @NotNull @Pattern(regexp = PHONE_REGEXP) @RequestParam(
+                    value = CommonTag.KEY_PHONE
+            ) String phone,
+            @NotEmpty @NotNull @RequestParam(value = KEY_KEY) String key,
+            HttpSession session
     )
     {
         JSONObject ret = new JSONObject();
@@ -253,7 +257,7 @@ public class UserController extends CommonController
      * @param session 提供一种方法，以跨对网站的多个页面请求或访问识别用户，并存储有关该用户的信息
      * @return JSON字符串，用户手机号为键对应值表示登录成功与否。
      */
-    @RequestMapping("passwordSignIn")
+    @RequestMapping("user/passwordSignIn")
     @ResponseBody
     protected String passwordSignIn(
             @RequestParam(
@@ -320,7 +324,7 @@ public class UserController extends CommonController
      * @param session 提供一种方法，以跨对网站的多个页面请求或访问识别用户，并存储有关该用户的信息
      * @return JSON字符串，用户手机号为键对应值表示登录成功与否。
      */
-    @RequestMapping("codeSignIn")
+    @RequestMapping("user/codeSignIn")
     @ResponseBody
     protected String codeSignIn(
             @RequestParam(value = CommonTag.KEY_PHONE) String phone,

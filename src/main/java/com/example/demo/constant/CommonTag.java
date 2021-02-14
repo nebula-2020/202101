@@ -2,9 +2,9 @@
  * 文件名：CommonTag.java
  * 描述：常见工具。
  * 修改人：刘可
- * 修改时间：2021-02-12
+ * 修改时间：2021-02-14
  */
-package com.example.demo.tool;
+package com.example.demo.constant;
 
 /**
  * 常见常值。
@@ -12,7 +12,7 @@ package com.example.demo.tool;
  * 代替一些经常使用的重复名称，便于维护。
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-12
+ * @since 2021-02-14
  */
 public abstract class CommonTag {
     public static final String UTF_8 = "utf-8";

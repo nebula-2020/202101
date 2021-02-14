@@ -59,7 +59,7 @@
     key = Math.random()
     phone = "008618648386666"
     function post() {
-        $.post("codeReg", {
+        $.post("user/codeReg", {
             phone: phone,
             js: key
         },
@@ -70,22 +70,22 @@
     }
     function post1(code) {
         $.ajax({
-            url: "codeSignUp", type: 'POST',
+            url: "user/codeSignUp", type: 'POST',
             dataType: 'json',
-            contentType: 'application/json;charset=UTF-8', data: JSON.stringify({
+            contentType: 'application/json;charset=UTF-8', data: {
                 phone: phone,
                 pwd: 'ni3oc2hu9r',
                 server: value,
                 js: key,
                 name: '名字',
                 code: document.getElementById("code").innerHTML,
-            }),
+            },
             success: function (data, status) {
             }
         });
     }
     function post2(code) {
-        $.post("codeSignIn", {
+        $.post("user/codeSignIn", {
             phone: phone,
             pwd: 'ni3oc2hu9r',
             account: '',
