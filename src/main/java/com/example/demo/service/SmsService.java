@@ -2,7 +2,7 @@
  * 文件名：SmsService.java
  * 描述：发送验证码相关服务。
  * 修改人：刘可
- * 修改时间：2021-02-05
+ * 修改时间：2021-02-15
  */
 package com.example.demo.service;
 
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
  * @see getMap
  * @see send
  * @see verify
- * @since 2021-02-02
+ * @since 2021-02-15
  */
 @Service("smsService")
 public class SmsService extends ComService
@@ -34,6 +34,10 @@ public class SmsService extends ComService
     private final String APP_ID = "100010";
     private final String APP_SERECT =
             "1S0U08SK15BB1BV804RG1D4G006S1JOR18DR0AAC0URO0TAT14U61E491U3K05RR";
+    private final Integer MASK = 0x39aa3ff;
+    private final Integer SAFE = 0x19a100;
+    private final Integer CODE_LEN = 4;
+    private final int DECIMAL = 36;
     private final String TEMPLATE_ID = "0";
     /**
      * 手机号之键。
@@ -113,8 +117,17 @@ public class SmsService extends ComService
             do
             {
                 Map<String, Object> params = new HashMap<>();
-                Integer mask = 0xffff;// 限制验证码位
-                String code = Integer.toHexString(mask & random.nextInt());// 得到一个四位的不分大小写的数字字母字串
+
+                Integer codeVal = MASK & random.nextInt() | SAFE;
+                String code = Integer.toUnsignedString(codeVal, DECIMAL);// 得到一个四位的不分大小写的数字字母字串
+                StringBuilder bulider = new StringBuilder();
+
+                for (int i = 1; i <= CODE_LEN; i++)//去掉首位，剩下4位作为验证码，首位无法取到全部26个字母
+                {
+                    bulider.append(code.charAt(i));
+                } // 结束：for (int i = 1; i <= CODE_LEN; i++)
+                code = bulider.toString();
+
                 Calendar t = Calendar.getInstance();// 验证码有效时间
                 t.setTimeInMillis(time);
 
