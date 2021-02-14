@@ -2,7 +2,7 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-14
+ * 修改时间：2021-02-15
  */
 package com.example.demo.controller;
 
@@ -30,7 +30,7 @@ import com.example.demo.entity.*;
  * @version 1.0.0.0
  * @see signUp
  * @see codeReguest
- * @since 2021-02-14
+ * @since 2021-02-15
  */
 @Controller
 public class UserController extends CommonController
@@ -159,7 +159,7 @@ public class UserController extends CommonController
     @RequestMapping("user/codeReg")
     @ResponseBody
     protected String codeReguest(
-            @NotEmpty @NotNull @Pattern(regexp = PHONE_REGEXP) @RequestParam(
+            @NotEmpty @NotNull @Pattern(regexp = PHONE_REGEXP,message = "{valid.format}") @RequestParam(
                     value = CommonTag.KEY_PHONE
             ) String phone,
             @NotEmpty @NotNull @RequestParam(value = KEY_KEY) String key,
@@ -217,14 +217,13 @@ public class UserController extends CommonController
      * @return 账号登录信息的实体。
      */
     protected SignInInfo valsToInfo(
-            List<Byte> ipv4, List<Byte> ipv6, List<Byte> mac, String gps,
+            Long ipv4, List<Byte> ipv6, List<Byte> mac, String gps,
             SignInMethod method
     )
     {
         byte[] ipv6Array = tool.toByteArray(ipv6);
         byte[] macArray = tool.toByteArray(mac);
-        byte[] ipv4Array = tool.toByteArray(ipv4);
-        Long ipv4Value = tool.bytes2Ipv4(ipv4Array);
+        Long ipv4Value = ipv4;
         SignInInfo info = new SignInInfo();
         info.setIpv4(ipv4Value);
         info.setIpv6(ipv6Array);
@@ -269,7 +268,7 @@ public class UserController extends CommonController
                     required = false
             ) String account,
             @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd,
-            @RequestParam(value = CommonTag.KEY_IPV4) List<Byte> ipv4,
+            @RequestParam(value = CommonTag.KEY_IPV4) Long ipv4,
             @RequestParam(value = CommonTag.KEY_IPV6) List<Byte> ipv6,
             @RequestParam(value = CommonTag.KEY_MAC) List<Byte> mac,
             @RequestParam(value = KEY_GPS) String gps, HttpSession session
@@ -331,7 +330,7 @@ public class UserController extends CommonController
             @RequestParam(value = KEY_KEY) String key,
             @RequestParam(value = KEY_CODE) String code,
             @RequestParam(value = KEY_SECRET) String sec,
-            @RequestParam(value = CommonTag.KEY_IPV4) List<Byte> ipv4,
+            @RequestParam(value = CommonTag.KEY_IPV4) Long ipv4,
             @RequestParam(value = CommonTag.KEY_IPV6) List<Byte> ipv6,
             @RequestParam(value = CommonTag.KEY_MAC) List<Byte> mac,
             @RequestParam(value = KEY_GPS) String gps, HttpSession session

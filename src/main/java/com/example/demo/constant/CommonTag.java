@@ -2,7 +2,7 @@
  * 文件名：CommonTag.java
  * 描述：常见工具。
  * 修改人：刘可
- * 修改时间：2021-02-14
+ * 修改时间：2021-02-15
  */
 package com.example.demo.constant;
 
@@ -12,7 +12,7 @@ package com.example.demo.constant;
  * 代替一些经常使用的重复名称，便于维护。
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-14
+ * @since 2021-02-15
  */
 public abstract class CommonTag {
     public static final String UTF_8 = "utf-8";
@@ -33,7 +33,7 @@ public abstract class CommonTag {
     /**
      * IPv4。
      */
-    public static final String KEY_IPV4 = "ipv4[]";
+    public static final String KEY_IPV4 = "ipv4";
     /**
      * IPv6。
      */
