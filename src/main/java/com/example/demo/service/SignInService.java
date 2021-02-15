@@ -2,7 +2,7 @@
  * 文件名：SignInService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-08
+ * 修改时间：2021-02-16
  */
 package com.example.demo.service;
 
@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import com.example.demo.entity.*;
 import com.example.demo.entity.pk.SignInInfoKey;
 import com.example.demo.repository.*;
+import com.example.demo.vo.VisitVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Service;
  * @see verify
  * @see phone2Id
  * @see signIn
- * @since 2021-02-08
+ * @since 2021-02-16
  */
 @Service("signInService")
 public class SignInService extends ComService
@@ -99,7 +100,7 @@ public class SignInService extends ComService
      */
     public boolean signIn(
             String phone, String account, String pwd, boolean noPwd,
-            SignInInfo info
+            VisitVO info
     ) throws NullPointerException
     {
         boolean ret = false;
@@ -133,8 +134,15 @@ public class SignInService extends ComService
                 SignInInfoKey primaryKey = new SignInInfoKey();
                 primaryKey.setId(user.getId());
                 primaryKey.setTime(new Timestamp(System.currentTimeMillis()));
-                info.setPrimaryKey(primaryKey);
-                signInRepo.save(info);
+
+                SignInInfo signIninfo = new SignInInfo(
+                        primaryKey, info.getMethod().getValue(),
+                        tool.toByteArray(info.getIpv6()),
+                        tool.toByteArray(info.getMac()), info.getIpv4(),
+                        info.getGps()
+                );
+
+                signInRepo.save(signIninfo);
                 ret = true;
             } // 结束：if(user!=null&&(noPwd||tool.isStrSame(pwd,user.getPassword())))
         }

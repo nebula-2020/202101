@@ -2,17 +2,19 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-15
+ * 修改时间：2021-02-16
  */
 package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.constant.*;
 import com.example.demo.tool.*;
 import com.example.demo.vo.SmsVO;
+import com.example.demo.vo.VisitVO;
 
 import java.util.*;
 
@@ -20,7 +22,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.constraints.*;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.entity.SignInInfo;
 import com.example.demo.service.*;
 import com.example.demo.entity.*;
 
@@ -33,7 +34,7 @@ import com.example.demo.entity.*;
  * @see codeReguest
  * @see passwordSignIn
  * @see codeSignIn
- * @since 2021-02-15
+ * @since 2021-02-16
  */
 @Controller
 public class UserController extends CommonController
@@ -46,37 +47,10 @@ public class UserController extends CommonController
     public final long MIN2SEC = 60;
     public final String UNIT_OF_TIME = "分钟";
     public final String PROJECT_NAME = "星云社区";
-    public final String PHONE_REGEXP = "\\d{15}";
-    /**
-     * 服务器随机代码。
-     */
-    public final String KEY_SECRET = "server";
-    /**
-     * 短信验证码。
-     */
-    public final String KEY_CODE = "code";
-    /**
-     * 客户端随机代码。
-     */
-    public final String KEY_KEY = "js";
-    /**
-     * 时间。
-     */
-    public final String KEY_TIME = "time";
-    /**
-     * 昵称。
-     */
-    public final String KEY_NAME = "name";
-
-    /**
-     * 账号。
-     */
-    public final String KEY_ACCOUNT = "account";
-    /**
-     * 地理位置。
-     */
-    public final String KEY_GPS = "gps";
-    public final String KEY_SMS_INFO = "sms";
+    private final String KEY_SMS_INFO = Constants.SESSION_SMS;
+    private final String KEY_PHONE = Constants.KEY_USER_PHONE;
+    private final String KEY_PASSWORD = Constants.KEY_USER_PASSWORD;
+    private final String KEY_LOCATION = "_location";
     @Autowired
     private SignUpService signUpService;
     @Autowired
@@ -85,6 +59,39 @@ public class UserController extends CommonController
     private SmsService sms;
     @Autowired
     private RedisService redis;
+
+    @ModelAttribute
+    public void getPhone(
+            @NotEmpty @NotNull @Pattern(
+                    regexp = Constants.REGEXP_PHONE
+            ) @RequestParam(value = Constants.KEY_USER_PHONE) String phone,
+            @RequestParam(
+                    value = KEY_PASSWORD,
+                    required = false
+            ) String pwd,
+            @RequestParam(
+                    value = Constants.KEY_SIGNIN_IPV4,
+                    required = false
+            ) Long ipv4,
+            @RequestParam(
+                    value = Constants.KEY_SIGNIN_IPV6,
+                    required = false
+            ) List<Byte> ipv6,
+            @RequestParam(
+                    value = Constants.KEY_SIGNIN_MAC,
+                    required = false
+            ) List<Byte> mac,
+            @RequestParam(
+                    value = Constants.KEY_SIGNIN_GPS,
+                    required = false
+            ) String gps, Model model
+    )
+    {
+        model.addAttribute(KEY_PHONE, phone);
+        model.addAttribute(KEY_PASSWORD, pwd);
+        VisitVO visit = new VisitVO(ipv4, ipv6, mac, gps, SignInMethod.UNKNOWN);
+        model.addAttribute(KEY_LOCATION, visit);
+    }
 
     /**
      * 用户注册。
@@ -101,12 +108,13 @@ public class UserController extends CommonController
     @RequestMapping("user/codeSignUp")
     @ResponseBody
     protected String signUp(
-            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
-            @RequestParam(value = KEY_KEY) String key,
-            @RequestParam(value = KEY_CODE) String code,
-            @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd,
-            @RequestParam(value = KEY_NAME) String name,
-            @RequestParam(value = KEY_SECRET) String sec, HttpSession session
+            @ModelAttribute(value = KEY_PHONE) String phone,
+            @ModelAttribute(value = KEY_PASSWORD) String pwd,
+            @RequestParam(value = Constants.KEY_USER_NAME) String name,
+            @RequestParam(value = Constants.KEY_SMS_JS) String key,
+            @RequestParam(value = Constants.KEY_SMS_CODE) String code,
+            @RequestParam(value = Constants.KEY_SMS_SECRET) String sec,
+            HttpSession session, Model model
     )
     {
         String ret = "";
@@ -129,7 +137,7 @@ public class UserController extends CommonController
                     result.put(phone, res);// true表示注册成功
                     System.out.println(result);// debug
                     ret = result.toJSONString();
-                }
+                }// 结束： if (sms.verify(requestMap, MSEC_60000, sessionMap))
             }
             catch (Exception e)
             {
@@ -138,7 +146,7 @@ public class UserController extends CommonController
             finally
             {
             }
-        }
+        }// 结束：if (!tool.containsNullOrEmpty(phone, key, code, pwd, name, sec))
         return ret;
 
     }
@@ -154,12 +162,9 @@ public class UserController extends CommonController
     @RequestMapping("user/codeReg")
     @ResponseBody
     protected String codeReguest(
-            @NotEmpty @NotNull @Pattern(
-                    regexp = PHONE_REGEXP,
-                    message = "{valid.format}"
-            ) @RequestParam(value = CommonTag.KEY_PHONE) String phone,
-            @NotEmpty @NotNull @RequestParam(value = KEY_KEY) String key,
-            HttpSession session
+            @ModelAttribute(value = KEY_PHONE) String phone,
+            @NotEmpty @NotNull @RequestParam(Constants.KEY_SMS_JS) String key,
+            HttpSession session, Model model
     )
     {
         JSONObject ret = new JSONObject();
@@ -195,41 +200,6 @@ public class UserController extends CommonController
     }
 
     /**
-     * 构造账号登录信息的实体，登录用。
-     * 
-     * @param ipv4 IPv4地址，大端模式
-     * @param ipv6 IPv6地址，大端模式
-     * @param mac 物理地址，大端模式
-     * @param gps 地理位置
-     * @param method 登陆方式
-     * @return 账号登录信息的实体。
-     */
-    protected SignInInfo valsToInfo(
-            Long ipv4, List<Byte> ipv6, List<Byte> mac, String gps,
-            SignInMethod method
-    )
-    {
-        byte[] ipv6Array = tool.toByteArray(ipv6);
-        byte[] macArray = tool.toByteArray(mac);
-        Long ipv4Value = ipv4;
-        SignInInfo info = new SignInInfo();
-        info.setIpv4(ipv4Value);
-        info.setIpv6(ipv6Array);
-        info.setMac(macArray);
-        info.setGps(gps);
-
-        if (method == null)
-        {
-            info.setMethod(SignInMethod.UNKNOWN.getValue());
-        }
-        else
-        {
-            info.setMethod(method.getValue());
-        } // 结束：if (method == null)
-        return info;
-    }
-
-    /**
      * 密码登录。
      * <p>
      * 账号和手机号有一个非空即可。
@@ -247,19 +217,14 @@ public class UserController extends CommonController
     @RequestMapping("user/passwordSignIn")
     @ResponseBody
     protected String passwordSignIn(
+            @ModelAttribute(value = KEY_PHONE) String phone,
+            @ModelAttribute(value = KEY_PASSWORD) String pwd,
             @RequestParam(
-                    value = CommonTag.KEY_PHONE,
-                    required = false
-            ) String phone,
-            @RequestParam(
-                    value = KEY_ACCOUNT,
+                    value = Constants.KEY_USER_ACCOUNT,
                     required = false
             ) String account,
-            @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd,
-            @RequestParam(value = CommonTag.KEY_IPV4) Long ipv4,
-            @RequestParam(value = CommonTag.KEY_IPV6) List<Byte> ipv6,
-            @RequestParam(value = CommonTag.KEY_MAC) List<Byte> mac,
-            @RequestParam(value = KEY_GPS) String gps, HttpSession session
+            @ModelAttribute(value = KEY_LOCATION) VisitVO info,
+            HttpSession session, Model model
     )
     {
         String ret = "";
@@ -269,8 +234,7 @@ public class UserController extends CommonController
 
             try
             {
-                SignInInfo info =
-                        valsToInfo(ipv4, ipv6, mac, gps, SignInMethod.PASSWORD);
+                info.setMethod(SignInMethod.PASSWORD);
 
                 // 布尔值描述数据库操作成功与否
                 boolean res =
@@ -315,14 +279,12 @@ public class UserController extends CommonController
     @RequestMapping("user/codeSignIn")
     @ResponseBody
     protected String codeSignIn(
-            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
-            @RequestParam(value = KEY_KEY) String key,
-            @RequestParam(value = KEY_CODE) String code,
-            @RequestParam(value = KEY_SECRET) String sec,
-            @RequestParam(value = CommonTag.KEY_IPV4) Long ipv4,
-            @RequestParam(value = CommonTag.KEY_IPV6) List<Byte> ipv6,
-            @RequestParam(value = CommonTag.KEY_MAC) List<Byte> mac,
-            @RequestParam(value = KEY_GPS) String gps, HttpSession session
+            @ModelAttribute(value = KEY_PHONE) String phone,
+            @RequestParam(value = Constants.KEY_SMS_JS) String key,
+            @RequestParam(value = Constants.KEY_SMS_CODE) String code,
+            @RequestParam(value = Constants.KEY_SMS_SECRET) String sec,
+            @ModelAttribute(value = KEY_LOCATION) VisitVO info,
+            HttpSession session, Model model
     )
     {
         String ret = "";
@@ -338,8 +300,7 @@ public class UserController extends CommonController
 
                 if (sms.verify(requestMap, MSEC_60000, sessionMap))// 密钥匹配
                 {
-                    SignInInfo info =
-                            valsToInfo(ipv4, ipv6, mac, gps, SignInMethod.SMS);
+                    info.setMethod(SignInMethod.SMS);
 
                     // 布尔值描述数据库操作成功与否
                     boolean res =
