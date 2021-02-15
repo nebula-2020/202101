@@ -165,7 +165,7 @@ public class UserController extends CommonController
         JSONObject ret = new JSONObject();
 
         // 60秒内不能重发，得等上一个session失效
-        if (true)
+        if (!redis.isKeyExist(KEY_SMS_INFO))
         {
 
             if (!tool.containsNullOrEmpty(phone, key))
@@ -189,7 +189,7 @@ public class UserController extends CommonController
                     e.printStackTrace();
                 }
             } // 结束：if (!tool.containsNullOrEmpty(phone, key))
-        } // 结束：if(true)
+        } // 结束：if (!redis.isKeyExist(KEY_SMS_INFO))
 
         return ret.toJSONString();
     }
@@ -275,6 +275,7 @@ public class UserController extends CommonController
                 // 布尔值描述数据库操作成功与否
                 boolean res =
                         signInService.signIn(phone, account, pwd, false, info);
+                redis.deleteObj(phone);
 
                 if (res)
                 {
@@ -343,6 +344,7 @@ public class UserController extends CommonController
                     // 布尔值描述数据库操作成功与否
                     boolean res =
                             signInService.signIn(phone, null, null, true, info);
+                    redis.deleteObj(phone);
 
                     if (res)
                     {
