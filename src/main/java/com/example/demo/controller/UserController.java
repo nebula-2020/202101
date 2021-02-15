@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.constant.*;
 import com.example.demo.tool.*;
+import com.example.demo.vo.SmsVO;
 
 import java.util.*;
 
@@ -30,6 +31,8 @@ import com.example.demo.entity.*;
  * @version 1.0.0.0
  * @see signUp
  * @see codeReguest
+ * @see passwordSignIn
+ * @see codeSignIn
  * @since 2021-02-15
  */
 @Controller
@@ -73,12 +76,15 @@ public class UserController extends CommonController
      * 地理位置。
      */
     public final String KEY_GPS = "gps";
+    public final String KEY_SMS_INFO = "sms";
     @Autowired
     private SignUpService signUpService;
     @Autowired
     private SignInService signInService;
     @Autowired
     private SmsService sms;
+    @Autowired
+    private RedisService redis;
 
     /**
      * 用户注册。
@@ -110,22 +116,11 @@ public class UserController extends CommonController
 
             try
             {
-                Map<String, Object> sessionMap = new HashMap<>();
-                Iterator<String> iterator =
-                        session.getAttributeNames().asIterator();
-
-                while (iterator.hasNext())
-                {
-                    String attrName = iterator.next();
-                    Object sessionObject = session.getAttribute(attrName);
-                    sessionMap.put(attrName, sessionObject);
-                } // 结束：while (iterator.hasNext())
-
+                SmsVO sessionMap = redis.get(KEY_SMS_INFO, SmsVO.class);
                 Long now = System.currentTimeMillis();
-                Map<String, Object> requestMap =
-                        sms.getMap(phone, code, key, sec, now);
+                SmsVO requestMap = new SmsVO(phone, code, key, sec, now);
 
-                if (sms.verify(requestMap, sessionMap))// 密钥匹配
+                if (sms.verify(requestMap, MSEC_60000, sessionMap))// 密钥匹配
                 {
                     // 验证成功
                     boolean res = signUpService.signUp(phone, pwd, name);// 注册账号
@@ -159,9 +154,10 @@ public class UserController extends CommonController
     @RequestMapping("user/codeReg")
     @ResponseBody
     protected String codeReguest(
-            @NotEmpty @NotNull @Pattern(regexp = PHONE_REGEXP,message = "{valid.format}") @RequestParam(
-                    value = CommonTag.KEY_PHONE
-            ) String phone,
+            @NotEmpty @NotNull @Pattern(
+                    regexp = PHONE_REGEXP,
+                    message = "{valid.format}"
+            ) @RequestParam(value = CommonTag.KEY_PHONE) String phone,
             @NotEmpty @NotNull @RequestParam(value = KEY_KEY) String key,
             HttpSession session
     )
@@ -178,18 +174,10 @@ public class UserController extends CommonController
                 try
                 {
                     String sec = Long.toHexString(Rand.getRandom().nextLong());// 密钥：随机长整型转16进制
-                    Map<String, Object> res =
-                            sms.send(phone, key, sec, MSEC_60000);
-
-                    for (Map.Entry<String, Object> entry: res.entrySet())
-                    {
-                        session.setAttribute(entry.getKey(), entry.getValue());
-                    } // 结束：for(Map.Entry<String,Object>entry:res.entrySet())
-
+                    SmsVO res = sms.send(phone, key, sec, MSEC_60000);
                     Calendar time = Calendar.getInstance();
                     time.setTimeInMillis(MSEC_60000);
-                    session.setMaxInactiveInterval(time.get(Calendar.SECOND));// 一分钟有效
-
+                    redis.set(KEY_SMS_INFO, res, MSEC_60000);
                     ret.put(phone, sec);
                 }
                 catch (NullPointerException e)
@@ -343,23 +331,11 @@ public class UserController extends CommonController
 
             try
             {
-
-                Map<String, Object> sessionMap = new HashMap<>();
-                Iterator<String> iterator =
-                        session.getAttributeNames().asIterator();
-
-                while (iterator.hasNext())
-                {
-                    String attrName = iterator.next();
-                    Object sessionObject = session.getAttribute(attrName);
-                    sessionMap.put(attrName, sessionObject);
-                } // 结束：while (iterator.hasNext())
-
+                SmsVO sessionMap = redis.get(KEY_SMS_INFO, SmsVO.class);
                 Long now = System.currentTimeMillis();
-                Map<String, Object> requestMap =
-                        sms.getMap(phone, code, key, sec, now);
+                SmsVO requestMap = new SmsVO(phone, code, key, sec, now);
 
-                if (sms.verify(requestMap, sessionMap))// 密钥匹配
+                if (sms.verify(requestMap, MSEC_60000, sessionMap))// 密钥匹配
                 {
                     SignInInfo info =
                             valsToInfo(ipv4, ipv6, mac, gps, SignInMethod.SMS);

@@ -6,6 +6,7 @@
  */
 package com.example.demo.tool;
 
+import java.io.*;
 import java.math.BigInteger;
 import java.util.*;
 
@@ -23,6 +24,9 @@ import java.util.*;
  * @see isStrSame
  * @see isBigIntSame
  * @see bytes2Ipv4
+ * @see closeAll
+ * @see bytes2Obj
+ * @see obj2Bytes
  * @since 2021-02-08
  */
 public final class CommonTool
@@ -339,5 +343,110 @@ public final class CommonTool
             } // 结束：for (int i = 0; i <ipv4Array.length; i++)
         } // 结束：if(ipv4Array.length>=ipv4Len){
         return ret;
+    }
+
+    /**
+     * 关闭所有对象。
+     * 
+     * @param closeables 可以关闭的数据源或目标数据
+     */
+    public void closeAll(Closeable... closeables)
+    {
+
+        if (closeables != null)
+        {
+
+            for (Closeable ele: closeables)
+            {
+
+                if (ele != null)
+                {
+
+                    try
+                    {
+                        ele.close();
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                    finally
+                    {
+                    }
+                } // 结束：if (ele != null)
+            } // 结束：for (Closeable ele: closeables)
+        } // 结束： if (closeables != null)
+    }
+
+    /**
+     * 数组转对象。
+     * 
+     * @param bytes 比特数组
+     * @return 对象，转换失败返回<code>null</code>。
+     */
+    public Object bytes2Obj(byte[] bytes)
+    {
+        Object ret = null;
+        ByteArrayInputStream arrSteam = null;
+        ObjectInputStream objSteam = null;
+
+        try
+        {
+            arrSteam = new ByteArrayInputStream(bytes);
+            objSteam = new ObjectInputStream(arrSteam);
+            ret = objSteam.readObject();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeAll(objSteam, arrSteam);
+        }
+        return ret;
+    }
+
+    /**
+     * 对象转数组。
+     * 
+     * @param obj 对象
+     * @return 数组，转换失败返回<code>null</code>。
+     */
+    public byte[] obj2Bytes(Object obj)
+    {
+        byte[] bytes = null;
+        ByteArrayOutputStream arrSteam = null;
+        ObjectOutputStream objSteam = null;
+
+        try
+        {
+            arrSteam = new ByteArrayOutputStream();
+            objSteam = new ObjectOutputStream(arrSteam);
+            objSteam.writeObject(obj);
+            objSteam.flush();
+            bytes = arrSteam.toByteArray();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            closeAll(objSteam, arrSteam);
+        }
+        return bytes;
     }
 }

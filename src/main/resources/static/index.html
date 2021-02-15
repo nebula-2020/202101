@@ -69,20 +69,16 @@
             });
     }
     function post1(code) {
-        $.ajax({
-            url: "user/codeSignUp", type: 'POST',
-            dataType: 'json',
-            contentType: 'application/json;charset=UTF-8', data: {
+        $.post("user/codeSignUp", {
                 phone: phone,
                 pwd: 'ni3oc2hu9r',
                 server: value,
                 js: key,
                 name: '名字',
                 code: document.getElementById("code").innerHTML,
-            },
-            success: function (data, status) {
+            },function (data, status) {
             }
-        });
+        );
     }
     function post2(code) {
         $.post("user/codeSignIn", {
