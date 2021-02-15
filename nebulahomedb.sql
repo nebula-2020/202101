@@ -257,7 +257,7 @@ CREATE TABLE `msg` (
 DROP TABLE IF EXISTS `report`;
 CREATE TABLE `report` (
  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
- `userid` bigint UNSIGNED NOT NULL,
+ `article` bigint UNSIGNED NOT NULL,
  `senderid` bigint UNSIGNED NOT NULL,
  `datetime` datetime NOT NULL,
  `cause` tinyint NOT NULL,

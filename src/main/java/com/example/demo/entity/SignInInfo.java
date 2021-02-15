@@ -2,7 +2,7 @@
  * 文件名：SignInInfo.java
  * 描述：数据表signindata的实体
  * 修改人：刘可
- * 修改时间：2021-02-05
+ * 修改时间：2021-02-16
  */
 package com.example.demo.entity;
 
@@ -15,6 +15,8 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "signindata")
 /**
  * 账号登录信息的实体。
@@ -23,7 +25,7 @@ import lombok.*;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-02
+ * @since 2021-02-16
  */
 public class SignInInfo
 {

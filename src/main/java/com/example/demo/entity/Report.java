@@ -2,7 +2,7 @@
  * 文件名：Report.java
  * 描述：数据表 report 的实体。
  * 修改人：刘可
- * 修改时间：2021-02-11
+ * 修改时间：2021-02-16
  */
 
 package com.example.demo.entity;
@@ -19,13 +19,15 @@ import lombok.*;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-11
+ * @since 2021-02-16
  */
 @EqualsAndHashCode
 @ToString
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "report")
 public class Report
 {
@@ -38,11 +40,11 @@ public class Report
     )
     private BigInteger id;
     @Column(
-            name = "userid",
+            name = "article",
             insertable = true,
             updatable = false
     )
-    private BigInteger userId;
+    private BigInteger article;
     @Column(
             name = "senderid",
             insertable = true,
