@@ -2,7 +2,7 @@
  * 文件名：CommonTool.java
  * 描述：常见工具。
  * 修改人：刘可
- * 修改时间：2021-02-08
+ * 修改时间：2021-02-16
  */
 package com.example.demo.tool;
 
@@ -27,7 +27,7 @@ import java.util.*;
  * @see closeAll
  * @see bytes2Obj
  * @see obj2Bytes
- * @since 2021-02-08
+ * @since 2021-02-16
  */
 public final class CommonTool
 {
@@ -248,7 +248,7 @@ public final class CommonTool
     public byte[] toByteArray(List<Byte> list)
     {
         byte[] ret = null;
-        int size = list.size();
+        int size = list == null ? 0 : list.size();
 
         if (size > 0)
         {
@@ -330,9 +330,13 @@ public final class CommonTool
      */
     public Long bytes2Ipv4(byte[] ipv4Array)
     {
+        if (ipv4Array == null || ipv4Array.length <= IPV4_LEN)
+        {
+            return null;
+        }// 结束：if (bytes == null || bytes.length <= 0)
         Long ret = null;
 
-        if (ipv4Array.length >= IPV4_LEN)
+        if (ipv4Array!=null&&ipv4Array.length >= IPV4_LEN)
         {
             ret = 0L;
 
@@ -386,6 +390,11 @@ public final class CommonTool
      */
     public Object bytes2Obj(byte[] bytes)
     {
+
+        if (bytes == null || bytes.length <= 0)
+        {
+            return null;
+        }// 结束：if (bytes == null || bytes.length <= 0)
         Object ret = null;
         ByteArrayInputStream arrSteam = null;
         ObjectInputStream objSteam = null;
@@ -423,6 +432,10 @@ public final class CommonTool
      */
     public byte[] obj2Bytes(Object obj)
     {
+        if (obj == null)
+        {
+            return null;
+        }// 结束：if (bytes == null || bytes.length <= 0)
         byte[] bytes = null;
         ByteArrayOutputStream arrSteam = null;
         ObjectOutputStream objSteam = null;
