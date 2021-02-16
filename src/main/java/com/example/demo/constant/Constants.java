@@ -15,11 +15,15 @@ package com.example.demo.constant;
  */
 public abstract class Constants
 {
+    public static final int NUM_16 = 16;
+    public static final int NUM_32 = 32;
+    public static final int NUM_36 = 36;
     public static final String REGEXP_PHONE = "\\d{15}";
     public static final String CHARASET_UTF8 = "utf-8";
     public static final String SESSION_SMS = "sms";
     public static final String SESSION_SIGNIN = "signin";
     public static final String SESSION_ARTICLE = "article";
+    public static final String SESSION_LOCATION = "loc";
     public static final String KEY_SMS_CODE = "code";
     public static final String KEY_SMS_JS = "js";
     public static final String KEY_SMS_SECRET = "server";
@@ -98,4 +102,6 @@ public abstract class Constants
     public static final String KEY_VISIT_IPV6 = "vipv6";
     public static final String KEY_VISIT_IPV4 = "vipv4";
     public static final String KEY_VISIT_MAC = "vmac";
+    public static final String ETC_UNITMINUTE = "分钟";
+    public static final String ETC_PROJECTNAME = "星云社区";
 }

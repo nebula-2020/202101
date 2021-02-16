@@ -2,13 +2,14 @@
  * 文件名：SmsService.java
  * 描述：发送验证码相关服务。
  * 修改人：刘可
- * 修改时间：2021-02-15
+ * 修改时间：2021-02-16
  */
 package com.example.demo.service;
 
 import java.util.*;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.constant.Constants;
 import com.example.demo.tool.Rand;
 import com.example.demo.vo.SmsVO;
 import com.rainbow.sms.Client;
@@ -22,21 +23,18 @@ import org.springframework.stereotype.Service;
  * @version 1.0.0.0
  * @see send
  * @see verify
- * @since 2021-02-15
+ * @since 2021-02-16
  */
 @Service("smsService")
 public class SmsService extends ComService
 {
-    public final String UNIT_OF_TIME = "分钟";
-    public final String PROJECT_NAME = "星云社区";
-    private final String API_URL = "https://sms_developer.zhenzikj.com";
-    private final String APP_ID = "100010";
-    private final String APP_SERECT =
+    private static final String API_URL = "https://sms_developer.zhenzikj.com";
+    private static final String APP_ID = "100010";
+    private static final String APP_SERECT =
             "1S0U08SK15BB1BV804RG1D4G006S1JOR18DR0AAC0URO0TAT14U61E491U3K05RR";
-    private final Integer SAFE = 0x80000000;
-    private final Integer CODE_LEN = 4;
-    private final int DECIMAL = 36;
-    private final String TEMPLATE_ID = "0";
+    private static final Integer SAFE = 0x80000000;
+    private static final Integer CODE_LEN = 4;
+    private static final String TEMPLATE_ID = "0";
 
     /**
      * 发送短信。
@@ -74,7 +72,7 @@ public class SmsService extends ComService
                 Map<String, Object> params = new HashMap<>();
 
                 Integer codeVal = SAFE | random.nextInt();
-                String code = Integer.toUnsignedString(codeVal, DECIMAL);// 得到一个四位的不分大小写的数字字母字串
+                String code = Integer.toUnsignedString(codeVal, Constants.NUM_36);// 得到一个四位的不分大小写的数字字母字串
                 StringBuilder bulider = new StringBuilder();
 
                 for (int i = 1; i <= CODE_LEN; i++)// 去掉首位，剩下4位作为验证码，首位无法取到全部26个字母
@@ -88,8 +86,8 @@ public class SmsService extends ComService
 
                 // 模板参数
                 String[] templateParams = new String[] {
-                        PROJECT_NAME, code,
-                        t.get(Calendar.MINUTE) + UNIT_OF_TIME// 到期时间多少分钟，一般超不了一个小时
+                        Constants.ETC_PROJECTNAME, code,
+                        t.get(Calendar.MINUTE) + Constants.ETC_UNITMINUTE// 到期时间多少分钟，一般超不了一个小时
                 };
 
                 // 短信请求参数

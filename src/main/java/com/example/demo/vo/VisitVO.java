@@ -9,6 +9,8 @@ package com.example.demo.vo;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import com.example.demo.entity.SignInMethod;
 
 import lombok.*;
@@ -32,5 +34,6 @@ public class VisitVO implements Serializable, VO
     private List<Byte> ipv6;
     private List<Byte> mac;
     private String gps;
+    @NotNull
     private SignInMethod method;
 }
