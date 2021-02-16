@@ -2,7 +2,7 @@
  * 文件名：ArticleInteractionService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-13
+ * 修改时间：2021-02-16
  */
 package com.example.demo.service;
 
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
  * @see deleteLike
  * @see addFavorite
  * @see deleteFavorite
- * @since 2021-02-13
+ * @since 2021-02-16
  */
 @Service("articleInteractionService")
 public class ArticleInteractionService extends ComService
@@ -57,11 +57,14 @@ public class ArticleInteractionService extends ComService
      */
     public boolean comment(BigInteger userId, BigInteger articleId, String text)
     {
+
         if (userId == null || articleId == null
                 || userId.compareTo(BigInteger.ZERO) <= 0
                 || articleId.compareTo(BigInteger.ZERO) <= 0
                 || tool.isNullOrEmpty(text))
+        {
             return false;
+        } // 结束：if (userId == null || articleId == null...
         Comment entity = new Comment();
         entity.setUserId(userId);
         entity.setArticleId(articleId);
@@ -82,10 +85,13 @@ public class ArticleInteractionService extends ComService
      */
     public boolean deleteComment(BigInteger userId, BigInteger commentId)
     {
+
         if (userId == null || commentId == null
                 || userId.compareTo(BigInteger.ZERO) <= 0
                 || commentId.compareTo(BigInteger.ZERO) <= 0)
+        {
             return false;
+        } // 结束：if (userId == null || commentId == null...
         Optional<Comment> optional = commentRepo.findById(commentId);
         boolean ret = false;
 
@@ -97,8 +103,8 @@ public class ArticleInteractionService extends ComService
             {
                 int res = commentRepo.updateOne(commentId, true);
                 ret = res > 0;
-            }
-        }
+            } // 结束：if (tool.isBigIntSame(entity.getId(), userId))
+        } // 结束：if (optional != null && optional.isPresent())
         return ret;
     }
 

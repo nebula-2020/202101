@@ -2,7 +2,7 @@
  * 文件名：SessionService.java
  * 描述：项目主要服务。
  * 修改人：刘可
- * 修改时间：2021-02-15
+ * 修改时间：2021-02-16
  */
 package com.example.demo.service;
 
@@ -13,11 +13,11 @@ package com.example.demo.service;
  * @see deleteObj
  * @see isKeyExist
  * @see get
- * @since 2021-02-15
+ * @since 2021-02-16
  */
 public abstract class SessionService extends ComService
 {
-    protected final long MSEC_60000 = 60000;
+    protected static final long MSEC_60000 = 60000;
 
     /**
      * 将一个值插入Session。

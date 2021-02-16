@@ -96,14 +96,14 @@ public class SignInService extends ComService
      * @param pwd 密码
      * @param noPwd 取<code>true</code>表示免密登录
      * @param info 登录信息
-     * @return 登陆成功与否。
+     * @return 登陆成功返回用户ID，否则返回<code>null</code>。
      */
-    public boolean signIn(
+    public BigInteger signIn(
             String phone, String account, String pwd, boolean noPwd,
             VisitVO info
     ) throws NullPointerException
     {
-        boolean ret = false;
+        BigInteger ret = null;
 
         // 账号和手机号全为空或密码为空且非免密登录
         if (tool.isNullOrEmpty(phone, account)
@@ -143,7 +143,7 @@ public class SignInService extends ComService
                 );
 
                 signInRepo.save(signIninfo);
-                ret = true;
+                ret = user.getId();
             } // 结束：if(user!=null&&(noPwd||tool.isStrSame(pwd,user.getPassword())))
         }
         catch (Exception e)
@@ -151,5 +151,18 @@ public class SignInService extends ComService
             e.printStackTrace();
         }
         return ret;
+    }
+
+    /**
+     * 用户免密登录服务。
+     * 
+     * @param phone 手机号
+     * @param info 登录信息
+     * @return 登陆成功返回用户ID，否则返回<code>null</code>。
+     */
+    public BigInteger signIn(String phone, VisitVO info)
+            throws NullPointerException
+    {
+        return signIn(phone, null, null, true, info);
     }
 }

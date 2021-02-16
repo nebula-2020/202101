@@ -35,6 +35,9 @@
     <span class="btn" onclick="post2()">
         登录
     </span>
+    <span class="btn" onclick="post7()">
+        密码登录
+    </span>
     <hr>
 
     <span class="btn" onclick="post3()">
@@ -143,6 +146,19 @@
             function (data, status) {
                 var d = JSON.parse(data);
                 document.getElementById("show").innerHTML = d['md']
+            });
+    }
+    function post7(code) {
+        $.post("user/passwordSignIn", {
+            phone: phone,
+            pwd: 'ni3oc2hu9r',
+            account: 'aaa',
+            ipv4: '0',
+            server: value,
+            js: key,
+            code: document.getElementById("code").innerHTML,
+        },
+            function (data, status) {
             });
     }
 </script>
