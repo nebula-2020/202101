@@ -2,20 +2,22 @@
  * 文件名：ArticleController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-14
+ * 修改时间：2021-02-17
  */
 package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
-import java.util.List;
+
+import javax.validation.constraints.*;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.entity.ArticleInfo;
 import com.example.demo.service.*;
+import com.example.demo.vo.ArticleVO;
 import com.example.demo.constant.*;
 
 /**
@@ -23,218 +25,154 @@ import com.example.demo.constant.*;
  * 
  * @author 刘可
  * @version 1.0.0.0
+ * @see initModel
  * @see updateArticle
  * @see deleteArticle
- * @since 2021-02-12
+ * @since 2021-02-17
  */
 @Controller
 public class ArticleController extends CommonController
 {
     @Autowired
-    private ArticleService articleService;
+    private ArticleEditService articleService;
     @Autowired
     private SignInService signInService;
+
     /**
-     * 文章ID。
+     * 初始化Model。
+     * 
+     * @param phone 手机号
+     * @param pwd 密码
+     * @param model 主要用于向Model添加属性
      */
-    public final String KEY_ARTICLE = "id";
-    /**
-     * 文章标题。
-     */
-    public final String KEY_TITLE = "title";
-    /**
-     * 内容。
-     */
-    public final String KEY_TEXT = "md";
-    /**
-     * 转载源。
-     */
-    public final String KEY_SOURCE = "source";
-    /**
-     * 是否为草稿。
-     */
-    public final String KEY_DRAFT = "draft";
+    @ModelAttribute
+    protected void initModel(
+            @NotNull @NotEmpty @Pattern(
+                    regexp = Constants.REGEXP_PHONE
+            ) @RequestParam(value = Constants.KEY_USER_PHONE) String phone,
+            @NotNull @NotEmpty @RequestParam(
+                    value = Constants.KEY_USER_PASSWORD
+            ) String pwd,
+            @Min(1) @RequestParam(
+                    value = Constants.KEY_ARTICLE_ID,
+                    required = false
+            ) BigInteger articleId,
+            @RequestParam(
+                    value = Constants.KEY_ARTICLE_SOURCE,
+                    required = false
+            ) String source,
+            @NotEmpty @RequestParam(
+                    value = Constants.KEY_ARTICLE_TITLE,
+                    required = false
+            ) String title,
+            @NotEmpty @RequestParam(
+                    value = Constants.KEY_ARTICLE_TEXT,
+                    required = false
+            ) String text,
+            @RequestParam(
+                    value = Constants.KEY_ARTICLE_DRAFT,
+                    required = false
+            ) Boolean isDraft, Model model
+    )
+    {
+        model.addAttribute(Constants.KEY_USER_PHONE, phone);
+        model.addAttribute(Constants.KEY_USER_PASSWORD, pwd);
+        model.addAttribute(Constants.KEY_ARTICLE_ID, articleId);
+
+        if (!tool.containsNullOrEmpty(title, text))
+        {
+            boolean draft = isDraft == null ? true : isDraft;
+            ArticleVO articleVO = new ArticleVO(title, text, source, draft);
+            model.addAttribute(Constants.SESSION_ARTICLE, articleVO);
+        } // 结束：if (!tool.containsNullOrEmpty(title, text))
+    }
 
     /**
      * 提交文章。
      * 
-     * @param idStr 文章ID
      * @param phone 作者手机号
      * @param pwd 作者密码
-     * @param isDraft <code>true</code>表示提交草稿
-     * @param source 转载源
-     * @param title 文章标题
-     * @param text 文章内容
-     * @return JSON字符串，用户手机号为键对应值表示提交成功与否。
+     * @param articleId 文章ID
+     * @param article 文章
+     * @param model 主要用于向Model添加属性
+     * @return JSON字符串，用户手机号为键对应值表示删除成功与否。
      */
     @RequestMapping("updateArticle")
     @ResponseBody
     protected String updateArticle(
-            @RequestParam(
-                    value = KEY_ARTICLE,
-                    required = false
-            ) String idStr,
-            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
-            @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd,
-            @RequestParam(value = KEY_DRAFT) Boolean isDraft,
-            @RequestParam(
-                    value = KEY_SOURCE,
-                    required = false
-            ) String source, @RequestParam(value = KEY_TITLE) String title,
-            @RequestParam(value = KEY_TEXT) String text
+            @ModelAttribute(value = Constants.KEY_USER_PHONE) String phone,
+            @ModelAttribute(value = Constants.KEY_USER_PASSWORD) String pwd,
+            @ModelAttribute(
+                    value = Constants.KEY_ARTICLE_ID
+            ) BigInteger articleId,
+            @NotNull @ModelAttribute(
+                    value = Constants.SESSION_ARTICLE
+            ) ArticleVO article, Model model
     )
     {
         String ret = "";
 
-        if (!tool.containsNullOrEmpty(text, title))
+        BigInteger userId = signInService.verify(phone, pwd);
+
+        if (userId != null && userId.compareTo(BigInteger.ZERO) > 0)
         {
-            BigInteger userId = signInService.verify(phone, pwd);
-
-            if (userId != null && userId.compareTo(BigInteger.ZERO) > 0)
-            {
-                // 用户存在且匹配
-                BigInteger articleId = null;
-
-                if (!tool.isNullOrEmpty(idStr))
-                {
-                    articleId = new BigInteger(idStr);
-                } // 结束：if (!tool.isNullOrEmpty(idStr))
-
-                try
-                {
-                    boolean draft = isDraft == null ? true : isDraft;
-                    boolean res = articleService.updateArticle(
-                            userId, articleId, title, source, text, draft
-                    );//
-                    JSONObject json = new JSONObject();
-                    json.put(phone, res);
-                    System.out.println(json);// debug
-                    ret = json.toJSONString();
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                finally
-                {
-                }
-            } // 结束：if (userId!=null&&userId.compareTo(BigInteger.ZERO)>0)
-        } // 结束：if(!tool.containsNullOrEmpty(text, title))
-        return ret;
-    }
-
-    /**
-     * 删除文章。
-     * 
-     * @param idStr 文章ID
-     * @param phone 作者手机号
-     * @param pwd 作者密码
-     * @return JSON字符串，用户手机号为键对应值表示删除成功与否。
-     */
-    @RequestMapping("deleteArticle")
-    @ResponseBody
-    protected String deleteArticle(
-            @RequestParam(value = KEY_ARTICLE) String idStr,
-            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
-            @RequestParam(value = CommonTag.KEY_PASSWORD) String pwd
-    )
-    {
-        String ret = "";
-
-        if (!tool.isNullOrEmpty(idStr))
-        {
-            BigInteger userId = signInService.verify(phone, pwd);
-
-            if (userId != null && userId.compareTo(BigInteger.ZERO) > 0)
-            {
-                // 用户存在且匹配
-                BigInteger articleId = null;
-
-                if (!tool.isNullOrEmpty(idStr))
-                {
-                    articleId = new BigInteger(idStr);
-                } // 结束：if (!tool.isNullOrEmpty(idStr))
-
-                try
-                {
-                    boolean res =
-                            articleService.deleteArticle(userId, articleId);
-                    JSONObject json = new JSONObject();
-                    json.put(phone, res);
-                    System.out.println(json);// debug
-                    ret = json.toJSONString();
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                finally
-                {
-                }
-            } // 结束：if(userId!=null&&userId.compareTo(BigInteger.ZERO)>0)
-        } // 结束：if(!tool.isNullOrEmpty(idStr))
-        return ret;//
-    }
-
-    /**
-     * 删除文章。
-     * 
-     * @param idStr 文章ID
-     * @param phone 作者手机号
-     * @param pwd 作者密码
-     * @return JSON字符串，用户手机号为键对应值表示删除成功与否。
-     */
-    @RequestMapping("article")
-    @ResponseBody
-    protected String visitArticle(
-            @RequestParam(value = KEY_ARTICLE) String idStr,
-            @RequestParam(value = CommonTag.KEY_PHONE) String phone,
-            @RequestParam(value = CommonTag.KEY_IPV4) List<Byte> ipv4,
-            @RequestParam(value = CommonTag.KEY_IPV6) List<Byte> ipv6,
-            @RequestParam(value = CommonTag.KEY_MAC) List<Byte> mac
-    )
-    {
-        String ret = "";
-
-        if (!tool.isNullOrEmpty(idStr))
-        {
-            BigInteger userId = signInService.phone2Id(phone);
-
-            // 用户存在且匹配
-            BigInteger articleId = null;
-
-            if (!tool.isNullOrEmpty(idStr))
-            {
-                articleId = new BigInteger(idStr);
-            } // 结束：if (!tool.isNullOrEmpty(idStr))
 
             try
             {
-                byte[] ipv6Array = tool.toByteArray(ipv6);
-                byte[] macArray = tool.toByteArray(mac);
-                byte[] ipv4Array = tool.toByteArray(ipv4);
-                ArticleInfo res = articleService.visitArticle(
-                        articleId, userId, tool.bytes2Ipv4(ipv4Array),
-                        ipv6Array, macArray
-                );
-
-                if (res != null)
-                {
-                    JSONObject json = new JSONObject();
-                    json.put(KEY_TEXT, res.getText());
-                    json.put(KEY_SOURCE, res.getSource());
-                    json.put(KEY_ARTICLE, res.getId());
-                    ret = json.toJSONString();
-                } // 结束： if (res != null)
+                boolean res = articleService
+                        .updateArticle(userId, articleId, article);//
+                JSONObject json = new JSONObject();
+                json.put(phone, res);
+                System.out.println(json);// debug
+                ret = json.toJSONString();
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
-            finally
+        } // 结束：if (userId!=null&&userId.compareTo(BigInteger.ZERO)>0)
+        return ret;
+    }
+
+    /**
+     * 删除文章。
+     *
+     * @param articleId 文章ID
+     * @param phone 作者手机号
+     * @param pwd 作者密码
+     * @param model 主要用于向Model添加属性
+     * @return JSON字符串，用户手机号为键对应值表示删除成功与否。
+     */
+    @RequestMapping("deleteArticle")
+    @ResponseBody
+    protected String deleteArticle(
+            @ModelAttribute(value = Constants.KEY_USER_PHONE) String phone,
+            @ModelAttribute(value = Constants.KEY_USER_PASSWORD) String pwd,
+            @NotNull @ModelAttribute(
+                    value = Constants.KEY_ARTICLE_ID
+            ) BigInteger articleId, Model model
+    )
+    {
+        String ret = "";
+
+        BigInteger userId = signInService.verify(phone, pwd);
+
+        if (userId != null && userId.compareTo(BigInteger.ZERO) > 0)
+        {
+
+            try
             {
+                boolean res = articleService.deleteArticle(userId, articleId);
+                JSONObject json = new JSONObject();
+                json.put(phone, res);
+                System.out.println(json);// debug
+                ret = json.toJSONString();
             }
-        } // 结束：if(!tool.isNullOrEmpty(idStr))
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        } // 结束：if(userId!=null&&userId.compareTo(BigInteger.ZERO)>0)
         return ret;//
     }
 }

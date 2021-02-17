@@ -2,13 +2,15 @@
  * 文件名：SignInService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-16
+ * 修改时间：2021-02-17
  */
 package com.example.demo.service;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.regex.*;
 
+import com.example.demo.constant.Constants;
 import com.example.demo.entity.*;
 import com.example.demo.entity.pk.SignInInfoKey;
 import com.example.demo.repository.*;
@@ -26,8 +28,10 @@ import org.springframework.stereotype.Service;
  * @version 1.0.0.0
  * @see verify
  * @see phone2Id
+ * @see account2Id
+ * @see id2Account
  * @see signIn
- * @since 2021-02-16
+ * @since 2021-02-17
  */
 @Service("signInService")
 public class SignInService extends ComService
@@ -83,6 +87,70 @@ public class SignInService extends ComService
                 ret = user.getId();
             } // 结束：if(user != null)
         } // 结束：if (tool.isNullOrEmpty(phone))
+        return ret;
+    }
+
+    /**
+     * 用户账号转ID或ID转ID。
+     * <p>
+     * 参数全为数字则认为其为ID。
+     * 账号或ID存在则返回存在的ID。
+     * 
+     * @param account 个性账号或ID
+     * @return ID。
+     */
+    public BigInteger account2Id(String account)
+    {
+        BigInteger ret = null;
+
+        if (!tool.isNullOrEmpty(account))
+        {
+            Pattern p = Pattern.compile(Constants.REGEXP_ID);
+            Matcher m = p.matcher(account);
+            UserBaseInfo user = null;
+
+            if (m.matches())
+            {
+                user = baseRepo.getOne(new BigInteger(account));
+            }
+            else
+            {
+                user = baseRepo.findByAccount(account);
+            } // 结束：if(m.matches())
+
+            if (user != null)
+            {
+                ret = user.getId();
+            } // 结束：if(user != null)
+        } // 结束：if (!tool.isNullOrEmpty(account))
+        return ret;
+    }
+
+    /**
+     * ID转账号。
+     * 如果用户未定义个性账号则直接调用<code>toString</code>返回ID。
+     * 
+     * @param id ID
+     * @return 用户账号。
+     */
+    public String id2Account(BigInteger id)
+    {
+        String ret = null;
+
+        if (id != null)
+        {
+            UserBaseInfo user = baseRepo.getOne(id);
+
+            if (user != null)
+            {
+                ret = user.getAccount();
+            } // 结束：if(user != null)
+
+            if (user != null)
+            {
+                ret = user.getId().toString();
+            } // 结束：if(user != null)
+        } // 结束：if (id!=null)
         return ret;
     }
 

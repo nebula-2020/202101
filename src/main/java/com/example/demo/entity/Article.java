@@ -2,7 +2,7 @@
  * 文件名：Article.java
  * 描述：数据表article的实体。
  * 修改人：刘可
- * 修改时间：2021-02-08
+ * 修改时间：2021-02-17
  */
 package com.example.demo.entity;
 
@@ -18,13 +18,15 @@ import lombok.*;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-08
+ * @since 2021-02-17
  */
 @EqualsAndHashCode
 @ToString
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "article")
 public class Article
 {
@@ -66,7 +68,7 @@ public class Article
     private Boolean del;
     @Column(
             name = "draft",
-            nullable = true,
+            nullable = false,
             insertable = true,
             updatable = true
     )
