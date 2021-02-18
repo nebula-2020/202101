@@ -8,6 +8,7 @@ package com.example.demo.service;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.Optional;
 import java.util.regex.*;
 
 import com.example.demo.constant.Constants;
@@ -39,6 +40,8 @@ public class SignInService extends ComService
 
     @Autowired
     UserBaseInfoRepository baseRepo;
+    @Autowired
+    UserStatusRepository statusRepo;
     @Autowired
     SignInInfoRepository signInRepo;
 
@@ -76,7 +79,6 @@ public class SignInService extends ComService
         {
             throw new NullPointerException();
         } // 结束：if (tool.containsNullOrEmpty(phone, pwd))
-
         UserBaseInfo user;
 
         if (usePhone)
@@ -91,7 +93,17 @@ public class SignInService extends ComService
 
         if (user != null && tool.isStrSame(pwd, user.getPassword()))
         {
-            ret = user.getId();
+            Optional<UserStatus> optional = statusRepo.findById(user.getId());
+
+            if (optional != null && optional.isPresent())
+            {
+                UserStatus status = optional.get();
+
+                if (!status.getBan())
+                {
+                    ret = user.getId();
+                } // 结束：if (!status.getBan())
+            } // 结束：if (optional != null && optional.isPresent())
         } // 结束：if(user != null && tool.isStrSame(pwd, user.getPassword()))
         return ret;
     }

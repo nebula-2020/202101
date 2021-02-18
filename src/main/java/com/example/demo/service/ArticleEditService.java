@@ -2,7 +2,7 @@
  * 文件名：ArticleEditService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-17
+ * 修改时间：2021-02-18
  */
 package com.example.demo.service;
 
@@ -24,13 +24,14 @@ import org.springframework.stereotype.Service;
  * @author 刘可
  * @version 1.0.0.0
  * @see verify
+ * @see getArticle
  * @see createArticle
  * @see modifyArticle
  * @see updateArticle
  * @see deleteArticle
  * @see banArticle
  * @see calcArticleTypeVal
- * @since 2021-02-17
+ * @since 2021-02-18
  */
 @Service("articleService")
 public class ArticleEditService extends ComService
@@ -43,15 +44,42 @@ public class ArticleEditService extends ComService
     /**
      * 文章验证。
      * <p>
-     * 判断文章的作者是否等于当前作者，如果等于则返回文章对象避免二次查找。
+     * 判断文章的作者是否等于当前作者，且文章未删除。
      * 如果作者不相等则返回<code>null</code>。
      * 如果文章不存在返回空对象。
      * 
      * @param authorId 作者ID，不得为<code>null</code>
-     * @param articleId 文章ID
-     * @return 文章。
+     * @param articleId 文章，不得为<code>null</code>
+     * @return 当前作者是否可以操作此文章。
      */
-    protected Article verify(BigInteger authorId, BigInteger articleId)
+    protected boolean verify(BigInteger authorId, Article article)
+    {
+        boolean ret = false;
+
+        try
+        {
+
+            if (tool.isBigIntSame(article.getAuthorId(), authorId)
+                    && !article.getDel())
+            {
+                // 不是此作者所写
+                ret = true;
+            } // 结束：if (tool.isBigIntSame(article.getAuthorId(), authorId)...
+        }
+        catch (NoSuchElementException e)
+        {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    /**
+     * 获取一篇文章。
+     * 
+     * @param articleId 文章ID
+     * @return 如果文章不存在返回<code>null</code>。
+     */
+    protected Article getArticle(BigInteger articleId)
     {
         Article ret = null;
 
@@ -65,27 +93,12 @@ public class ArticleEditService extends ComService
                 if (found != null && found.isPresent())
                 {
                     ret = found.get();
-
-                    if (!tool.isBigIntSame(ret.getAuthorId(), authorId))
-                    {
-                        // 不是此作者所写
-                        ret = null;
-                    } // 结束：if(!tool.isBigIntSame(ret.getAuthorId(),authorId))
-                }
-                else
-                {
-                    ret = new Article();
                 } // 结束：if (found != null && found.isPresent())
-            }
-            else
-            {
-                ret = new Article();
             } // 结束：if(articleId!=null&&articleId.compareTo(BigInteger.ZERO)>0)
         }
         catch (NoSuchElementException e)
         {
             e.printStackTrace();
-            ret = new Article();
         }
         return ret;
     }
@@ -142,9 +155,9 @@ public class ArticleEditService extends ComService
 
         try
         {
-            Article article = verify(authorId, id);
-
-            if (article != null && article.getId() != null)
+            Article article = getArticle(id);
+            boolean canEdit = verify(authorId, article);
+            if (article != null && canEdit)
             {
                 boolean draft = vo.isDraft();
 
@@ -160,7 +173,7 @@ public class ArticleEditService extends ComService
                 articleRepo.updateOne(id, vo.getTitle(), type, draft);
                 infoRepo.updateOne(id, vo.getSource(), vo.getText(), now);
                 ret = true;
-            } // 结束：if (article!=null&&article.getId() != null)
+            } // 结束：if (article != null && canEdit)
         }
         catch (Exception e)
         {
@@ -211,12 +224,13 @@ public class ArticleEditService extends ComService
 
         try
         {
-            Article article = verify(authorId, id);
+            Article article = getArticle(id);
+            boolean canEdit = verify(authorId, article);
 
-            if (article.getId() != null)
+            if (article != null && canEdit)
             {
                 ret = banArticle(authorId, id);
-            } // 结束：if (article.getId() != null)
+            } // 结束：if (article != null && canEdit)
         }
         catch (Exception e)
         {
