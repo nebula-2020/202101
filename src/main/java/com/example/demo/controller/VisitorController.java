@@ -2,7 +2,7 @@
  * 文件名：VisitorController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-17
+ * 修改时间：2021-02-18
  */
 package com.example.demo.controller;
 
@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 /**
  * 文章访问控制器。
  * 
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
  * @version 1.0.0.0
  * @see initModel
  * @see visitArticle
- * @since 2021-02-17
+ * @since 2021-02-18
  */
 @Controller
 public class VisitorController extends CommonController
@@ -55,10 +56,10 @@ public class VisitorController extends CommonController
             @NotNull @Min(1) @RequestParam(
                     value = Constants.KEY_ARTICLE_ID
             ) BigInteger articleId,
-            @NotEmpty @Pattern(regexp = Constants.REGEXP_PHONE) @RequestParam(
-                    value = Constants.KEY_USER_PHONE,
+            @NotNull @NotEmpty @RequestParam(
+                    value = Constants.KEY_USER_ACCOUNT,
                     required = false
-            ) String phone,
+            ) String account,
             @NotEmpty @RequestParam(
                     value = Constants.KEY_USER_PASSWORD,
                     required = false
@@ -77,7 +78,7 @@ public class VisitorController extends CommonController
             ) List<Byte> mac, Model model
     )
     {
-        model.addAttribute(Constants.KEY_USER_PHONE, phone);
+        model.addAttribute(Constants.KEY_USER_ACCOUNT, account);
         model.addAttribute(Constants.KEY_USER_PASSWORD, pwd);
         model.addAttribute(Constants.KEY_ARTICLE_ID, articleId);
         VisitVO visit =

@@ -2,7 +2,7 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-16
+ * 修改时间：2021-02-18
  */
 package com.example.demo.controller;
 
@@ -15,7 +15,6 @@ import com.example.demo.constant.*;
 import com.example.demo.tool.*;
 import com.example.demo.vo.*;
 
-import java.math.BigInteger;
 import java.util.*;
 
 import javax.validation.constraints.*;
@@ -34,17 +33,12 @@ import com.example.demo.entity.*;
  * @see codeReguest
  * @see passwordSignIn
  * @see codeSignIn
- * @since 2021-02-16
+ * @since 2021-02-18
  */
 @Controller
 public class UserController extends CommonController
 {
     protected final long MSEC_60000 = 60000;
-    protected final long MSEC_1000 = 1000;
-    /**
-     * 描述一分钟等于多少秒。
-     */
-    protected final long MIN2SEC = 60;
     @Autowired
     protected SignUpService signUpService;
     @Autowired
@@ -230,7 +224,7 @@ public class UserController extends CommonController
      * @param pwd 密码
      * @param info 描述访问信息
      * @param model 主要用于向Model添加属性
-     * @return JSON字符串，用户手机号为键对应值表示登录成功与否。
+     * @return JSON字符串，用户账号为键对应值表示登录成功与否。
      */
     @RequestMapping("user/passwordSignIn")
     @ResponseBody
@@ -257,21 +251,17 @@ public class UserController extends CommonController
                 info.setMethod(SignInMethod.PASSWORD);
 
                 // 布尔值描述数据库操作成功与否
-                BigInteger res =
+                String res =
                         signInService.signIn(phone, account, pwd, false, info);
                 redis.deleteObj(phone);
 
-                if (res != null && res.compareTo(BigInteger.ZERO) > 0)
+                if (!tool.isNullOrEmpty(res))
                 {
-                    redis.setHash(
-                            res.toString(Constants.NUM_32),
-                            Constants.SESSION_SIGNIN, Boolean.TRUE
-                    );
                     JSONObject json = new JSONObject();
                     json.put(phone, res);
                     System.out.print(json);
                     ret = json.toJSONString();
-                } // 结束：if(res)
+                } // 结束：if (!tool.isNullOrEmpty(res))
             }
             catch (Exception e)
             {
@@ -292,7 +282,7 @@ public class UserController extends CommonController
      * @param smsInfo 描述短信验证码校验用信息
      * @param info 描述访问信息
      * @param model 主要用于向Model添加属性
-     * @return JSON字符串，用户手机号为键对应值表示登录成功与否。
+     * @return JSON字符串，用户账号为键对应值表示登录成功与否。
      */
     @RequestMapping("user/codeSignIn")
     @ResponseBody
@@ -314,21 +304,16 @@ public class UserController extends CommonController
             {
                 info.setMethod(SignInMethod.SMS);
                 String phone = smsInfo.getPhone();
-                // 布尔值描述数据库操作成功与否
-                BigInteger res = signInService.signIn(phone, info);
+                String res = signInService.signIn(phone, info);
                 redis.deleteObj(phone);
 
-                if (res != null && res.compareTo(BigInteger.ZERO) > 0)
+                if (!tool.isNullOrEmpty(res))
                 {
-                    redis.setHash(
-                            res.toString(Constants.NUM_32),
-                            Constants.SESSION_SIGNIN, Boolean.TRUE
-                    );
                     JSONObject json = new JSONObject();
                     json.put(phone, res);
                     System.out.print(json);
                     ret = json.toJSONString();
-                } // 结束：if(res)
+                } // 结束：if (!tool.isNullOrEmpty(res))
             } // 结束：if (sms.verify(requestMap, sessionMap))
         }
         catch (Exception e)

@@ -2,7 +2,7 @@
  * 文件名：SignInService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-17
+ * 修改时间：2021-02-18
  */
 package com.example.demo.service;
 
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Service;
  * @see account2Id
  * @see id2Account
  * @see signIn
- * @since 2021-02-17
+ * @since 2021-02-18
  */
 @Service("signInService")
 public class SignInService extends ComService
@@ -43,22 +43,50 @@ public class SignInService extends ComService
     SignInInfoRepository signInRepo;
 
     /**
-     * 手机号密码验证。
+     * 账号密码验证。
      * <p>
      * 此方法不变更数据表。
      * 
-     * @param phone 手机号
+     * @param account 账号
      * @param pwd 密码
      * @return 验证成功则返回用户ID，否则返回<code>null</code>。
+     * @throws NullPointerException 参数存在空值。
      */
-    public BigInteger verify(String phone, String pwd)
+    public BigInteger verify(String account, String pwd)
+    {
+        return verify(account, pwd, false);
+    }
+
+    /**
+     * 密码验证。
+     * <p>
+     * 此方法不变更数据表。
+     * 
+     * @param phoneOrAccount 手机号或账号
+     * @param pwd 密码
+     * @param usePhone 使用手机号
+     * @return 验证成功则返回用户ID，否则返回<code>null</code>。
+     * @throws NullPointerException 参数存在空值。
+     */
+    public BigInteger
+            verify(String phoneOrAccount, String pwd, boolean usePhone)
     {
 
-        if (tool.containsNullOrEmpty(phone, pwd))
+        if (tool.containsNullOrEmpty(phoneOrAccount, pwd))
         {
             throw new NullPointerException();
         } // 结束：if (tool.containsNullOrEmpty(phone, pwd))
-        UserBaseInfo user = baseRepo.findByPhone(phone);
+
+        UserBaseInfo user;
+
+        if (usePhone)
+        {
+            user = baseRepo.findByPhone(phoneOrAccount);
+        }
+        else
+        {
+            user = baseRepo.findByAccount(phoneOrAccount);
+        } // 结束：if (usePhone)
         BigInteger ret = null;
 
         if (user != null && tool.isStrSame(pwd, user.getPassword()))
@@ -164,14 +192,14 @@ public class SignInService extends ComService
      * @param pwd 密码
      * @param noPwd 取<code>true</code>表示免密登录
      * @param info 登录信息
-     * @return 登陆成功返回用户ID，否则返回<code>null</code>。
+     * @return 登陆成功返回用户账号，否则返回<code>null</code>。
      */
-    public BigInteger signIn(
+    public String signIn(
             String phone, String account, String pwd, boolean noPwd,
             VisitVO info
     ) throws NullPointerException
     {
-        BigInteger ret = null;
+        String ret = null;
 
         // 账号和手机号全为空或密码为空且非免密登录
         if (tool.isNullOrEmpty(phone, account)
@@ -195,7 +223,7 @@ public class SignInService extends ComService
                 user = baseRepo.findByAccount(account);
             } // 结束：if (!tool.isNullOrEmpty(phone))
 
-            if (user != null
+            if (user != null && user.getId().compareTo(BigInteger.ZERO) > 0
                     && (noPwd || tool.isStrSame(pwd, user.getPassword())))
             {
                 // 用户存在且免密登录或密码正确
@@ -211,8 +239,8 @@ public class SignInService extends ComService
                 );
 
                 signInRepo.save(signIninfo);
-                ret = user.getId();
-            } // 结束：if(user!=null&&(noPwd||tool.isStrSame(pwd,user.getPassword())))
+                ret = user.getAccount();
+            } // 结束：if (user != null && user.getId().compareTo(...
         }
         catch (Exception e)
         {
@@ -226,10 +254,9 @@ public class SignInService extends ComService
      * 
      * @param phone 手机号
      * @param info 登录信息
-     * @return 登陆成功返回用户ID，否则返回<code>null</code>。
+     * @return 登陆成功返回用户账号，否则返回<code>null</code>。
      */
-    public BigInteger signIn(String phone, VisitVO info)
-            throws NullPointerException
+    public String signIn(String phone, VisitVO info) throws NullPointerException
     {
         return signIn(phone, null, null, true, info);
     }

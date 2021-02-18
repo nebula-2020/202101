@@ -2,7 +2,7 @@
  * 文件名：VisitService.java
  * 描述：项目主要服务。
  * 修改人：刘可
- * 修改时间：2021-02-17
+ * 修改时间：2021-02-18
  */
 package com.example.demo.service;
 
@@ -16,6 +16,7 @@ import com.example.demo.vo.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 /**
  * 文章访问服务。
  * 
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Service;
  * @see addVisitInfo
  * @see visitArticle
  * @see getArticleInfo
- * @since 2021-02-17
+ * @since 2021-02-18
  */
 @Service("visitService")
 public class VisitService extends ComService
@@ -92,9 +93,7 @@ public class VisitService extends ComService
             return null;
         } // 结束：if (article == null)
         UserBaseInfo authorInfo = userRepo.getOne(article.getAuthorId());
-        String account = tool.supportTo(
-                authorInfo.getAccount(), authorInfo.getId().toString()
-        );
+        String account = authorInfo.getAccount();
 
         ArticlePeekVO ret = new ArticlePeekVO(
                 article.getId(), //
@@ -109,6 +108,7 @@ public class VisitService extends ComService
 
     /**
      * 添加文章访问信息。
+     * 
      * @param articleId 文章ID，不得为<code>null</code>
      * @param userId 访客ID
      * @param vo 访问数据
@@ -191,9 +191,7 @@ public class VisitService extends ComService
             return null;
         } // 结束：if (info.getText() == null)
         UserBaseInfo authorInfo = userRepo.getOne(article.getAuthorId());
-        String account = tool.supportTo(
-                authorInfo.getAccount(), authorInfo.getId().toString()
-        );
+        String account = authorInfo.getAccount();
 
         ArticleInfoVO ret = new ArticleInfoVO(
                 article.getId(), article.getTitle(), info.getText(),

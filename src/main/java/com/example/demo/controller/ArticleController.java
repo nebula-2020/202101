@@ -2,7 +2,7 @@
  * 文件名：ArticleController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-17
+ * 修改时间：2021-02-18
  */
 package com.example.demo.controller;
 
@@ -28,7 +28,7 @@ import com.example.demo.constant.*;
  * @see initModel
  * @see updateArticle
  * @see deleteArticle
- * @since 2021-02-17
+ * @since 2021-02-18
  */
 @Controller
 public class ArticleController extends CommonController
@@ -47,9 +47,9 @@ public class ArticleController extends CommonController
      */
     @ModelAttribute
     protected void initModel(
-            @NotNull @NotEmpty @Pattern(
-                    regexp = Constants.REGEXP_PHONE
-            ) @RequestParam(value = Constants.KEY_USER_PHONE) String phone,
+            @NotNull @NotEmpty @RequestParam(
+                    value = Constants.KEY_USER_ACCOUNT
+            ) String account,
             @NotNull @NotEmpty @RequestParam(
                     value = Constants.KEY_USER_PASSWORD
             ) String pwd,
@@ -75,7 +75,7 @@ public class ArticleController extends CommonController
             ) Boolean isDraft, Model model
     )
     {
-        model.addAttribute(Constants.KEY_USER_PHONE, phone);
+        model.addAttribute(Constants.KEY_USER_ACCOUNT, account);
         model.addAttribute(Constants.KEY_USER_PASSWORD, pwd);
         model.addAttribute(Constants.KEY_ARTICLE_ID, articleId);
 
@@ -95,12 +95,12 @@ public class ArticleController extends CommonController
      * @param articleId 文章ID
      * @param article 文章
      * @param model 主要用于向Model添加属性
-     * @return JSON字符串，用户手机号为键对应值表示删除成功与否。
+     * @return JSON字符串，用户账号为键对应值表示删除成功与否。
      */
     @RequestMapping("updateArticle")
     @ResponseBody
     protected String updateArticle(
-            @ModelAttribute(value = Constants.KEY_USER_PHONE) String phone,
+            @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
             @ModelAttribute(value = Constants.KEY_USER_PASSWORD) String pwd,
             @ModelAttribute(
                     value = Constants.KEY_ARTICLE_ID
@@ -112,7 +112,7 @@ public class ArticleController extends CommonController
     {
         String ret = "";
 
-        BigInteger userId = signInService.verify(phone, pwd);
+        BigInteger userId = signInService.verify(account, pwd);
 
         if (userId != null && userId.compareTo(BigInteger.ZERO) > 0)
         {
@@ -122,7 +122,7 @@ public class ArticleController extends CommonController
                 boolean res = articleService
                         .updateArticle(userId, articleId, article);//
                 JSONObject json = new JSONObject();
-                json.put(phone, res);
+                json.put(account, res);
                 System.out.println(json);// debug
                 ret = json.toJSONString();
             }
@@ -141,12 +141,12 @@ public class ArticleController extends CommonController
      * @param phone 作者手机号
      * @param pwd 作者密码
      * @param model 主要用于向Model添加属性
-     * @return JSON字符串，用户手机号为键对应值表示删除成功与否。
+     * @return JSON字符串，用户账号为键对应值表示删除成功与否。
      */
     @RequestMapping("deleteArticle")
     @ResponseBody
     protected String deleteArticle(
-            @ModelAttribute(value = Constants.KEY_USER_PHONE) String phone,
+        @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
             @ModelAttribute(value = Constants.KEY_USER_PASSWORD) String pwd,
             @NotNull @ModelAttribute(
                     value = Constants.KEY_ARTICLE_ID
@@ -155,7 +155,7 @@ public class ArticleController extends CommonController
     {
         String ret = "";
 
-        BigInteger userId = signInService.verify(phone, pwd);
+        BigInteger userId = signInService.verify(account, pwd);
 
         if (userId != null && userId.compareTo(BigInteger.ZERO) > 0)
         {
@@ -164,7 +164,7 @@ public class ArticleController extends CommonController
             {
                 boolean res = articleService.deleteArticle(userId, articleId);
                 JSONObject json = new JSONObject();
-                json.put(phone, res);
+                json.put(account, res);
                 System.out.println(json);// debug
                 ret = json.toJSONString();
             }
