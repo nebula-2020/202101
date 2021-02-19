@@ -78,6 +78,8 @@ public class ArticleInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示操作成功与否。
      */
+    @RequestMapping("article/like")
+    @ResponseBody
     protected String like(
             @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
             @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
@@ -118,6 +120,8 @@ public class ArticleInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示操作成功与否。
      */
+    @RequestMapping("article/comment")
+    @ResponseBody
     protected String comment(
             @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
             @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
@@ -161,6 +165,8 @@ public class ArticleInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示操作成功与否。
      */
+    @RequestMapping("article/deleteComment")
+    @ResponseBody
     protected String deleteComment(
             @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
             @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
@@ -201,6 +207,8 @@ public class ArticleInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示操作成功与否。
      */
+    @RequestMapping("user/favorite")
+    @ResponseBody
     protected String favorite(
             @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
             @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
@@ -241,6 +249,8 @@ public class ArticleInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示操作成功与否。
      */
+    @RequestMapping("user/deleteFavorite")
+    @ResponseBody
     protected String deleteFavorite(
             @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
             @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
