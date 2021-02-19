@@ -2,7 +2,7 @@
  * 文件名：ArticleInteractionService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-16
+ * 修改时间：2021-02-19
  */
 package com.example.demo.service;
 
@@ -27,10 +27,9 @@ import org.springframework.stereotype.Service;
  * @see comment
  * @see deleteComment
  * @see like
- * @see deleteLike
  * @see addFavorite
  * @see deleteFavorite
- * @since 2021-02-16
+ * @since 2021-02-19
  */
 @Service("articleInteractionService")
 public class ArticleInteractionService extends ComService
@@ -65,12 +64,18 @@ public class ArticleInteractionService extends ComService
         {
             return false;
         } // 结束：if (userId == null || articleId == null...
-        Comment entity = new Comment();
-        entity.setUserId(userId);
-        entity.setArticleId(articleId);
-        entity.setText(text);
-        entity = commentRepo.save(entity);
-        boolean ret = entity.getId() != null;
+        Article article = articleRepo.getOne(articleId);
+        boolean ret = false;
+
+        if (article != null && !(article.getDraft() || article.getDel()))
+        {
+            Comment entity = new Comment();
+            entity.setUserId(userId);
+            entity.setArticleId(articleId);
+            entity.setText(text);
+            entity = commentRepo.save(entity);
+            ret = entity.getId() != null;
+        } // 结束：if(article!=null&&!(article.getDraft()||article.getDel()))
         return ret;
     }
 
