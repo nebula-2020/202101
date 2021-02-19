@@ -2,7 +2,7 @@
  * 文件名：ReportCause.java
  * 描述：数据相关枚举。
  * 修改人： 刘可
- * 修改时间：2021-02-03
+ * 修改时间：2021-02-19
  */
 package com.example.demo.entity;
 
@@ -15,7 +15,8 @@ package com.example.demo.entity;
  * @version 1.0.0.0
  * @see getValue
  * @see getName
- * @since 2021-02-02
+ * @see praseReportCause
+ * @since 2021-02-19
  */
 public enum ReportCause
 {
@@ -58,5 +59,26 @@ public enum ReportCause
     {
         this.value = value;
         this.name = name;
+    }
+
+    /**
+     * 数值转换为枚举值。
+     * 
+     * @param b 值
+     * @return 枚举值。
+     * @exception IllegalArgumentException 参数错误导致无法转换为枚举值。
+     */
+    public static ReportCause praseReportCause(byte b)
+    {
+
+        for (ReportCause ele: ReportCause.values())
+        {
+
+            if (b == ele.getValue())
+            {
+                return ele;
+            } // 结束：if (b == ele.getValue())
+        } // 结束：for (ReportCause ele: ReportCause.values())
+        throw new IllegalArgumentException();
     }
 }
