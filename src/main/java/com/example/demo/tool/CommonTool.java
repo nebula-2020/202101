@@ -332,13 +332,14 @@ public final class CommonTool
      */
     public Long bytes2Ipv4(byte[] ipv4Array)
     {
+
         if (ipv4Array == null || ipv4Array.length <= IPV4_LEN)
         {
             return null;
-        }// 结束：if (bytes == null || bytes.length <= 0)
+        } // 结束：if (bytes == null || bytes.length <= 0)
         Long ret = null;
 
-        if (ipv4Array!=null&&ipv4Array.length >= IPV4_LEN)
+        if (ipv4Array != null && ipv4Array.length >= IPV4_LEN)
         {
             ret = 0L;
 
@@ -396,7 +397,7 @@ public final class CommonTool
         if (bytes == null || bytes.length <= 0)
         {
             return null;
-        }// 结束：if (bytes == null || bytes.length <= 0)
+        } // 结束：if (bytes == null || bytes.length <= 0)
         Object ret = null;
         ByteArrayInputStream arrSteam = null;
         ObjectInputStream objSteam = null;
@@ -434,10 +435,11 @@ public final class CommonTool
      */
     public byte[] obj2Bytes(Object obj)
     {
+
         if (obj == null)
         {
             return null;
-        }// 结束：if (bytes == null || bytes.length <= 0)
+        } // 结束：if (bytes == null || bytes.length <= 0)
         byte[] bytes = null;
         ByteArrayOutputStream arrSteam = null;
         ObjectOutputStream objSteam = null;
