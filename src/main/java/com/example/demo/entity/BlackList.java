@@ -2,7 +2,7 @@
  * 文件名：BlackList.java
  * 描述：数据表 blacklist 的实体。
  * 修改人：刘可
- * 修改时间：2021-02-11
+ * 修改时间：2021-02-20
  */
 
 package com.example.demo.entity;
@@ -18,7 +18,7 @@ import lombok.*;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-11
+ * @since 2021-02-20
  */
 @EqualsAndHashCode
 @ToString
@@ -31,22 +31,9 @@ public class BlackList
     @EmbeddedId
     private BlackListKey key;
     @Column(
-            name = "firstblack",
+            name = "datetime",
             insertable = false,
             updatable = false
     )
-    private Boolean firstBlack;
-    @Column(
-            name = "lastblack",
-            insertable = false,
-            updatable = true
-    )
-    private Boolean lastBlack;
-    @Column(
-            name = "del",
-            nullable = false,
-            insertable = false,
-            updatable = true
-    )
-    private Boolean del;
+    private Boolean dateTime;
 }

@@ -2,7 +2,7 @@
  * 文件名：Message.java
  * 描述：数据表msg的实体。
  * 修改人：刘可
- * 修改时间：2021-02-08
+ * 修改时间：2021-02-20
  */
 package com.example.demo.entity;
 
@@ -23,7 +23,7 @@ import lombok.ToString;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-08
+ * @since 2021-02-20
  */
 @EqualsAndHashCode
 @ToString
@@ -45,9 +45,16 @@ public class Message
     private String text;
     @Column(
             name = "del",
-            nullable = true,
+            nullable = false,
             insertable = false,
             updatable = true
     )
     private Boolean del;
+    @Column(
+            name = "hide",
+            nullable = false,
+            insertable = false,
+            updatable = true
+    )
+    private Boolean hide;
 }

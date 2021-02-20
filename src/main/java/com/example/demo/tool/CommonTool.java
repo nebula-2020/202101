@@ -2,7 +2,7 @@
  * 文件名：CommonTool.java
  * 描述：常见工具。
  * 修改人：刘可
- * 修改时间：2021-02-16
+ * 修改时间：2021-02-20
  */
 package com.example.demo.tool;
 
@@ -27,7 +27,9 @@ import java.util.*;
  * @see closeAll
  * @see bytes2Obj
  * @see obj2Bytes
- * @since 2021-02-16
+ * @see isPositive
+ * @see containsPositive
+ * @since 2021-02-20
  */
 public final class CommonTool
 {
@@ -461,5 +463,66 @@ public final class CommonTool
             closeAll(objSteam, arrSteam);
         }
         return bytes;
+    }
+
+    /**
+     * 判断所给数值是否全为正。
+     * 
+     * @param bigInts 被检测值
+     * @return 满足以下条件之一则返回<code>true</code>，否则返回<code>false</code>：
+     * <ul>
+     * <li>被检测值中不存在非正数；</li>
+     * <li>被检测值中不存在<code>null</code>；</li>
+     * <li>被检测值非<code>null</code>。</li>
+     * </ul>
+     */
+    public boolean isPositive(BigInteger... bigInts)
+    {
+        boolean ret = true;
+
+        if (bigInts != null)
+        {
+
+            for (BigInteger i: bigInts)
+            {
+
+                if (i == null || BigInteger.ZERO.compareTo(i) >= 0)
+                {
+                    ret = false;
+                    break;
+                } // 结束：if (i==null||BigInteger.ZERO.compareTo(i)>=0)
+            } // 结束：for (BigInteger i : bigInts)
+        } // 结束：if (bigInts != null)
+        return ret;
+    }
+
+    /**
+     * 判断所给数值是存在正数。
+     * 
+     * @param bigInts 被检测值
+     * @return 满足以下条件则返回<code>true</code>，否则返回<code>false</code>：
+     * <ul>
+     * <li>被检测值中存在正数；</li>
+     * <li>被检测值非<code>null</code>。</li>
+     * </ul>
+     */
+    public boolean containsPositive(BigInteger... bigInts)
+    {
+        boolean ret = false;
+
+        if (bigInts != null)
+        {
+
+            for (BigInteger i: bigInts)
+            {
+
+                if (i != null && BigInteger.ZERO.compareTo(i) < 0)
+                {
+                    ret = true;
+                    break;
+                } // 结束：if (i != null && BigInteger.ZERO.compareTo(i) < 0)
+            } // 结束：for (BigInteger i : bigInts)
+        } // 结束：if (bigInts != null)
+        return ret;
     }
 }

@@ -246,6 +246,7 @@ CREATE TABLE `msg` (
  `datetime` datetime NOT NULL,
  `text` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
  `del` bit(1) NOT NULL DEFAULT b'0',
+ `hide` bit(1) NOT NULL DEFAULT b'0',
  PRIMARY KEY (`userid`, `senderid`, `datetime`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
@@ -274,9 +275,7 @@ DROP TABLE IF EXISTS `blacklist`;
 CREATE TABLE `blacklist` (
  `userid` bigint UNSIGNED NOT NULL,
  `blackid` bigint UNSIGNED NOT NULL,
- `firstblack` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
- `lastblack` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
- `del` bit(1) NOT NULL DEFAULT 0,
+ `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(0),
  PRIMARY KEY (`userid`, `blackid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------

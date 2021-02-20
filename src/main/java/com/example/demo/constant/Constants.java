@@ -2,7 +2,7 @@
  * 文件名：Constants.java
  * 描述：项目常见常量。
  * 修改人：刘可
- * 修改时间：2021-02-17
+ * 修改时间：2021-02-20
  */
 
 package com.example.demo.constant;
@@ -11,7 +11,7 @@ package com.example.demo.constant;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-17
+ * @since 2021-02-20
  */
 public abstract class Constants
 {
@@ -74,6 +74,7 @@ public abstract class Constants
     public static final String KEY_MSG_DATETIME = "msgdate";
     public static final String KEY_MSG_TEXT = "msg";
     public static final String KEY_MSG_DEL = "msgdel";
+    public static final String KEY_MSG_HIDE = "msghide";
     public static final String KEY_REPORT_ID = "rid";
     public static final String KEY_REPORT_ARTICLE = "rarticle";
     public static final String KEY_REPORT_USER = "ruser";
