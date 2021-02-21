@@ -17,7 +17,7 @@ import org.springframework.data.jpa.repository.*;
  * @version 1.0.0.0
  * @since 2021-02-20
  */
-public  interface  TopicRepository  extends JpaRepository<Topic, BigInteger>,
-JpaSpecificationExecutor<Topic>
+public interface TopicRepository extends JpaRepository<Topic, BigInteger>,
+        JpaSpecificationExecutor<Topic>
 {
 }

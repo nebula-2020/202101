@@ -9,6 +9,7 @@ package com.example.demo.repository;
 import com.example.demo.entity.*;
 import com.example.demo.entity.pk.*;
 import org.springframework.data.jpa.repository.*;
+
 /**
  * 话题人员存储库。
  * 
@@ -16,7 +17,8 @@ import org.springframework.data.jpa.repository.*;
  * @version 1.0.0.0
  * @since 2021-02-20
  */
-public  interface  TopicUserRepository extends JpaRepository<TopicUser, TopicUserKey>,
-JpaSpecificationExecutor<TopicUser>
+public interface TopicUserRepository
+        extends JpaRepository<TopicUser, TopicUserKey>,
+        JpaSpecificationExecutor<TopicUser>
 {
 }

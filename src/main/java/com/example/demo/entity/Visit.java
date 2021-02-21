@@ -33,7 +33,7 @@ public class Visit
 {
     @EmbeddedId
     private ArticleTimeKey primaryKey;
-    
+
     @Column(
             name = "userid",
             nullable = true,

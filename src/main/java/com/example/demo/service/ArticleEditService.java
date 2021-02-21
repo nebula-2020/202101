@@ -157,6 +157,7 @@ public class ArticleEditService extends ComService
         {
             Article article = getArticle(id);
             boolean canEdit = verify(authorId, article);
+
             if (article != null && canEdit)
             {
                 boolean draft = vo.isDraft();

@@ -12,6 +12,7 @@ import java.math.BigInteger;
 
 import javax.persistence.*;
 import lombok.*;
+
 /**
  * 关注消息的联合主键。
  * 

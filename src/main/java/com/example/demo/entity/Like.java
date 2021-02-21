@@ -33,5 +33,5 @@ import lombok.ToString;
 public class Like
 {
     @EmbeddedId
-   private LikeKey key;
+    private LikeKey key;
 }

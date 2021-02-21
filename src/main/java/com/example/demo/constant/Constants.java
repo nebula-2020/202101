@@ -2,10 +2,11 @@
  * 文件名：Constants.java
  * 描述：项目常见常量。
  * 修改人：刘可
- * 修改时间：2021-02-20
+ * 修改时间：2021-02-21
  */
 
 package com.example.demo.constant;
+
 /**
  * 常见常量类。
  * 

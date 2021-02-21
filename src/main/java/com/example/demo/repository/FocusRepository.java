@@ -18,7 +18,7 @@ import org.springframework.data.jpa.repository.*;
  * @since 2021-02-20
  */
 
-public interface FocusRepository extends JpaRepository<Focus, FocusKey>,
-JpaSpecificationExecutor<Focus>
+public interface FocusRepository
+        extends JpaRepository<Focus, FocusKey>, JpaSpecificationExecutor<Focus>
 {
 }

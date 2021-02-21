@@ -72,7 +72,8 @@ public class SmsService extends ComService
                 Map<String, Object> params = new HashMap<>();
 
                 Integer codeVal = SAFE | random.nextInt();
-                String code = Integer.toUnsignedString(codeVal, Constants.NUM_36);// 得到一个四位的不分大小写的数字字母字串
+                String code =
+                        Integer.toUnsignedString(codeVal, Constants.NUM_36);// 得到一个四位的不分大小写的数字字母字串
                 StringBuilder bulider = new StringBuilder();
 
                 for (int i = 1; i <= CODE_LEN; i++)// 去掉首位，剩下4位作为验证码，首位无法取到全部26个字母

@@ -6,7 +6,6 @@
  */
 package com.example.demo.repository;
 
-
 import java.math.BigInteger;
 import com.example.demo.entity.*;
 import org.springframework.data.jpa.repository.*;
@@ -18,7 +17,8 @@ import org.springframework.data.jpa.repository.*;
  * @version 1.0.0.0
  * @since 2021-02-20
  */
-public  interface  TopicInfoRepository extends JpaRepository<TopicInfo, BigInteger>,
-JpaSpecificationExecutor<TopicInfo>
+public interface TopicInfoRepository
+        extends JpaRepository<TopicInfo, BigInteger>,
+        JpaSpecificationExecutor<TopicInfo>
 {
 }

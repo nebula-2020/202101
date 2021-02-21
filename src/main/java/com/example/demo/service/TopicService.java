@@ -6,6 +6,7 @@
  */
 
 package com.example.demo.service;
+
 /**
  * 话题服务。
  * 
@@ -13,6 +14,7 @@ package com.example.demo.service;
  * @version 1.0.0.0
  * @since 2021-02-20
  */
-public class TopicService extends ComService {
-    
+public class TopicService extends ComService
+{
+
 }

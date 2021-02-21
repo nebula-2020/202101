@@ -5,6 +5,7 @@
  * 修改时间：2021-02-20
  */
 package com.example.demo.controller;
+
 /**
  * 话题控制器。
  * 
@@ -12,6 +13,7 @@ package com.example.demo.controller;
  * @version 1.0.0.0
  * @since 2021-02-20
  */
-public class TopicController {
-    
+public class TopicController
+{
+
 }

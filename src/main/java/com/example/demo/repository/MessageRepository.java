@@ -21,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @see hideOne
  * @since 2021-02-20
  */
-public  interface  MessageRepository extends JpaRepository<Message, MsgKey>,
-JpaSpecificationExecutor<Message>
+public interface MessageRepository extends JpaRepository<Message, MsgKey>,
+        JpaSpecificationExecutor<Message>
 {
     /**
      * 设置私信是否删除。
@@ -38,6 +38,7 @@ JpaSpecificationExecutor<Message>
             nativeQuery = true
     )
     int deleteOne(@Param("id") MsgKey id, @Param("del") Boolean del);
+
     /**
      * 设置私信是否隐藏。
      * 

@@ -12,6 +12,7 @@ import java.math.BigInteger;
 
 import javax.persistence.*;
 import lombok.*;
+
 /**
  * 黑名单信息的联合主键。
  * 

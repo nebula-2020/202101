@@ -26,21 +26,19 @@ public interface CommentRepository extends JpaRepository<Comment, BigInteger>,
         JpaSpecificationExecutor<Comment>
 {
     /**
-    * 设置一条评论的可见性。
-    * 
-    * @param id 文章ID
-    * @param title 新标题
-    * @param type 新标签
-    * @param draft 是否为草稿
-    * @return 变更行数。
-    */
-   @Transactional
-   @Modifying
-   @Query(
-           value = "UPDATE `comment` SET `del`=:del WHERE id=:id",
-           nativeQuery = true
-   )
-   int updateOne(
-           @Param("id") BigInteger id, @Param("del") boolean delete
-   );
+     * 设置一条评论的可见性。
+     * 
+     * @param id 文章ID
+     * @param title 新标题
+     * @param type 新标签
+     * @param draft 是否为草稿
+     * @return 变更行数。
+     */
+    @Transactional
+    @Modifying
+    @Query(
+            value = "UPDATE `comment` SET `del`=:del WHERE id=:id",
+            nativeQuery = true
+    )
+    int updateOne(@Param("id") BigInteger id, @Param("del") boolean delete);
 }

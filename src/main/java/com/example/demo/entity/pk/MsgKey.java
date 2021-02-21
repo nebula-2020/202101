@@ -27,16 +27,28 @@ import lombok.*;
 @Getter
 @Setter
 @Embeddable
-public class MsgKey implements Serializable 
+public class MsgKey implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "userid", insertable = true, updatable = false)
+    @Column(
+            name = "userid",
+            insertable = true,
+            updatable = false
+    )
     private BigInteger userId;
 
-    @Column(name = "senderid", insertable = true, updatable = false)
+    @Column(
+            name = "senderid",
+            insertable = true,
+            updatable = false
+    )
     private BigInteger senderId;
 
-    @Column(name = "datetime", insertable = false, updatable = false)
+    @Column(
+            name = "datetime",
+            insertable = false,
+            updatable = false
+    )
     private Timestamp time;
 }

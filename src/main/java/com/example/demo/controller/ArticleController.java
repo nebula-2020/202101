@@ -2,7 +2,7 @@
  * 文件名：ArticleController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-19
+ * 修改时间：2021-02-21
  */
 package com.example.demo.controller;
 
@@ -146,7 +146,7 @@ public class ArticleController extends CommonController
     @RequestMapping("article/deleteArticle")
     @ResponseBody
     protected String deleteArticle(
-        @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
+            @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
             @ModelAttribute(value = Constants.KEY_USER_PASSWORD) String pwd,
             @NotNull @ModelAttribute(
                     value = Constants.KEY_ARTICLE_ID

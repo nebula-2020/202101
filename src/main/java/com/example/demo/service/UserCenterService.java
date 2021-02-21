@@ -4,7 +4,8 @@
  * 修改人：刘可
  * 修改时间：2021-02-20
  */
-package com.example.demo.service;  
+package com.example.demo.service;
+
 /**
  * 处理用户个人中心相关请求。
  * 

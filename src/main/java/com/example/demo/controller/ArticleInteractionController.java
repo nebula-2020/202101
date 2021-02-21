@@ -2,7 +2,7 @@
  * 文件名：ArticleInteractionController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-19
+ * 修改时间：2021-02-21
  */
 package com.example.demo.controller;
 
@@ -197,7 +197,6 @@ public class ArticleInteractionController extends CommonController
         return ret;
     }
 
-
     /**
      * 收藏文章。
      * 
@@ -238,7 +237,6 @@ public class ArticleInteractionController extends CommonController
         }
         return ret;
     }
-
 
     /**
      * 取消收藏文章。
