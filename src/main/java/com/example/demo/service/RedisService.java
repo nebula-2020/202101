@@ -2,7 +2,7 @@
  * 文件名：RedisService.java
  * 描述：项目主要服务。
  * 修改人：刘可
- * 修改时间：2021-02-22
+ * 修改时间：2021-02-24
  */
 
 package com.example.demo.service;
@@ -25,19 +25,73 @@ import org.springframework.data.util.CastUtils;
  * 
  * @author 刘可
  * @version 1.0.0.0
+ * @see setSignInSession
+ * @see verifySignIn
  * @see setSmsSession
  * @see getSmsSession
  * @see set
  * @see deleteObj
  * @see isKeyExist
  * @see get
- * @since 2021-02-22
+ * @since 2021-02-24
  */
 @Service("redisService")
 public class RedisService extends SessionService
 {
     @Autowired
     protected StringRedisTemplate redis;
+
+    /**
+     * 在Session中存储用户登陆时间。
+     * 
+     * @param account 用户账号
+     * @param time Session保存时间，单位为毫秒
+     * @return 操作成功与否。
+     */
+    public boolean setSignInSession(String account, long time)
+    {
+        boolean ret = false;
+
+        try
+        {
+
+            if (!isKeyExist(account))
+            {
+                set(account, true, time);
+                ret = true;
+            } // 结束：if (!isKeyExist(account))
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    /**
+     * Session验证用户登录。
+     * 
+     * @param account 用户账号
+     * @return 描述用户登录值是否在Session中。
+     */
+    public boolean verifySignIn(String account)
+    {
+        boolean ret = false;
+
+        try
+        {
+
+            if (isKeyExist(account))
+            {
+                ret = true;
+            } // 结束：if (isKeyExist(account))
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return ret;
+    }
 
     /**
      * 将一条短信验证用Session存入数据库。

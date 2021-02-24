@@ -2,7 +2,7 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-22
+ * 修改时间：2021-02-24
  */
 package com.example.demo.controller;
 
@@ -33,12 +33,11 @@ import com.example.demo.entity.*;
  * @see codeReguest
  * @see passwordSignIn
  * @see codeSignIn
- * @since 2021-02-22
+ * @since 2021-02-24
  */
 @Controller
 public class UserController extends CommonController
 {
-    protected final long MSEC_60000 = 60000;
     @Autowired
     protected SignUpService signUpService;
     @Autowired
@@ -146,7 +145,7 @@ public class UserController extends CommonController
         {
             SmsVO sessionMap = redis.get(Constants.SESSION_SMS, SmsVO.class);
 
-            if (sms.verify(requestMap, MSEC_60000, sessionMap))// 密钥匹配
+            if (sms.verify(requestMap, Constants.TIME_1MIN, sessionMap))// 密钥匹配
             {
                 // 验证成功
                 boolean res = signUpService.signUp(phone, pwd, name);// 注册账号
@@ -190,8 +189,8 @@ public class UserController extends CommonController
         try
         {
             String sec = Long.toHexString(Rand.getRandom().nextLong());// 密钥：随机长整型转16进制
-            SmsVO res = sms.send(phone, key, sec, MSEC_60000);
-            boolean succeed = redis.setSmsSession(res, MSEC_60000);
+            SmsVO res = sms.send(phone, key, sec, Constants.TIME_1MIN);
+            boolean succeed = redis.setSmsSession(res, Constants.TIME_1MIN);
 
             if (succeed)
             {
@@ -253,6 +252,7 @@ public class UserController extends CommonController
 
                 if (!tool.isNullOrEmpty(res))
                 {
+                    redis.setSignInSession(account, Constants.TIME_1HOUR);
                     JSONObject json = new JSONObject();
                     json.put(phone, res);
                     System.out.print(json);
@@ -298,7 +298,7 @@ public class UserController extends CommonController
 
             // 密钥匹配
             if (sessionMap != null
-                    && sms.verify(smsInfo, MSEC_60000, sessionMap))
+                    && sms.verify(smsInfo, Constants.TIME_1MIN, sessionMap))
             {
                 info.setMethod(SignInMethod.SMS);
                 String phone = smsInfo.getPhone();
@@ -307,6 +307,7 @@ public class UserController extends CommonController
 
                 if (!tool.isNullOrEmpty(res))
                 {
+                    redis.setSignInSession(res, Constants.TIME_1HOUR);
                     JSONObject json = new JSONObject();
                     json.put(phone, res);
                     System.out.print(json);

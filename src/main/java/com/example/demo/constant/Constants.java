@@ -2,7 +2,7 @@
  * 文件名：Constants.java
  * 描述：项目常见常量。
  * 修改人：刘可
- * 修改时间：2021-02-22
+ * 修改时间：2021-02-24
  */
 
 package com.example.demo.constant;
@@ -12,10 +12,12 @@ package com.example.demo.constant;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-22
+ * @since 2021-02-24
  */
 public abstract class Constants
 {
+    public static final long TIME_1MIN = 60000;
+    public static final long TIME_1HOUR = 360000;
     public static final int NUM_16 = 16;
     public static final int NUM_32 = 32;
     public static final int NUM_36 = 36;
