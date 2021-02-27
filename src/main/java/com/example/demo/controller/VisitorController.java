@@ -2,7 +2,7 @@
  * 文件名：VisitorController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-18
+ * 修改时间：2021-02-27
  */
 package com.example.demo.controller;
 
@@ -13,7 +13,7 @@ import javax.validation.constraints.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.constant.Constants;
-import com.example.demo.entity.SignInMethod;
+import com.example.demo.enumation.*;
 import com.example.demo.service.*;
 import com.example.demo.vo.ArticleInfoVO;
 import com.example.demo.vo.VisitVO;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
  * @version 1.0.0.0
  * @see initModel
  * @see visitArticle
- * @since 2021-02-18
+ * @since 2021-02-27
  */
 @Controller
 public class VisitorController extends CommonController

@@ -2,7 +2,7 @@
  * 文件名：VisitVO.java
  * 描述：搭建项目数据传输
  * 修改人：刘可
- * 修改时间：2021-02-16
+ * 修改时间：2021-02-27
  */
 package com.example.demo.vo;
 
@@ -11,7 +11,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import com.example.demo.entity.SignInMethod;
+import com.example.demo.enumation.*;
 
 import lombok.*;
 
@@ -20,7 +20,7 @@ import lombok.*;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-02-16
+ * @since 2021-02-27
  */
 @Getter
 @Setter

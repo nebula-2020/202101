@@ -2,11 +2,12 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-24
+ * 修改时间：2021-02-27
  */
 package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +16,14 @@ import com.example.demo.constant.*;
 import com.example.demo.tool.*;
 import com.example.demo.vo.*;
 
+import java.security.Principal;
 import java.util.*;
 
 import javax.validation.constraints.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.service.*;
-import com.example.demo.entity.*;
+import com.example.demo.enumation.*;
 
 /**
  * 用户控制器。
@@ -33,7 +35,7 @@ import com.example.demo.entity.*;
  * @see codeReguest
  * @see passwordSignIn
  * @see codeSignIn
- * @since 2021-02-24
+ * @since 2021-02-27
  */
 @Controller
 public class UserController extends CommonController
@@ -50,6 +52,7 @@ public class UserController extends CommonController
     /**
      * 初始化Model。
      * 
+     * @param principal 可以用来表示任何实体，比如个人、公司和登录id
      * @param phone 手机号
      * @param key 客户端随机代码
      * @param code 短信验证码
@@ -63,6 +66,7 @@ public class UserController extends CommonController
      */
     @ModelAttribute
     protected void initModel(
+            @AuthenticationPrincipal Principal principal,
             @NotEmpty @Pattern(regexp = Constants.REGEXP_PHONE) @RequestParam(
                     value = Constants.KEY_USER_PHONE,
                     required = false
@@ -105,6 +109,8 @@ public class UserController extends CommonController
         model.addAttribute(Constants.KEY_USER_PASSWORD, pwd);
         VisitVO visit = new VisitVO(ipv4, ipv6, mac, gps, SignInMethod.UNKNOWN);
         model.addAttribute(Constants.SESSION_LOCATION, visit);
+        model.addAttribute(Constants.SECURITY_USER, principal.getName());
+        System.out.println(principal.getName());
 
         if (!tool.containsNullOrEmpty(code, phone, key, sec))
         {

@@ -2,13 +2,14 @@
  * 文件名：ReportService.java
  * 描述：项目主要服务。
  * 修改人：刘可
- * 修改时间：2021-02-19
+ * 修改时间：2021-02-27
  */
 package com.example.demo.service;
 
 import java.math.BigInteger;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
+import com.example.demo.enumation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
  * @version 1.0.0.0
  * @see report
  * @see finishReport
- * @since 2021-02-19
+ * @since 2021-02-27
  */
 @Service("reportService")
 public class ReportService extends ComService

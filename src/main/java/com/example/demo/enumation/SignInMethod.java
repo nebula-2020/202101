@@ -2,9 +2,9 @@
  * 文件名：SignInMethod.java
  * 描述：数据相关枚举。
  * 修改人： 刘可
- * 修改时间：2021-02-03
+ * 修改时间：2021-02-27
  */
-package com.example.demo.entity;
+package com.example.demo.enumation;
 
 /**
  * 描述用户的登录方式。

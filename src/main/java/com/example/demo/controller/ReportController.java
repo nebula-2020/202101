@@ -2,7 +2,7 @@
  * 文件名：ReportController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-19
+ * 修改时间：2021-02-27
  */
 package com.example.demo.controller;
 
@@ -18,7 +18,7 @@ import javax.validation.constraints.*;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.service.*;
 import com.example.demo.constant.*;
-import com.example.demo.entity.ReportCause;
+import com.example.demo.enumation.*;
 
 /**
  * 用户举报控制器。
@@ -27,7 +27,7 @@ import com.example.demo.entity.ReportCause;
  * @version 1.0.0.0
  * @see initModel
  * @see report
- * @since 2021-02-19
+ * @since 2021-02-27
  */
 @Controller
 public class ReportController extends CommonController
