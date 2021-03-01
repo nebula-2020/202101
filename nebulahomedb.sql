@@ -316,69 +316,30 @@ CREATE TABLE `signindata` (
 -- ALTER TABLE `focus` ADD FOREIGN KEY (`fanid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 -- ALTER TABLE `msg` ADD FOREIGN KEY (`userid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 -- ALTER TABLE `msg` ADD FOREIGN KEY (`senderid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-CREATE OR REPLACE ALGORITHM = MERGE DEFINER = `root`@`localhost` SQL SECURITY INVOKER VIEW `nebulahomedb`.`fulluserdata` AS SELECT
-	`user`.`id` AS `id`,
-	`user`.`personalid` AS `personalid`,
-	`user`.`password` AS `password`,
-	`user`.`phone` AS `phone`,
-	`userstatus`.`lock` AS `lock`,
-	`userstatus`.`ban` AS `ban`,
-	`userdetails`.`sex` AS `sex`,
-	`userdetails`.`com` AS `com`,
-	`userdetails`.`address` AS `address`,
-	`userdetails`.`college` AS `college`,
-	`userdetails`.`birthday` AS `birthday`,
-	`userdetails`.`intro` AS `intro`,
-	`userinfo`.`name` AS `name`,
-	`userinfo`.`createtime` AS `createtime`,
-	`userinfo`.`point` AS `point`,
-	`userinfo`.`signature` AS `signature`,
-	`userinfo`.`icon` AS `icon` 
-FROM 
-(
-    (
-        (
-            `user`
-            JOIN `userstatus` ON 
-            (
-                `user`.`id` = `userstatus`.`id` 
-            )
-        )
-        JOIN `userinfo` ON 
-        (
-            `user`.`id` = `userinfo`.`id` 
-        )
-    )
-    JOIN `userdetails` ON 
-    (
-        `user`.`id` = `userdetails`.`id` 
-    )
-) 
-WHERE (`user`.`id` = `userstatus`.`id`);
-
-CREATE OR REPLACE ALGORITHM = UNDEFINED DEFINER = `root`@`localhost` SQL SECURITY DEFINER VIEW `nebulahomedb`.`userdata` AS SELECT
-	`user`.`personalid` AS `personalid`,
-	`user`.`id` AS `id`,
-	`userstatus`.`ban` AS `ban`,
-	`userinfo`.`createtime` AS `createtime`,
-	`userinfo`.`point` AS `point`,
-	`userinfo`.`icon` AS `icon`,
-	`userinfo`.`signature` AS `signature`,
-	`userinfo`.`name` AS `name` 
-FROM 
-(
-    (
-        `user`
-        JOIN `userinfo` ON 
-        (
-            `user`.`id` = `userinfo`.`id` 
-        )
-    )
-    JOIN `userstatus` ON 
-    (
-        `user`.`id` = `userstatus`.`id` 
-    )
-);
+-- ----------------------------
+-- Table structure for role
+-- ----------------------------
+DROP TABLE IF EXISTS `permission`;
+CREATE TABLE `role` (
+ `permission` bigint NOT NULL AUTO_INCREMENT COMMENT '权限',
+ `name` char(8) NOT NULL COMMENT '权限名字最多8个字',
+ PRIMARY KEY (`permission`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+-- ----------------------------
+-- Records of role
+-- ----------------------------
+-- ----------------------------
+-- Table structure for role
+-- ----------------------------
+DROP TABLE IF EXISTS `role`;
+CREATE TABLE `role` (
+ `id` bigint UNSIGNED NOT NULL COMMENT '角色编号',
+ `name` char(8) NOT NULL COMMENT '名字最多8个字',
+ `permission` char(8) NOT NULL COMMENT '每一位代表一种权限，某一位为1代表角色具有这种权限',
+ PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+-- ----------------------------
+-- Records of role
+-- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;
