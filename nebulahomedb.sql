@@ -317,29 +317,52 @@ CREATE TABLE `signindata` (
 -- ALTER TABLE `msg` ADD FOREIGN KEY (`userid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 -- ALTER TABLE `msg` ADD FOREIGN KEY (`senderid`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 -- ----------------------------
--- Table structure for role
+-- Table structure for permission
 -- ----------------------------
 DROP TABLE IF EXISTS `permission`;
-CREATE TABLE `role` (
+CREATE TABLE `permission` (
  `permission` bigint NOT NULL AUTO_INCREMENT COMMENT '权限',
  `name` char(8) NOT NULL COMMENT '权限名字最多8个字',
  PRIMARY KEY (`permission`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
--- Records of role
+-- Records of permission
 -- ----------------------------
 -- ----------------------------
 -- Table structure for role
 -- ----------------------------
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
- `id` bigint UNSIGNED NOT NULL COMMENT '角色编号',
+ `id` tinyint UNSIGNED NOT NULL COMMENT '角色编号',
  `name` char(8) NOT NULL COMMENT '名字最多8个字',
- `permission` char(8) NOT NULL COMMENT '每一位代表一种权限，某一位为1代表角色具有这种权限',
+ `permissions` bigint NOT NULL COMMENT '每一位代表一种权限，某一位为1代表角色具有这种权限',
  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 -- ----------------------------
 -- Records of role
 -- ----------------------------
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'1','基础权限');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'10','读任意用户数据');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'100','写任意用户数据');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'1000','删任意用户数据');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'10000','读任意文章信息');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'100000','写任意文章信息');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'1000000','删任意文章信息');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'10000000','读任意话题数据');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'100000000','写任意话题数据');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'1000000000','删任意话题数据');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'10000000000','读任意举报数据');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'100000000000','写任意举报数据');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'1000000000000','删任意举报数据');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'10000000000000','增加任意数据');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'100000000000000','修改数据表结构');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'1000000000000000','增加数据表');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'10000000000000000','删除数据表');
+INSERT INTO `permission` (`permission`, `name`) VALUES (b'100000000000000000','执行任意脚本');
+
+INSERT INTO `role` (`id`, `name`, `permissions`) VALUES (10, '管理员', b'111111111111111111'); -- 啥都能干：管理员
+INSERT INTO `role` (`id`, `name`, `permissions`) VALUES (20, '人工审核员', b'000001010000110101'); -- 看文章和封号删文章：人工审核员
+INSERT INTO `role` (`id`, `name`, `permissions`) VALUES (30, '数据库维护员', b'011100000000000001'); -- 增删改数据表：数据库维护员
+INSERT INTO `role` (`id`, `name`, `permissions`) VALUES (1, '注册用户', b'1'); -- 无特权：注册用户
 
 SET FOREIGN_KEY_CHECKS = 1;
