@@ -7,7 +7,6 @@
 
 package com.example.demo.entity;
 
-import java.math.BigInteger;
 import javax.persistence.*;
 
 import lombok.*;
@@ -51,5 +50,5 @@ public class Role
             nullable = false,
             updatable = false
     )
-    private BigInteger permissions;
+    private Long permissions;
 }

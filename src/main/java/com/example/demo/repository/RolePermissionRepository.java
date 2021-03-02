@@ -7,7 +7,6 @@
 
 package com.example.demo.repository;
 
-import java.math.BigInteger;
 import org.springframework.data.jpa.repository.*;
 import com.example.demo.entity.*;
 
@@ -19,7 +18,7 @@ import com.example.demo.entity.*;
  * @since 2021-03-02
  */
 public interface RolePermissionRepository
-        extends JpaRepository<RolePermission, BigInteger>,
+        extends JpaRepository<RolePermission, Long>,
         JpaSpecificationExecutor<RolePermission>
 {
 

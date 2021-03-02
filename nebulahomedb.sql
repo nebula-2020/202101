@@ -341,6 +341,18 @@ CREATE TABLE `role` (
 -- ----------------------------
 -- Records of role
 -- ----------------------------
+-- ----------------------------
+-- Table structure for role
+-- ----------------------------
+DROP TABLE IF EXISTS `role_user`;
+CREATE TABLE `role_user` (
+ `role_id` tinyint UNSIGNED NOT NULL,
+ `user_id` bigint UNSIGNED NOT NULL,
+ PRIMARY KEY (`user_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+-- ----------------------------
+-- Records of role
+-- ----------------------------
 INSERT INTO `permission` (`permission`, `name`) VALUES (b'1','基础权限');
 INSERT INTO `permission` (`permission`, `name`) VALUES (b'10','读任意用户数据');
 INSERT INTO `permission` (`permission`, `name`) VALUES (b'100','写任意用户数据');

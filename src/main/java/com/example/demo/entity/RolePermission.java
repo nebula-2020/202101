@@ -6,7 +6,6 @@
  */
 package com.example.demo.entity;
 
-import java.math.BigInteger;
 import javax.persistence.*;
 
 import lombok.*;
@@ -25,7 +24,7 @@ import lombok.*;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "role")
+@Table(name = "permission")
 public class RolePermission
 {
     @Id
@@ -35,7 +34,7 @@ public class RolePermission
             nullable = false,
             updatable = false
     )
-    private BigInteger permission;
+    private Long permission;
     @Column(
             name = "name",
             insertable = true,
