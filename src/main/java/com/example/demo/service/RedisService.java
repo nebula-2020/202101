@@ -2,7 +2,7 @@
  * 文件名：RedisService.java
  * 描述：项目主要服务。
  * 修改人：刘可
- * 修改时间：2021-02-24
+ * 修改时间：2021-03-04
  */
 
 package com.example.demo.service;
@@ -25,6 +25,7 @@ import org.springframework.data.util.CastUtils;
  * 
  * @author 刘可
  * @version 1.0.0.0
+ * @see signOut
  * @see setSignInSession
  * @see verifySignIn
  * @see setSmsSession
@@ -33,13 +34,36 @@ import org.springframework.data.util.CastUtils;
  * @see deleteObj
  * @see isKeyExist
  * @see get
- * @since 2021-02-24
+ * @since 2021-03-04
  */
 @Service("redisService")
 public class RedisService extends SessionService
 {
     @Autowired
     protected StringRedisTemplate redis;
+
+    /**
+     * 在一段时间内登出一个用户。
+     * 
+     * @param account 用户账号
+     * @param time Session保存时间，单位为毫秒，应长于Token保存时间
+     * @return 操作成功与否。
+     */
+    public boolean signOut(String account, long time)
+    {
+        boolean ret = false;
+
+        try
+        {
+            set(account, false, time);
+            ret = true;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return ret;
+    }
 
     /**
      * 在Session中存储用户登陆时间。
@@ -54,12 +78,20 @@ public class RedisService extends SessionService
 
         try
         {
+            boolean canSignIn = !isKeyExist(account);
 
-            if (!isKeyExist(account))
+            if (!canSignIn)
+            {
+                canSignIn = get(account, boolean.class);//可能设置登出了
+                set(account, true, time);
+                ret = true;
+            } // 结束：if (!canSignIn)
+
+            if (canSignIn)
             {
                 set(account, true, time);
                 ret = true;
-            } // 结束：if (!isKeyExist(account))
+            } // 结束：if (canSignIn)
         }
         catch (Exception e)
         {
