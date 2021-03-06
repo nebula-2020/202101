@@ -2,7 +2,7 @@
  * 文件名：SignInService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-28
+ * 修改时间：2021-03-06
  */
 package com.example.demo.service;
 
@@ -18,7 +18,6 @@ import com.example.demo.repository.*;
 import com.example.demo.vo.VisitVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,7 +32,7 @@ import org.springframework.stereotype.Service;
  * @see account2Id
  * @see id2Account
  * @see signIn
- * @since 2021-02-28
+ * @since 2021-03-06
  */
 @Service("signInService")
 public class SignInService extends ComService
@@ -207,7 +206,6 @@ public class SignInService extends ComService
      * @param info 登录信息
      * @return 登陆成功返回用户账号，否则返回<code>null</code>。
      */
-    @PreAuthorize("hasRole('user')")
     public String signIn(
             String phone, String account, String pwd, boolean noPwd,
             VisitVO info
@@ -270,7 +268,6 @@ public class SignInService extends ComService
      * @param info 登录信息
      * @return 登陆成功返回用户账号，否则返回<code>null</code>。
      */
-    @PreAuthorize("hasRole('user')")
     public String signIn(String phone, VisitVO info) throws NullPointerException
     {
         return signIn(phone, null, null, true, info);
