@@ -256,6 +256,7 @@ public class UserController extends CommonController
                     redis.setSignInSession(account, Constants.TIME_1HOUR);
                     JSONObject json = new JSONObject();
                     json.put(phone, res);
+                    json.put(Constants.TOKEN, res);// ★暂时先存明文
                     System.out.print(json);
                     ret = json.toJSONString();
                 } // 结束：if (!tool.isNullOrEmpty(res))
@@ -311,6 +312,7 @@ public class UserController extends CommonController
                     redis.setSignInSession(res, Constants.TIME_1HOUR);
                     JSONObject json = new JSONObject();
                     json.put(phone, res);
+                    json.put(Constants.TOKEN, res);// ★暂时先存明文
                     System.out.print(json);
                     ret = json.toJSONString();
                 } // 结束：if (!tool.isNullOrEmpty(res))

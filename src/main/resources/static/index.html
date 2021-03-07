@@ -58,9 +58,10 @@
 
 </html>
 <script>
-    value = ''
-    key = Math.random()
-    phone = "008618648386666"
+    const TOKEN = 'Authorization';
+    var value = ''
+    var key = Math.random()
+    var phone = "008618648386666"
     function post() {
         $.post("codeReg", {
             phone: phone,
@@ -73,14 +74,14 @@
     }
     function post1(code) {
         $.post("codeSignUp", {
-                phone: phone,
-                pwd: 'ni3oc2hu9r',
-                server: value,
-                js: key,
-                name: '名字',
-                code: document.getElementById("code").innerHTML,
-            },function (data, status) {
-            }
+            phone: phone,
+            pwd: 'ni3oc2hu9r',
+            server: value,
+            js: key,
+            name: '名字',
+            code: document.getElementById("code").innerHTML,
+        }, function (data, status) {
+        }
         );
     }
     function post2(code) {
@@ -97,19 +98,26 @@
             code: document.getElementById("code").innerHTML,
         },
             function (data, status) {
+                window.localStorage.setItem(TOKEN, data[TOKEN])
             });
     }
     function post3(code) {
-        $.post("article/updateArticle", {
-            phone: phone,
-            pwd: 'ni3oc2hu9r',
-            md: 'i💃💃💃💃💃',
-            title: 'liin76i,9p97t543vm3`',
-            source: '09o87yurt',
-            draft: false
-        },
-            function (data, status) {
-            });
+        $.ajax({
+            headers: {
+                "Authorization": localStorage.getItem(TOKEN)
+            },
+            url: "article/updateArticle",
+            data: {
+                phone: phone,
+                pwd: 'ni3oc2hu9r',
+                md: 'i💃💃💃💃💃',
+                title: 'liin76i,9p97t543vm3`',
+                source: '09o87yurt',
+                draft: false
+            },
+            function(data, status) {
+            }
+        });
     }
     function post4(code) {
         $.post("article/updateArticle", {
@@ -159,6 +167,7 @@
             code: document.getElementById("code").innerHTML,
         },
             function (data, status) {
+                window.localStorage.setItem(TOKEN, data[TOKEN])
             });
     }
 </script>
