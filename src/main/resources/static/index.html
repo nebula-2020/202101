@@ -62,7 +62,7 @@
     key = Math.random()
     phone = "008618648386666"
     function post() {
-        $.post("user/codeReg", {
+        $.post("codeReg", {
             phone: phone,
             js: key
         },
@@ -72,7 +72,7 @@
             });
     }
     function post1(code) {
-        $.post("user/codeSignUp", {
+        $.post("codeSignUp", {
                 phone: phone,
                 pwd: 'ni3oc2hu9r',
                 server: value,
@@ -84,7 +84,7 @@
         );
     }
     function post2(code) {
-        $.post("user/codeSignIn", {
+        $.post("codeSignIn", {
             phone: phone,
             pwd: 'ni3oc2hu9r',
             account: '',
@@ -149,7 +149,7 @@
             });
     }
     function post7(code) {
-        $.post("user/passwordSignIn", {
+        $.post("passwordSignIn", {
             phone: phone,
             pwd: 'ni3oc2hu9r',
             account: 'aaa',

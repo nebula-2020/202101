@@ -126,7 +126,7 @@ public class UserController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户手机号为键对应布尔值描述注册成功与否。
      */
-    @RequestMapping("user/codeSignUp")
+    @RequestMapping("codeSignUp")
     @ResponseBody
     protected String signUp(
             @NotNull @ModelAttribute(
@@ -175,7 +175,7 @@ public class UserController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户手机号为键对应值表示服务器随机代码。
      */
-    @RequestMapping("user/codeReg")
+    @RequestMapping("codeReg")
     @ResponseBody
     protected String codeReguest(
             @NotNull @ModelAttribute(
@@ -222,7 +222,7 @@ public class UserController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示登录成功与否。
      */
-    @RequestMapping("user/passwordSignIn")
+    @RequestMapping("passwordSignIn")
     @ResponseBody
     protected String passwordSignIn(
             @ModelAttribute(value = Constants.KEY_USER_PHONE) String phone,
@@ -281,7 +281,7 @@ public class UserController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示登录成功与否。
      */
-    @RequestMapping("user/codeSignIn")
+    @RequestMapping("codeSignIn")
     @ResponseBody
     protected String codeSignIn(
             @NotNull @ModelAttribute(
