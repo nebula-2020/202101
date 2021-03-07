@@ -144,7 +144,7 @@ public class UserController extends CommonController
 
         try
         {
-            SmsVO sessionMap = redis.get(phone, SmsVO.class);
+            SmsVO sessionMap = redis.getSmsSession(phone);
 
             if (sms.verify(requestMap, Constants.TIME_1MIN, sessionMap))// 密钥匹配
             {

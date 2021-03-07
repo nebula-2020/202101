@@ -2,7 +2,7 @@
  * 文件名：RedisService.java
  * 描述：项目主要服务。
  * 修改人：刘可
- * 修改时间：2021-03-04
+ * 修改时间：2021-03-07
  */
 
 package com.example.demo.service;
@@ -10,8 +10,6 @@ package com.example.demo.service;
 import java.util.concurrent.TimeUnit;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.example.demo.constant.Constants;
 import com.example.demo.vo.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ import org.springframework.data.util.CastUtils;
  * @see deleteObj
  * @see isKeyExist
  * @see get
- * @since 2021-03-04
+ * @since 2021-03-07
  */
 @Service("redisService")
 public class RedisService extends SessionService
@@ -82,7 +80,7 @@ public class RedisService extends SessionService
 
             if (!canSignIn)
             {
-                canSignIn = get(account, boolean.class);//可能设置登出了
+                canSignIn = get(account, boolean.class);// 可能设置登出了
                 set(account, true, time);
                 ret = true;
             } // 结束：if (!canSignIn)
@@ -150,14 +148,7 @@ public class RedisService extends SessionService
 
             try
             {
-                JSONObject val = new JSONObject();
-                val.put(Constants.KEY_SMS_CODE, vo.getCode());
-                val.put(Constants.KEY_SMS_JS, vo.getKey());
-                val.put(Constants.KEY_SMS_SECRET, vo.getSecret());
-                val.put(
-                        Constants.KEY_SMS_TIME, Long.valueOf(vo.getCreateTime())
-                );
-                set(vo.getPhone(), val.toJSONString(), time);
+                set(vo.getPhone(), vo, time);
                 ret = true;
             }
             catch (NullPointerException e)
@@ -193,14 +184,7 @@ public class RedisService extends SessionService
 
             if (isKeyExist(phone))
             {
-                String val = get(phone, String.class);
-                JSONObject res = JSONObject.parseObject(val);
-                ret = new SmsVO(
-                        phone, res.getString(Constants.KEY_SMS_CODE),
-                        res.getString(Constants.KEY_SMS_JS),
-                        res.getString(Constants.KEY_SMS_SECRET),
-                        res.getLong(Constants.KEY_SMS_TIME)
-                );
+                ret = (SmsVO)get(phone, SmsVO.class);
             } // 结束：if (isKeyExist(phone))
         }
         catch (Exception e)
