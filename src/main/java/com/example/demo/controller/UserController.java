@@ -2,7 +2,7 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-02-28
+ * 修改时间：2021-03-07
  */
 package com.example.demo.controller;
 
@@ -33,7 +33,7 @@ import com.example.demo.enumation.*;
  * @see codeReguest
  * @see passwordSignIn
  * @see codeSignIn
- * @since 2021-02-28
+ * @since 2021-03-07
  */
 @Controller
 public class UserController extends CommonController
@@ -144,7 +144,7 @@ public class UserController extends CommonController
 
         try
         {
-            SmsVO sessionMap = redis.get(Constants.SESSION_SMS, SmsVO.class);
+            SmsVO sessionMap = redis.get(phone, SmsVO.class);
 
             if (sms.verify(requestMap, Constants.TIME_1MIN, sessionMap))// 密钥匹配
             {
