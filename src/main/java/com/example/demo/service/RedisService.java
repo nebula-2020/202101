@@ -2,7 +2,7 @@
  * 文件名：RedisService.java
  * 描述：项目主要服务。
  * 修改人：刘可
- * 修改时间：2021-03-07
+ * 修改时间：2021-03-08
  */
 
 package com.example.demo.service;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.*;
+import org.springframework.util.StringUtils;
 import org.springframework.data.util.CastUtils;
 
 /**
@@ -32,7 +33,7 @@ import org.springframework.data.util.CastUtils;
  * @see deleteObj
  * @see isKeyExist
  * @see get
- * @since 2021-03-07
+ * @since 2021-03-08
  */
 @Service("redisService")
 public class RedisService extends SessionService
@@ -173,10 +174,10 @@ public class RedisService extends SessionService
     public SmsVO getSmsSession(String phone)
     {
 
-        if (tool.isNullOrEmpty(phone))
+        if (!StringUtils.hasText(phone))
         {
             throw new IllegalArgumentException();
-        } // 结束：if (tool.isNullOrEmpty(phone))
+        } // 结束：if (!StringUtils.hasText(phone))
         SmsVO ret = null;
 
         try

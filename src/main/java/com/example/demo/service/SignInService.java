@@ -2,7 +2,7 @@
  * 文件名：SignInService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-03-06
+ * 修改时间：2021-03-08
  */
 package com.example.demo.service;
 
@@ -19,6 +19,7 @@ import com.example.demo.vo.VisitVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * 用户登录服务。
@@ -32,7 +33,7 @@ import org.springframework.stereotype.Service;
  * @see account2Id
  * @see id2Account
  * @see signIn
- * @since 2021-03-06
+ * @since 2021-03-08
  */
 @Service("signInService")
 public class SignInService extends ComService
@@ -226,14 +227,14 @@ public class SignInService extends ComService
             UserBaseInfo user = null;
 
             // 验证用户信息
-            if (!tool.isNullOrEmpty(phone))
+            if (StringUtils.hasText(phone))
             {
                 user = baseRepo.findByPhone(phone);
             }
             else// 前面已经验证过了，如果手机号为空账号必然非空
             {
                 user = baseRepo.findByAccount(account);
-            } // 结束：if (!tool.isNullOrEmpty(phone))
+            } // 结束：if (StringUtils.hasText(phone))
 
             if (user != null && user.getId().compareTo(BigInteger.ZERO) > 0
                     && (noPwd || tool.isStrSame(pwd, user.getPassword())))
