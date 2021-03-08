@@ -2,7 +2,7 @@
  * 文件名：UserInteractionController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-20
+ * 修改时间：2021-03-08
  */
 
 package com.example.demo.controller;
@@ -33,9 +33,10 @@ import com.example.demo.constant.*;
  * @see hideMsg
  * @see addFocus
  * @see deleteFocus
- * @since 2021-02-20
+ * @since 2021-03-08
  */
 @Controller
+@RequestMapping("/user")
 public class UserInteractionController extends CommonController
 {
     @Autowired
@@ -78,7 +79,7 @@ public class UserInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应布尔值描述操作成功与否。
      */
-    @RequestMapping("user/black")
+    @RequestMapping("/black")
     @ResponseBody
     protected String addBlackList(
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
@@ -120,7 +121,7 @@ public class UserInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应布尔值描述操作成功与否。
      */
-    @RequestMapping("user/deleteBlack")
+    @RequestMapping("/deleteBlack")
     @ResponseBody
     protected String deleteBlackList(
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
@@ -163,7 +164,7 @@ public class UserInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应布尔值描述操作成功与否。
      */
-    @RequestMapping("user/msg")
+    @RequestMapping("/msg")
     @ResponseBody
     protected String sendMsg(
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
@@ -209,7 +210,7 @@ public class UserInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应布尔值描述操作成功与否。
      */
-    @RequestMapping("user/deleteMsg")
+    @RequestMapping("/deleteMsg")
     @ResponseBody
     protected String deleteMsg(
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
@@ -257,7 +258,7 @@ public class UserInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应布尔值描述操作成功与否。
      */
-    @RequestMapping("user/hideMsg")
+    @RequestMapping("/hideMsg")
     @ResponseBody
     protected String hideMsg(
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
@@ -302,7 +303,7 @@ public class UserInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应布尔值描述操作成功与否。
      */
-    @RequestMapping("user/focus")
+    @RequestMapping("/focus")
     @ResponseBody
     protected String addFocus(
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
@@ -345,7 +346,7 @@ public class UserInteractionController extends CommonController
      * @return JSON字符串，用户账号为键对应布尔值描述操作成功与否。
      */
 
-    @RequestMapping("user/deleteFocus")
+    @RequestMapping("/deleteFocus")
     @ResponseBody
     protected String deleteFocus(
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,

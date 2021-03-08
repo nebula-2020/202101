@@ -2,7 +2,7 @@
  * 文件名：ArticleController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-21
+ * 修改时间：2021-03-08
  */
 package com.example.demo.controller;
 
@@ -28,9 +28,10 @@ import com.example.demo.constant.*;
  * @see initModel
  * @see updateArticle
  * @see deleteArticle
- * @since 2021-02-19
+ * @since 2021-03-08
  */
 @Controller
+@RequestMapping("/article")
 public class ArticleController extends CommonController
 {
     @Autowired
@@ -97,7 +98,7 @@ public class ArticleController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示删除成功与否。
      */
-    @RequestMapping("article/updateArticle")
+    @RequestMapping("/updateArticle")
     @ResponseBody
     protected String updateArticle(
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
@@ -143,7 +144,7 @@ public class ArticleController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示删除成功与否。
      */
-    @RequestMapping("article/deleteArticle")
+    @RequestMapping("/deleteArticle")
     @ResponseBody
     protected String deleteArticle(
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,

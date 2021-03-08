@@ -2,7 +2,7 @@
  * 文件名：ReportController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-02-27
+ * 修改时间：2021-03-08
  */
 package com.example.demo.controller;
 
@@ -27,9 +27,10 @@ import com.example.demo.enumation.*;
  * @version 1.0.0.0
  * @see initModel
  * @see report
- * @since 2021-02-27
+ * @since 2021-03-08
  */
 @Controller
+@RequestMapping("/article")
 public class ReportController extends CommonController
 {
     @Autowired
@@ -68,7 +69,7 @@ public class ReportController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示删除成功与否。
      */
-    @RequestMapping("report")
+    @RequestMapping("/report")
     @ResponseBody
     protected String report(
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,

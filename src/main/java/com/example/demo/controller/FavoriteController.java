@@ -1,5 +1,5 @@
 /*
- * 文件名：ArticleInteractionController.java
+ * 文件名： FavoriteController.java
  * 描述：必要控制器
  * 修改人：刘可
  * 修改时间：2021-03-08
@@ -20,23 +20,19 @@ import com.example.demo.service.*;
 import com.example.demo.constant.*;
 
 /**
- * 文章互动控制器。
+ * 收藏控制器。
  * <p>
- * 处理文章点赞评论和收藏请求。
+ * 处理文章收藏请求。
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @see initModel
- * @see like
- * @see comment
- * @see deleteComment
  * @see favorite
  * @see deleteFavorite
  * @since 2021-03-08
  */
 @Controller
-@RequestMapping("/article")
-public class ArticleInteractionController extends CommonController
+@RequestMapping("/user")
+public class FavoriteController
 {
 
     @Autowired
@@ -71,7 +67,7 @@ public class ArticleInteractionController extends CommonController
     }
 
     /**
-     * 在文章点赞。
+     * 收藏文章。
      * 
      * @param account 账号
      * @param pwd 密码
@@ -79,9 +75,9 @@ public class ArticleInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示操作成功与否。
      */
-    @RequestMapping("/like")
+    @RequestMapping("/favorite")
     @ResponseBody
-    protected String like(
+    protected String favorite(
             @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
             @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
             @ModelAttribute(Constants.KEY_ARTICLE_ID) BigInteger id, Model model
@@ -96,7 +92,7 @@ public class ArticleInteractionController extends CommonController
 
             if (userId != null)
             {
-                boolean res = articleService.like(userId, id);
+                boolean res = articleService.addFavorite(userId, id);
 
                 JSONObject json = new JSONObject();
                 json.put(account, res);
@@ -112,53 +108,7 @@ public class ArticleInteractionController extends CommonController
     }
 
     /**
-     * 评论文章。
-     * 
-     * @param account 账号
-     * @param pwd 密码
-     * @param id 文章ID
-     * @param text 评论内容
-     * @param model 主要用于向Model添加属性
-     * @return JSON字符串，用户账号为键对应值表示操作成功与否。
-     */
-    @RequestMapping("/comment")
-    @ResponseBody
-    protected String comment(
-            @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
-            @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
-            @ModelAttribute(Constants.KEY_ARTICLE_ID) BigInteger id,
-            @NotNull @NotEmpty @RequestParam(
-                    value = Constants.KEY_COMMENT_TEXT,
-                    required = false
-            ) String text, Model model
-    )
-    {
-        String ret = "";
-
-        try
-        {
-
-            BigInteger userId = signInService.verify(account, pwd);
-
-            if (userId != null)
-            {
-                boolean res = articleService.comment(userId, id, text);
-
-                JSONObject json = new JSONObject();
-                json.put(account, res);
-                System.out.print(json);
-                ret = json.toJSONString();
-            } // 结束：if(userId!=null)
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return ret;
-    }
-
-    /**
-     * 在文章点删除评论。
+     * 取消收藏文章。
      * 
      * @param account 账号
      * @param pwd 密码
@@ -166,9 +116,9 @@ public class ArticleInteractionController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示操作成功与否。
      */
-    @RequestMapping("/deleteComment")
+    @RequestMapping("/deleteFavorite")
     @ResponseBody
-    protected String deleteComment(
+    protected String deleteFavorite(
             @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
             @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
             @ModelAttribute(Constants.KEY_ARTICLE_ID) BigInteger id, Model model
@@ -183,7 +133,7 @@ public class ArticleInteractionController extends CommonController
 
             if (userId != null)
             {
-                boolean res = articleService.deleteComment(userId, id);
+                boolean res = articleService.deleteFavorite(userId, id);
 
                 JSONObject json = new JSONObject();
                 json.put(account, res);
