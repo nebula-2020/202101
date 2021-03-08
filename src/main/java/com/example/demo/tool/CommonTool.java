@@ -2,13 +2,15 @@
  * 文件名：CommonTool.java
  * 描述：常见工具。
  * 修改人：刘可
- * 修改时间：2021-02-20
+ * 修改时间：2021-03-08
  */
 package com.example.demo.tool;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.util.*;
+
+import org.springframework.util.StringUtils;
 
 /**
  * 常见工具。
@@ -58,10 +60,11 @@ public final class CommonTool
      * <li>被检测值为<code>""</code>；</li>
      * <li>被检测值为<code>null</code>。</li>
      * </ul>
+     * @deprecated
      */
     public boolean isNullOrEmpty(String str)
     {
-        return str == null || str.length() <= 0;
+        return !StringUtils.hasText(str);
     }
 
     /**
@@ -86,10 +89,10 @@ public final class CommonTool
         for (String s: strs)
         {
 
-            if (isNullOrEmpty(s))
+            if (!StringUtils.hasText(s))
             {
                 return true;
-            } // 结束：if (isNullOrEmpty(s))
+            } // 结束：if (!StringUtils.hasText(s))
 
         } // 结束：for (String s: str)
 
