@@ -2,7 +2,7 @@
  * 文件名：CommonTool.java
  * 描述：常见工具。
  * 修改人：刘可
- * 修改时间：2021-03-08
+ * 修改时间：2021-03-09
  */
 package com.example.demo.tool;
 
@@ -31,7 +31,8 @@ import org.springframework.util.StringUtils;
  * @see obj2Bytes
  * @see isPositive
  * @see containsPositive
- * @since 2021-02-20
+ * @since 2021-03-09
+ * @deprecated
  */
 public final class CommonTool
 {
