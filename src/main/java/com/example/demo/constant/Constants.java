@@ -2,7 +2,7 @@
  * 文件名：Constants.java
  * 描述：项目常见常量。
  * 修改人：刘可
- * 修改时间：2021-03-08
+ * 修改时间：2021-03-09
  */
 
 package com.example.demo.constant;
@@ -12,7 +12,7 @@ package com.example.demo.constant;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-03-08
+ * @since 2021-03-09
  */
 public abstract class Constants
 {
@@ -30,7 +30,7 @@ public abstract class Constants
     public static final String REGEXP_ID = "\\d+";
     public static final String CHARASET_UTF8 = "utf-8";
     public static final String CHARASET_UTF8CONTENTYPE =
-            "text/html;charset=utf-8";
+            "application/json;charset=utf-8";
     public static final String SESSION_SMS = "sms";
     public static final String SESSION_SIGNIN = "signin";
     public static final String SESSION_ARTICLE = "article";
