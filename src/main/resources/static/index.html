@@ -63,49 +63,60 @@
     var key = Math.random()
     var phone = "008618648386666"
     function post() {
-        $.post("codeReg", {
-            phone: phone,
-            js: key
-        },
-            function (data, status) {
+        $.ajax({
+            url: "codeReg",
+            data: {
+                phone: phone,
+                js: key
+            },
+            function(data, status) {
                 value = JSON.parse(data)[phone]
                 console.log(JSON.parse(data) + '\n' + JSON.parse(data)[String(phone)] + '\n' + value + '\n' + key)
-            });
+            }
+        });
     }
     function post1(code) {
-        $.post("codeSignUp", {
-            phone: phone,
-            pwd: 'ni3oc2hu9r',
-            server: value,
-            js: key,
-            name: '名字',
-            code: document.getElementById("code").innerHTML,
-        }, function (data, status) {
-        }
-        );
+        $.ajax({
+            url: "codeSignUp",
+            type: "POST",
+            data: {
+                phone: phone,
+                pwd: 'ni3oc2hu9r',
+                server: value,
+                js: key,
+                name: '名字',
+                code: document.getElementById("code").innerHTML,
+            }, function(data, status) {
+            }
+        });
     }
     function post2(code) {
-        $.post("codeSignIn", {
-            phone: phone,
-            pwd: 'ni3oc2hu9r',
-            account: '',
-            ipv4: '0',
-            ipv6: [-128, -128, -128, 127],
-            mac: [-128, -128, -128, 127],
-            gps: 'loc',
-            server: value,
-            js: key,
-            code: document.getElementById("code").innerHTML,
-        },
-            function (data, status) {
+        $.ajax({
+            url: "codeSignIn",
+            type: "POST",
+            data: {
+                phone: phone,
+                pwd: 'ni3oc2hu9r',
+                account: '',
+                ipv4: '0',
+                ipv6: [-128, -128, -128, 127],
+                mac: [-128, -128, -128, 127],
+                gps: 'loc',
+                server: value,
+                js: key,
+                code: document.getElementById("code").innerHTML,
+            },
+            function(data, status) {
                 window.localStorage.setItem(TOKEN, data[TOKEN])
-            });
+            }
+        });
     }
     function post3(code) {
         $.ajax({
             headers: {
                 "Authorization": localStorage.getItem(TOKEN)
             },
+            type: "POST",
             url: "article/updateArticle",
             data: {
                 phone: phone,
@@ -157,17 +168,20 @@
             });
     }
     function post7(code) {
-        $.post("passwordSignIn", {
-            phone: phone,
-            pwd: 'ni3oc2hu9r',
-            account: 'aaa',
-            ipv4: '0',
-            server: value,
-            js: key,
-            code: document.getElementById("code").innerHTML,
-        },
-            function (data, status) {
+        $.ajax({
+            url: "passwordSignIn",
+            data: {
+                phone: phone,
+                pwd: 'ni3oc2hu9r',
+                account: 'aaa',
+                ipv4: '0',
+                server: value,
+                js: key,
+                code: document.getElementById("code").innerHTML,
+            },
+            function(data, status) {
                 window.localStorage.setItem(TOKEN, data[TOKEN])
-            });
+            }
+        });
     }
 </script>

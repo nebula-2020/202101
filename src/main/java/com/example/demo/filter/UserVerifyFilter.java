@@ -2,12 +2,13 @@
  * 文件名： UserVerifyFilter.java
  * 描述：项目必需过滤器。
  * 修改人：刘可
- * 修改时间：2021-03-08
+ * 修改时间：2021-03-09
  */
 
 package com.example.demo.filter;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 
 import javax.servlet.FilterChain;
@@ -17,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.example.demo.constant.Constants;
-import com.example.demo.service.RedisService;
+import com.example.demo.service.*;
+
+import org.apache.catalina.util.ParameterMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.util.StringUtils;
@@ -31,26 +34,31 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * @author 刘可
  * @version 1.0.0.0
  * @see doFilterInternal
- * @since 2021-03-08
+ * @since 2021-03-09
  */
 @Order(50)
 @WebFilter(urlPatterns =
 {
         "/article/*", "/user/*"
 },
-        filterName = "commonFilter"
+        filterName = "userVerifyFilter"
 )
 public class UserVerifyFilter extends OncePerRequestFilter
 {
     @Autowired
     protected RedisService redis;
+    @Autowired
+    private SignInService signInService;
 
     /**
      * 过滤器逻辑。
+     * <p>
+     * token中存储了用户的账号(目前未加密)。方法会将账号和用户ID一同存储进请求。
      * 
      * @param request 为servlet传参
      * @param response 为servlet传参
      * @param chain 提供了一个查看经过过滤的资源请求的调用链的视图
+     * @since 2021-03-09
      */
     @Override
     protected void doFilterInternal(
@@ -81,10 +89,30 @@ public class UserVerifyFilter extends OncePerRequestFilter
 
                 if (status)
                 {
-                    chain.doFilter(request, response);
-                    System.out.println("登录状态验证成功。");
-                    return;
-                } // 结束：if (Objects.isNull(loginStatus))
+                    BigInteger id = signInService.account2Id(token);
+
+                    if (id != null && BigInteger.ZERO.compareTo(id) < 0)
+                    {
+                        ParameterMap<String, String[]> map =
+                                (ParameterMap<String, String[]>)request
+                                        .getParameterMap();
+                        map.setLocked(false);// 设置对象锁定状态
+                        map.put(Constants.KEY_USER_ID, new String[] {
+                                id.toString()
+                        });
+                        map.put(Constants.KEY_USER_ACCOUNT, new String[] {
+                                token
+                        });// 插入(覆盖)值
+                        map.setLocked(true);// 重新锁定
+                        chain.doFilter(request, response);
+                        System.out.println("登录状态验证成功。");
+                        return;
+                    }
+                    else
+                    {
+                        System.out.println("账号不存在或已经注销。");
+                    } // 结束：if(id!=null&&BigInteger.ZERO.compareTo(id)<0)
+                } // 结束：if (status)
                 System.out.println("TOKEN错误： " + token);
             }
             catch (Exception e)

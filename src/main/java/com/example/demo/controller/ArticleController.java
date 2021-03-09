@@ -2,7 +2,7 @@
  * 文件名：ArticleController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-03-08
+ * 修改时间：2021-03-09
  */
 package com.example.demo.controller;
 
@@ -28,7 +28,7 @@ import com.example.demo.constant.*;
  * @see initModel
  * @see updateArticle
  * @see deleteArticle
- * @since 2021-03-08
+ * @since 2021-03-09
  */
 @Controller
 @RequestMapping("/article")
@@ -36,21 +36,28 @@ public class ArticleController extends CommonController
 {
     @Autowired
     private ArticleEditService articleService;
-    @Autowired
-    private SignInService signInService;
 
     /**
      * 初始化Model。
      * 
-     * @param phone 手机号
+     * @param account 请求者用户账号，原本位于请求头，由过滤器设置
+     * @param id 请求者用户账号对应用户ID，由过滤器设置
      * @param pwd 密码
+     * @param articleId 文章ID
+     * @param source 转载源
+     * @param title 文章标题
+     * @param text 文章内容
+     * @param isDraft 是否为草稿
      * @param model 主要用于向Model添加属性
      */
     @ModelAttribute
     protected void initModel(
             @NotNull @NotEmpty @RequestParam(
-                    value = Constants.KEY_USER_ACCOUNT
+                Constants.KEY_USER_ACCOUNT
             ) String account,
+            @NotNull @NotEmpty @RequestParam(
+                    value = Constants.KEY_USER_ID
+            ) BigInteger id,
             @NotNull @NotEmpty @RequestParam(
                     value = Constants.KEY_USER_PASSWORD
             ) String pwd,
@@ -77,6 +84,7 @@ public class ArticleController extends CommonController
     )
     {
         model.addAttribute(Constants.KEY_USER_ACCOUNT, account);
+        model.addAttribute(Constants.KEY_USER_ID, id);
         model.addAttribute(Constants.KEY_USER_PASSWORD, pwd);
         model.addAttribute(Constants.KEY_ARTICLE_ID, articleId);
 
@@ -91,18 +99,18 @@ public class ArticleController extends CommonController
     /**
      * 提交文章。
      * 
-     * @param phone 作者手机号
-     * @param pwd 作者密码
+     * @param userId 作者ID
+     * @param account 作者账号
      * @param articleId 文章ID
-     * @param article 文章
+     * @param article 描述用户提交的文章数据
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示删除成功与否。
      */
     @RequestMapping("/updateArticle")
     @ResponseBody
     protected String updateArticle(
+            @ModelAttribute(value = Constants.KEY_USER_ID) BigInteger userId,
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
-            @ModelAttribute(value = Constants.KEY_USER_PASSWORD) String pwd,
             @ModelAttribute(
                     value = Constants.KEY_ARTICLE_ID
             ) BigInteger articleId,
@@ -113,42 +121,37 @@ public class ArticleController extends CommonController
     {
         String ret = "";
 
-        BigInteger userId = signInService.verify(account, pwd);
-
-        if (userId != null && userId.compareTo(BigInteger.ZERO) > 0)
+        try
         {
-
-            try
-            {
-                boolean res = articleService
-                        .updateArticle(userId, articleId, article);//
-                JSONObject json = new JSONObject();
-                json.put(account, res);
-                System.out.println(json);// debug
-                ret = json.toJSONString();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        } // 结束：if (userId!=null&&userId.compareTo(BigInteger.ZERO)>0)
+            boolean res =
+                    articleService.updateArticle(userId, articleId, article);//
+            JSONObject json = new JSONObject();
+            json.put(account, res);
+            System.out.println(json);// debug
+            ret = json.toJSONString();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         return ret;
     }
 
     /**
      * 删除文章。
-     *
+     * 
+     * @param userId 作者ID
+     * @param account 作者账号
      * @param articleId 文章ID
-     * @param phone 作者手机号
-     * @param pwd 作者密码
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示删除成功与否。
      */
+
     @RequestMapping("/deleteArticle")
     @ResponseBody
     protected String deleteArticle(
+            @ModelAttribute(value = Constants.KEY_USER_ID) BigInteger userId,
             @ModelAttribute(value = Constants.KEY_USER_ACCOUNT) String account,
-            @ModelAttribute(value = Constants.KEY_USER_PASSWORD) String pwd,
             @NotNull @ModelAttribute(
                     value = Constants.KEY_ARTICLE_ID
             ) BigInteger articleId, Model model
@@ -156,24 +159,18 @@ public class ArticleController extends CommonController
     {
         String ret = "";
 
-        BigInteger userId = signInService.verify(account, pwd);
-
-        if (userId != null && userId.compareTo(BigInteger.ZERO) > 0)
+        try
         {
-
-            try
-            {
-                boolean res = articleService.deleteArticle(userId, articleId);
-                JSONObject json = new JSONObject();
-                json.put(account, res);
-                System.out.println(json);// debug
-                ret = json.toJSONString();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        } // 结束：if(userId!=null&&userId.compareTo(BigInteger.ZERO)>0)
+            boolean res = articleService.deleteArticle(userId, articleId);
+            JSONObject json = new JSONObject();
+            json.put(account, res);
+            System.out.println(json);// debug
+            ret = json.toJSONString();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         return ret;//
     }
 }
