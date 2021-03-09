@@ -2,13 +2,14 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-03-07
+ * 修改时间：2021-03-09
  */
 package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.constant.*;
@@ -33,7 +34,7 @@ import com.example.demo.enumation.*;
  * @see codeReguest
  * @see passwordSignIn
  * @see codeSignIn
- * @since 2021-03-07
+ * @since 2021-03-09
  */
 @Controller
 public class UserController extends CommonController
@@ -126,7 +127,7 @@ public class UserController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户手机号为键对应布尔值描述注册成功与否。
      */
-    @RequestMapping("codeSignUp")
+    @RequestMapping("/codeSignUp")
     @ResponseBody
     protected String signUp(
             @NotNull @ModelAttribute(
@@ -175,7 +176,7 @@ public class UserController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户手机号为键对应值表示服务器随机代码。
      */
-    @RequestMapping("codeReg")
+    @RequestMapping("/codeReg")
     @ResponseBody
     protected String codeReguest(
             @NotNull @ModelAttribute(
@@ -222,7 +223,7 @@ public class UserController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示登录成功与否。
      */
-    @RequestMapping("passwordSignIn")
+    @RequestMapping("/passwordSignIn")
     @ResponseBody
     protected String passwordSignIn(
             @ModelAttribute(value = Constants.KEY_USER_PHONE) String phone,
@@ -282,7 +283,7 @@ public class UserController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示登录成功与否。
      */
-    @RequestMapping("codeSignIn")
+    @RequestMapping("/codeSignIn")
     @ResponseBody
     protected String codeSignIn(
             @NotNull @ModelAttribute(
@@ -307,7 +308,7 @@ public class UserController extends CommonController
                 String res = signInService.signIn(phone, info);
                 redis.deleteObj(phone);
 
-                if (!tool.isNullOrEmpty(res))
+                if (StringUtils.hasText(res))
                 {
                     redis.setSignInSession(res, Constants.TIME_1HOUR);
                     JSONObject json = new JSONObject();
@@ -315,7 +316,7 @@ public class UserController extends CommonController
                     json.put(Constants.TOKEN, res);// ★暂时先存明文
                     System.out.print(json);
                     ret = json.toJSONString();
-                } // 结束：if (!tool.isNullOrEmpty(res))
+                } // 结束：if (StringUtils.hasText(res))
             } // 结束：if (sessionMap != null && sms.verify(smsInfo,...
         }
         catch (Exception e)
