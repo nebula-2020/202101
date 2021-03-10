@@ -2,9 +2,11 @@
  * 文件名：StringUtils.java
  * 描述：常见工具。
  * 修改人：刘可
- * 修改时间：2021-03-09
+ * 修改时间：2021-03-10
  */
 package com.example.demo.util;
+
+import javax.validation.constraints.NotNull;
 
 import org.springframework.lang.Nullable;
 
@@ -23,12 +25,12 @@ import org.springframework.lang.Nullable;
  * @author 刘可
  * @version 1.0.0.0
  * @see hasText
- * @since 2021-03-09
+ * @since 2021-03-10
  */
-public class StringUtils extends org.springframework.util.StringUtils
+public abstract class StringUtils extends org.springframework.util.StringUtils
 {
     /**
-     * 检查给定的字符串是否包含实际的文本。
+     * 检查给定的字符串是否<b>全部</b>包含实际的文本。
      * 
      * @param strs 候选对象(可为{@code null})
      * @return 如果字符串不存在{@code null}，长度全部大于0，并且全部包含至少一个非空白字符，则该方法返回{@code true}。
@@ -49,5 +51,12 @@ public class StringUtils extends org.springframework.util.StringUtils
             } // 结束：for(String str:strs)
         } // 结束：if (strs != null)
         return true;
+    }
+
+    public static int compareTo(@NotNull String str, @NotNull String anotherStr)
+    {
+        StringBuilder strBuilder = new StringBuilder(str);
+        StringBuilder anotherStrBuilder = new StringBuilder(anotherStr);
+        return strBuilder.compareTo(anotherStrBuilder);
     }
 }
