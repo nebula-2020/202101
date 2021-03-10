@@ -2,7 +2,7 @@
  * 文件名：ArticleEditService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-02-18
+ * 修改时间：2021-03-10
  */
 package com.example.demo.service;
 
@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
+import com.example.demo.util.BigIntUtils;
 import com.example.demo.vo.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ import org.springframework.stereotype.Service;
  * @see deleteArticle
  * @see banArticle
  * @see calcArticleTypeVal
- * @since 2021-02-18
+ * @since 2021-03-10
  */
 @Service("articleService")
 public class ArticleEditService extends ComService
@@ -59,7 +60,7 @@ public class ArticleEditService extends ComService
         try
         {
 
-            if (tool.isBigIntSame(article.getAuthorId(), authorId)
+            if (BigIntUtils.isSame(article.getAuthorId(), authorId)
                     && !article.getDel())
             {
                 // 不是此作者所写

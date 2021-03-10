@@ -2,7 +2,7 @@
  * 文件名：SignInService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-03-08
+ * 修改时间：2021-03-10
  */
 package com.example.demo.service;
 
@@ -15,11 +15,11 @@ import com.example.demo.constant.Constants;
 import com.example.demo.entity.*;
 import com.example.demo.entity.pk.SignInInfoKey;
 import com.example.demo.repository.*;
+import com.example.demo.util.StringUtils;
 import com.example.demo.vo.VisitVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 /**
  * 用户登录服务。
@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
  * @see account2Id
  * @see id2Account
  * @see signIn
- * @since 2021-03-08
+ * @since 2021-03-10
  */
 @Service("signInService")
 public class SignInService extends ComService
@@ -76,10 +76,10 @@ public class SignInService extends ComService
             verify(String phoneOrAccount, String pwd, boolean usePhone)
     {
 
-        if (tool.containsNullOrEmpty(phoneOrAccount, pwd))
+        if (!StringUtils.hasText(phoneOrAccount, pwd))
         {
             throw new NullPointerException();
-        } // 结束：if (tool.containsNullOrEmpty(phone, pwd))
+        } // 结束：if (!StringUtils.hasText(phoneOrAccount, pwd))
         UserBaseInfo user;
 
         if (usePhone)
@@ -92,7 +92,7 @@ public class SignInService extends ComService
         } // 结束：if (usePhone)
         BigInteger ret = null;
 
-        if (user != null && tool.isStrSame(pwd, user.getPassword()))
+        if (user != null && StringUtils.compareTo(pwd, user.getPassword()) == 0)
         {
             Optional<UserStatus> optional = statusRepo.findById(user.getId());
 
@@ -105,7 +105,7 @@ public class SignInService extends ComService
                     ret = user.getId();
                 } // 结束：if (!status.getBan())
             } // 结束：if (optional != null && optional.isPresent())
-        } // 结束：if(user != null && tool.isStrSame(pwd, user.getPassword()))
+        } // 结束：if(user!=null&&StringUtils.compareTo(pwd,user.getPassword(...
         return ret;
     }
 
@@ -119,7 +119,7 @@ public class SignInService extends ComService
     {
         BigInteger ret = null;
 
-        if (!tool.isNullOrEmpty(phone))
+        if (StringUtils.hasText(phone))
         {
             UserBaseInfo user = baseRepo.findByPhone(phone);
 
@@ -127,7 +127,7 @@ public class SignInService extends ComService
             {
                 ret = user.getId();
             } // 结束：if(user != null)
-        } // 结束：if (tool.isNullOrEmpty(phone))
+        } // 结束：if (StringUtils.hasText(phone))
         return ret;
     }
 
@@ -144,7 +144,7 @@ public class SignInService extends ComService
     {
         BigInteger ret = null;
 
-        if (!tool.isNullOrEmpty(account))
+        if (StringUtils.hasText(account))
         {
             Pattern p = Pattern.compile(Constants.REGEXP_ID);
             Matcher m = p.matcher(account);
@@ -163,7 +163,7 @@ public class SignInService extends ComService
             {
                 ret = user.getId();
             } // 结束：if(user != null)
-        } // 结束：if (!tool.isNullOrEmpty(account))
+        } // 结束：if (StringUtils.hasText(account))
         return ret;
     }
 
@@ -215,11 +215,15 @@ public class SignInService extends ComService
         String ret = null;
 
         // 账号和手机号全为空或密码为空且非免密登录
-        if (tool.isNullOrEmpty(phone, account)
-                || (tool.isNullOrEmpty(pwd) && !noPwd))
+        if (!StringUtils.hasText(phone, account))
         {
             throw new NullPointerException();
-        } // 结束：if(tool.isNullOrEmpty(phone,account)||(tool.isNullOrEmpty(pwd)&&!noPwd))
+        } // 结束：if (!StringUtils.hasText(phone, account))
+
+        if (!(StringUtils.hasText(pwd) || noPwd))
+        {
+            throw new NullPointerException();
+        } // 结束：if (!(StringUtils.hasText(pwd)||noPwd))
 
         try
         {
@@ -236,8 +240,10 @@ public class SignInService extends ComService
                 user = baseRepo.findByAccount(account);
             } // 结束：if (StringUtils.hasText(phone))
 
-            if (user != null && user.getId().compareTo(BigInteger.ZERO) > 0
-                    && (noPwd || tool.isStrSame(pwd, user.getPassword())))
+            if (user != null && user.getId().compareTo(
+                    BigInteger.ZERO
+            ) > 0 && (noPwd
+                    || StringUtils.compareTo(pwd, user.getPassword()) == 0))
             {
                 // 用户存在且免密登录或密码正确
                 SignInInfoKey primaryKey = new SignInInfoKey();

@@ -15,6 +15,8 @@ import com.example.demo.entity.*;
 import com.example.demo.entity.pk.LikeKey;
 import com.example.demo.entity.pk.UserArticleKey;
 import com.example.demo.repository.*;
+import com.example.demo.util.BigIntUtils;
+import com.example.demo.util.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,7 +62,7 @@ public class ArticleInteractionService extends ComService
         if (userId == null || articleId == null
                 || userId.compareTo(BigInteger.ZERO) <= 0
                 || articleId.compareTo(BigInteger.ZERO) <= 0
-                || tool.isNullOrEmpty(text))
+                || !StringUtils.hasText(text))
         {
             return false;
         } // 结束：if (userId == null || articleId == null...
@@ -104,11 +106,11 @@ public class ArticleInteractionService extends ComService
         {
             Comment entity = optional.get();
 
-            if (tool.isBigIntSame(entity.getId(), userId))
+            if (BigIntUtils.isSame(entity.getId(), userId))
             {
                 int res = commentRepo.updateOne(commentId, true);
                 ret = res > 0;
-            } // 结束：if (tool.isBigIntSame(entity.getId(), userId))
+            } // 结束：if (BigIntUtils.isSame(entity.getId(), userId))
         } // 结束：if (optional != null && optional.isPresent())
         return ret;
     }

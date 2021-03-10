@@ -10,6 +10,7 @@ import java.math.BigInteger;
 
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
+import com.example.demo.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class SignUpService extends ComService
     public boolean signUp(String phone, String pwd, String name)
     {
 
-        if (tool.containsNullOrEmpty(phone, pwd, name))
+        if (!StringUtils.hasText(phone, pwd, name))
         {
             throw new NullPointerException();
         } // 结束：if (tool.containsNullOrEmpty(phone, pwd, name))

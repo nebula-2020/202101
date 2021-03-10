@@ -11,6 +11,7 @@ import java.util.*;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.constant.Constants;
 import com.example.demo.tool.Rand;
+import com.example.demo.util.StringUtils;
 import com.example.demo.vo.SmsVO;
 import com.rainbow.sms.Client;
 
@@ -53,7 +54,7 @@ public class SmsService extends ComService
         try
         {
 
-            if (tool.containsNullOrEmpty(phone, key, sec))
+            if (StringUtils.hasText(phone, key, sec))
             {
                 throw new NullPointerException();
             } // 结束：if (StrTool.containsNullOrEmpty(phone, key))
