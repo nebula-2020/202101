@@ -2,7 +2,7 @@
  * 文件名：ArticleInteractionController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-03-08
+ * 修改时间：2021-03-12
  */
 package com.example.demo.controller;
 
@@ -32,7 +32,7 @@ import com.example.demo.constant.*;
  * @see deleteComment
  * @see favorite
  * @see deleteFavorite
- * @since 2021-03-08
+ * @since 2021-03-12
  */
 @Controller
 @RequestMapping("/article")
@@ -41,8 +41,6 @@ public class ArticleInteractionController extends CommonController
 
     @Autowired
     private ArticleInteractionService articleService;
-    @Autowired
-    private SignInService signInService;
 
     /**
      * 初始化Model。
@@ -57,6 +55,7 @@ public class ArticleInteractionController extends CommonController
             @NotNull @NotEmpty @RequestParam(
                     value = Constants.KEY_USER_ACCOUNT
             ) String account,
+            @NotNull @RequestParam(value = Constants.KEY_USER_ID) BigInteger id,
             @NotNull @NotEmpty @RequestParam(
                     value = Constants.KEY_USER_PASSWORD
             ) String pwd,
@@ -66,6 +65,7 @@ public class ArticleInteractionController extends CommonController
     )
     {
         model.addAttribute(Constants.KEY_USER_ACCOUNT, account);
+        model.addAttribute(Constants.KEY_USER_ID, id);
         model.addAttribute(Constants.KEY_USER_PASSWORD, pwd);
         model.addAttribute(Constants.KEY_ARTICLE_ID, articleId);
     }
@@ -74,7 +74,7 @@ public class ArticleInteractionController extends CommonController
      * 在文章点赞。
      * 
      * @param account 账号
-     * @param pwd 密码
+     * @param userId 用户ID
      * @param id 文章ID
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示操作成功与否。
@@ -83,7 +83,7 @@ public class ArticleInteractionController extends CommonController
     @ResponseBody
     protected String like(
             @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
-            @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
+            @ModelAttribute(Constants.KEY_USER_ID) BigInteger userId,
             @ModelAttribute(Constants.KEY_ARTICLE_ID) BigInteger id, Model model
     )
     {
@@ -91,8 +91,6 @@ public class ArticleInteractionController extends CommonController
 
         try
         {
-
-            BigInteger userId = signInService.verify(account, pwd);
 
             if (userId != null)
             {
@@ -115,7 +113,7 @@ public class ArticleInteractionController extends CommonController
      * 评论文章。
      * 
      * @param account 账号
-     * @param pwd 密码
+     * @param userId 用户ID
      * @param id 文章ID
      * @param text 评论内容
      * @param model 主要用于向Model添加属性
@@ -125,7 +123,7 @@ public class ArticleInteractionController extends CommonController
     @ResponseBody
     protected String comment(
             @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
-            @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
+            @ModelAttribute(Constants.KEY_USER_ID) BigInteger userId,
             @ModelAttribute(Constants.KEY_ARTICLE_ID) BigInteger id,
             @NotNull @NotEmpty @RequestParam(
                     value = Constants.KEY_COMMENT_TEXT,
@@ -137,8 +135,6 @@ public class ArticleInteractionController extends CommonController
 
         try
         {
-
-            BigInteger userId = signInService.verify(account, pwd);
 
             if (userId != null)
             {
@@ -161,7 +157,7 @@ public class ArticleInteractionController extends CommonController
      * 在文章点删除评论。
      * 
      * @param account 账号
-     * @param pwd 密码
+     * @param userId 用户ID
      * @param id 文章ID
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示操作成功与否。
@@ -170,7 +166,7 @@ public class ArticleInteractionController extends CommonController
     @ResponseBody
     protected String deleteComment(
             @ModelAttribute(Constants.KEY_USER_ACCOUNT) String account,
-            @ModelAttribute(Constants.KEY_USER_PASSWORD) String pwd,
+            @ModelAttribute(Constants.KEY_USER_ID) BigInteger userId,
             @ModelAttribute(Constants.KEY_ARTICLE_ID) BigInteger id, Model model
     )
     {
@@ -178,8 +174,6 @@ public class ArticleInteractionController extends CommonController
 
         try
         {
-
-            BigInteger userId = signInService.verify(account, pwd);
 
             if (userId != null)
             {
