@@ -9,11 +9,11 @@ package com.example.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.constant.*;
 import com.example.demo.tool.*;
+import com.example.demo.util.StringUtils;
 import com.example.demo.vo.*;
 
 import java.util.*;
@@ -108,7 +108,7 @@ public class UserController extends CommonController
         VisitVO visit = new VisitVO(ipv4, ipv6, mac, gps, SignInMethod.UNKNOWN);
         model.addAttribute(Constants.SESSION_LOCATION, visit);
 
-        if (!tool.containsNullOrEmpty(code, phone, key, sec))
+        if (StringUtils.hasText(code, phone, key, sec))
         {
             SmsVO smsVo = new SmsVO(
                     phone, code, key, sec, System.currentTimeMillis()
@@ -240,7 +240,7 @@ public class UserController extends CommonController
     {
         String ret = "";
 
-        if (!tool.isNullOrEmpty(phone, account))
+        if (StringUtils.hasText(phone) || StringUtils.hasText(account))
         {
 
             try
@@ -252,7 +252,7 @@ public class UserController extends CommonController
                         signInService.signIn(phone, account, pwd, false, info);
                 redis.deleteObj(phone);
 
-                if (!tool.isNullOrEmpty(res))
+                if (StringUtils.hasText(res))
                 {
                     redis.setSignInSession(account, Constants.TIME_1HOUR);
                     JSONObject json = new JSONObject();
@@ -260,7 +260,7 @@ public class UserController extends CommonController
                     json.put(Constants.TOKEN, res);// ★暂时先存明文
                     System.out.print(json);
                     ret = json.toJSONString();
-                } // 结束：if (!tool.isNullOrEmpty(res))
+                } // 结束：if (StringUtils.hasText(res))
             }
             catch (Exception e)
             {
@@ -269,7 +269,7 @@ public class UserController extends CommonController
             finally
             {
             }
-        } // 结束：if (!tool.isNullOrEmpty(phone, account))
+        } // 结束：if (StringUtils.hasText(phone)||StringUtils.hasText (account))
 
         return ret;
 
