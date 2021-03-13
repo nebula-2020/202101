@@ -17,6 +17,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
 import com.example.demo.constant.Constants;
 import com.example.demo.service.*;
 
@@ -79,7 +80,8 @@ public class UserVerifyFilter extends OncePerRequestFilter
 
         String token = request.getHeader(Constants.TOKEN);// 找到token
 
-        if (StringUtils.hasText(token) && redis.isKeyExist(token))
+        if (StringUtils.hasText(token) && //
+                redis.isKeyExist(token))
         {
 
             // 这里需要一个token解密
@@ -104,6 +106,7 @@ public class UserVerifyFilter extends OncePerRequestFilter
                                 token
                         });// 插入(覆盖)值
                         map.setLocked(true);// 重新锁定
+                        System.out.println(JSON.toJSONString(map));
                         chain.doFilter(request, response);
                         System.out.println("登录状态验证成功。");
                         return;
@@ -122,6 +125,7 @@ public class UserVerifyFilter extends OncePerRequestFilter
             return;
         } // 结束：if (StringUtils.hasText(token)&&redis.isKeyExist(token))
         System.out.println("没token");
+        System.out.println(JSON.toJSONString(headers));
     }
 
 }
