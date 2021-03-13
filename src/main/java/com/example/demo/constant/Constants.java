@@ -2,7 +2,7 @@
  * 文件名：Constants.java
  * 描述：项目常见常量。
  * 修改人：刘可
- * 修改时间：2021-03-09
+ * 修改时间：2021-03-13
  */
 
 package com.example.demo.constant;
@@ -12,11 +12,11 @@ package com.example.demo.constant;
  * 
  * @author 刘可
  * @version 1.0.0.0
- * @since 2021-03-09
+ * @since 2021-03-13
  */
 public abstract class Constants
 {
-    public static final String TOKEN = "Authorization";
+    public static final String TOKEN = "authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final int NUM_TOKENPREFIXLENGTH = TOKEN_PREFIX.length();
     public static final String SECURITY_USER = "user";
