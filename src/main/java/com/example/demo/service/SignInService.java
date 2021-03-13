@@ -2,7 +2,7 @@
  * 文件名：SignInService.java
  * 描述：项目主要服务。
  * 修改人： 刘可
- * 修改时间：2021-03-10
+ * 修改时间：2021-03-13
  */
 package com.example.demo.service;
 
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Service;
  * @see account2Id
  * @see id2Account
  * @see signIn
- * @since 2021-03-10
+ * @since 2021-03-13
  */
 @Service("signInService")
 public class SignInService extends ComService
@@ -132,12 +132,11 @@ public class SignInService extends ComService
     }
 
     /**
-     * 用户账号转ID或ID转ID。
+     * 用户账号转ID。
      * <p>
-     * 参数全为数字则认为其为ID。
-     * 账号或ID存在则返回存在的ID。
+     * 账号存在则返回存在的ID，否则返回{@code null}。
      * 
-     * @param account 个性账号或ID
+     * @param account 个性账号
      * @return ID。
      */
     public BigInteger account2Id(String account)
@@ -146,18 +145,7 @@ public class SignInService extends ComService
 
         if (StringUtils.hasText(account))
         {
-            Pattern p = Pattern.compile(Constants.REGEXP_ID);
-            Matcher m = p.matcher(account);
-            UserBaseInfo user = null;
-
-            if (m.matches())
-            {
-                user = baseRepo.getOne(new BigInteger(account));
-            }
-            else
-            {
-                user = baseRepo.findByAccount(account);
-            } // 结束：if(m.matches())
+            UserBaseInfo user = baseRepo.findByAccount(account);
 
             if (user != null)
             {
@@ -215,10 +203,10 @@ public class SignInService extends ComService
         String ret = null;
 
         // 账号和手机号全为空或密码为空且非免密登录
-        if (!StringUtils.hasText(phone, account))
+        if (!(StringUtils.hasText(phone) || StringUtils.hasText(account)))
         {
             throw new NullPointerException();
-        } // 结束：if (!StringUtils.hasText(phone, account))
+        } // 结束：if (!(StringUtils.hasText(phone) || StringUtils.hasText...
 
         if (!(StringUtils.hasText(pwd) || noPwd))
         {

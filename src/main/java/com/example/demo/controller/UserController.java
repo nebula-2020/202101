@@ -255,7 +255,7 @@ public class UserController extends CommonController
 
                 if (StringUtils.hasText(res))
                 {
-                    redis.setSignInSession(account, Constants.TIME_1HOUR);
+                    redis.setSignInSession(res, Constants.TIME_1HOUR);
                     JSONObject json = new JSONObject();
                     json.put(phone, res);
                     json.put(Constants.TOKEN, res);// ★暂时先存明文
