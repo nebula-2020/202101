@@ -2,7 +2,7 @@
  * 文件名：ArticleController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-03-09
+ * 修改时间：2021-03-13
  */
 package com.example.demo.controller;
 
@@ -28,7 +28,7 @@ import com.example.demo.constant.*;
  * @see initModel
  * @see updateArticle
  * @see deleteArticle
- * @since 2021-03-09
+ * @since 2021-03-13
  */
 @Controller
 @RequestMapping("/article")
@@ -58,9 +58,6 @@ public class ArticleController extends CommonController
             @NotNull @NotEmpty @RequestParam(
                     value = Constants.KEY_USER_ID
             ) BigInteger id,
-            @NotNull @NotEmpty @RequestParam(
-                    value = Constants.KEY_USER_PASSWORD
-            ) String pwd,
             @Min(1) @RequestParam(
                     value = Constants.KEY_ARTICLE_ID,
                     required = false
@@ -85,7 +82,6 @@ public class ArticleController extends CommonController
     {
         model.addAttribute(Constants.KEY_USER_ACCOUNT, account);
         model.addAttribute(Constants.KEY_USER_ID, id);
-        model.addAttribute(Constants.KEY_USER_PASSWORD, pwd);
         model.addAttribute(Constants.KEY_ARTICLE_ID, articleId);
 
         if (!tool.containsNullOrEmpty(title, text))
@@ -106,7 +102,7 @@ public class ArticleController extends CommonController
      * @param model 主要用于向Model添加属性
      * @return JSON字符串，用户账号为键对应值表示删除成功与否。
      */
-    @RequestMapping("/updateArticle")
+    @RequestMapping("/update")
     @ResponseBody
     protected String updateArticle(
             @ModelAttribute(value = Constants.KEY_USER_ID) BigInteger userId,
@@ -147,7 +143,7 @@ public class ArticleController extends CommonController
      * @return JSON字符串，用户账号为键对应值表示删除成功与否。
      */
 
-    @RequestMapping("/deleteArticle")
+    @RequestMapping("/delete")
     @ResponseBody
     protected String deleteArticle(
             @ModelAttribute(value = Constants.KEY_USER_ID) BigInteger userId,
