@@ -2,7 +2,7 @@
  * 文件名：SmsService.java
  * 描述：发送验证码相关服务。
  * 修改人：刘可
- * 修改时间：2021-02-16
+ * 修改时间：2021-03-13
  */
 package com.example.demo.service;
 
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
  * @version 1.0.0.0
  * @see send
  * @see verify
- * @since 2021-02-16
+ * @since 2021-03-13
  */
 @Service("smsService")
 public class SmsService extends ComService
@@ -44,20 +44,20 @@ public class SmsService extends ComService
      * @param key 手机端传来的代码
      * @param sec 服务器生成的代码
      * @param time 验证码有效时间
-     * @return 将写入session的数据。
+     * @return 将写入session的数据，操作失败返回{@code null}。
      */
     public SmsVO send(String phone, String key, String sec, long time)
             throws NullPointerException
     {
-        SmsVO ret = new SmsVO();
+        SmsVO ret = null;
 
         try
         {
 
-            if (StringUtils.hasText(phone, key, sec))
+            if (!StringUtils.hasText(phone, key, sec))
             {
                 throw new NullPointerException();
-            } // 结束：if (StrTool.containsNullOrEmpty(phone, key))
+            } // 结束：if (!StrTool.containsNullOrEmpty(phone, key))
 
             byte count = 2;// 发送失败后重试一次
             Random random = new Random(Rand.getRandom().nextLong());
@@ -111,12 +111,7 @@ public class SmsService extends ComService
                 {
                     // 验证码发送成功
                     count = 0;
-                    Long now = System.currentTimeMillis();
-                    ret.setCode(code);
-                    ret.setPhone(phone);
-                    ret.setKey(key);
-                    ret.setSecret(sec);
-                    ret.setCreateTime(now);
+                    ret = new SmsVO(phone, code, key, sec);
                 } // 结束：if(jo.containsKey("code")&&jo.getIntValue("code")==0)
                 else count--;
 
@@ -126,9 +121,6 @@ public class SmsService extends ComService
         catch (Exception e)
         {
             e.printStackTrace();
-        }
-        finally
-        {
         }
 
         return ret;
@@ -152,34 +144,20 @@ public class SmsService extends ComService
 
             try
             {
-                Long requestTime = request.getCreateTime();
-                Long sessionTime = session.getCreateTime();
 
-                if (requestTime != null && sessionTime != null// 时间非空
-                        && requestTime - sessionTime <= time// 时间未到
-                        && requestTime > 0 && sessionTime > 0)// 时间正常
+                if (request.getCode().compareTo(session.getCode()) == 0
+                        && request.getKey().compareTo(session.getKey()) == 0
+                        && request.getPhone().compareTo(session.getPhone()) == 0
+                        && request.getSecret()
+                                .compareTo(session.getSecret()) == 0)
                 {
-
-                    if (request.getCode().compareTo(session.getCode()) == 0
-                            && request.getKey().compareTo(session.getKey()) == 0
-                            && request.getPhone()
-                                    .compareTo(session.getPhone()) == 0
-                            && request.getSecret()
-                                    .compareTo(session.getSecret()) == 0)
-                    {
-                        ret = true;
-                    }
-                } // 结束：if (requestTime != null && sessionTime != null.....
-
+                    ret = true;
+                } // 结束：if (request.getCode().compareTo(session.getCode())...
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
-            finally
-            {
-            }
-
         } // 结束：if (request != null && session != null)
 
         return ret;

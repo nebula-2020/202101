@@ -69,13 +69,13 @@
                 phone: phone,
                 js: key
             },
-            function(data, status) {
+            success: function (data, status) {
                 value = JSON.parse(data)[phone]
                 console.log(JSON.parse(data) + '\n' + JSON.parse(data)[String(phone)] + '\n' + value + '\n' + key)
             }
         });
     }
-    function post1(code) {
+    function post1() {
         $.ajax({
             url: "codeSignUp",
             type: "POST",
@@ -86,11 +86,11 @@
                 js: key,
                 name: '名字',
                 code: document.getElementById("code").innerHTML,
-            }, function(data, status) {
+            }, success: function (data, status) {
             }
         });
     }
-    function post2(code) {
+    function post2() {
         $.ajax({
             url: "codeSignIn",
             type: "POST",
@@ -106,12 +106,12 @@
                 js: key,
                 code: document.getElementById("code").innerHTML,
             },
-            function(data, status) {
+            success: function (data, status) {
                 window.localStorage.setItem(TOKEN, data[TOKEN])
             }
         });
     }
-    function post3(code) {
+    function post3() {
         $.ajax({
             headers: {
                 "Authorization": localStorage.getItem(TOKEN)
@@ -126,11 +126,11 @@
                 source: '09o87yurt',
                 draft: false
             },
-            function(data, status) {
+            success: function (data, status) {
             }
         });
     }
-    function post4(code) {
+    function post4() {
         $.post("article/updateArticle", {
             phone: phone,
             id: document.getElementById("id").innerHTML,
@@ -145,7 +145,7 @@
             function (data, status) {
             });
     }
-    function post5(code) {
+    function post5() {
         $.post("article/deleteArticle", {
             phone: phone,
             id: document.getElementById("id").innerHTML,
@@ -154,7 +154,7 @@
             function (data, status) {
             });
     }
-    function post6(code) {
+    function post6() {
         $.post("article", {
             phone: phone,
             id: document.getElementById("id").innerHTML,
@@ -167,7 +167,7 @@
                 document.getElementById("show").innerHTML = d['md']
             });
     }
-    function post7(code) {
+    function post7() {
         $.ajax({
             url: "passwordSignIn",
             data: {
@@ -179,7 +179,7 @@
                 js: key,
                 code: document.getElementById("code").innerHTML,
             },
-            function(data, status) {
+            success: function (data, status) {
                 window.localStorage.setItem(TOKEN, data[TOKEN])
             }
         });

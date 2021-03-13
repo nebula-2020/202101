@@ -2,7 +2,7 @@
  * 文件名：SignUpController.java
  * 描述：控制器负责用户注册业务
  * 修改人：刘可
- * 修改时间：2021-03-09
+ * 修改时间：2021-03-13
  */
 package com.example.demo.controller;
 
@@ -20,6 +20,7 @@ import java.util.*;
 
 import javax.validation.constraints.*;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.service.*;
 import com.example.demo.enumation.*;
@@ -34,7 +35,7 @@ import com.example.demo.enumation.*;
  * @see codeReguest
  * @see passwordSignIn
  * @see codeSignIn
- * @since 2021-03-09
+ * @since 2021-03-13
  */
 @Controller
 public class UserController extends CommonController
@@ -110,9 +111,7 @@ public class UserController extends CommonController
 
         if (StringUtils.hasText(code, phone, key, sec))
         {
-            SmsVO smsVo = new SmsVO(
-                    phone, code, key, sec, System.currentTimeMillis()
-            );
+            SmsVO smsVo = new SmsVO(phone, code, key, sec);
             model.addAttribute(Constants.SESSION_SMS, smsVo);
         } // 结束：if (!tool.isNullOrEmpty(code))
     }
@@ -137,7 +136,7 @@ public class UserController extends CommonController
                     value = Constants.KEY_USER_PASSWORD
             ) String pwd,
             @ModelAttribute(value = Constants.SESSION_SMS) SmsVO requestMap,
-            @NotNull @RequestParam(value = Constants.KEY_USER_NAME) String name,
+            @RequestParam(value = Constants.KEY_USER_NAME) String name,
             Model model
     )
     {
@@ -146,6 +145,8 @@ public class UserController extends CommonController
         try
         {
             SmsVO sessionMap = redis.getSmsSession(phone);
+            System.out.println(JSON.toJSONString(sessionMap));
+            System.out.println(JSON.toJSONString(requestMap));
 
             if (sms.verify(requestMap, Constants.TIME_1MIN, sessionMap))// 密钥匹配
             {
