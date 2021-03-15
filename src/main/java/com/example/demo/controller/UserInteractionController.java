@@ -2,7 +2,7 @@
  * 文件名：UserInteractionController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-03-08
+ * 修改时间：2021-03-15
  */
 
 package com.example.demo.controller;
@@ -18,6 +18,7 @@ import javax.validation.constraints.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.service.*;
+import com.example.demo.util.*;
 import com.example.demo.constant.*;
 
 /**
@@ -33,7 +34,7 @@ import com.example.demo.constant.*;
  * @see hideMsg
  * @see addFocus
  * @see deleteFocus
- * @since 2021-03-08
+ * @since 2021-03-15
  */
 @Controller
 @RequestMapping("/user")
@@ -96,14 +97,14 @@ public class UserInteractionController extends CommonController
             BigInteger id = userService.verify(account, pwd);
             BigInteger blackId = userService.account2Id(focusAccount);
 
-            if (tool.isPositive(id, blackId))
+            if (BigIntUtils.isPositive(id, blackId))
             {
                 boolean res = interaction.addBlackList(id, blackId);
                 JSONObject result = new JSONObject();
                 result.put(account, res);
                 System.out.println(result);// debug
                 ret = result.toJSONString();
-            } // 结束：if (tool.isPositive(id, blackId))
+            } // 结束：if (BigIntUtils.isPositive(id, blackId))
         }
         catch (Exception e)
         {
@@ -138,14 +139,14 @@ public class UserInteractionController extends CommonController
             BigInteger id = userService.verify(account, pwd);
             BigInteger blackId = userService.account2Id(focusAccount);
 
-            if (tool.isPositive(id, blackId))
+            if (BigIntUtils.isPositive(id, blackId))
             {
                 boolean res = interaction.deleteBlackList(id, blackId);
                 JSONObject result = new JSONObject();
                 result.put(account, res);
                 System.out.println(result);// debug
                 ret = result.toJSONString();
-            } // 结束：if (tool.isPositive(id, blackId))
+            } // 结束：if (BigIntUtils.isPositive(id, blackId))
         }
         catch (Exception e)
         {
@@ -184,14 +185,14 @@ public class UserInteractionController extends CommonController
             BigInteger fromId = userService.verify(account, pwd);
             BigInteger toId = userService.account2Id(focusAccount);
 
-            if (tool.isPositive(fromId, toId))
+            if (BigIntUtils.isPositive(fromId, toId))
             {
                 long res = interaction.sendMsg(fromId, toId, text);
                 JSONObject result = new JSONObject();
                 result.put(account, res);
                 System.out.println(result);// debug
                 ret = result.toJSONString();
-            } // 结束：if (tool.isPositive(fromId, toId))
+            } // 结束：if (BigIntUtils.isPositive(fromId, toId))
         }
         catch (Exception e)
         {
@@ -230,14 +231,14 @@ public class UserInteractionController extends CommonController
             BigInteger fromId = userService.verify(account, pwd);
             BigInteger toId = userService.account2Id(focusAccount);
 
-            if (tool.isPositive(fromId, toId))
+            if (BigIntUtils.isPositive(fromId, toId))
             {
                 int res = interaction.deleteMsg(fromId, toId, time);
                 JSONObject result = new JSONObject();
                 result.put(account, res);
                 System.out.println(result);// debug
                 ret = result.toJSONString();
-            } // 结束：if (tool.isPositive(fromId, toId))
+            } // 结束：if (BigIntUtils.isPositive(fromId, toId))
         }
         catch (Exception e)
         {
@@ -278,14 +279,14 @@ public class UserInteractionController extends CommonController
             BigInteger toId = userService.verify(account, pwd);
             BigInteger fromId = userService.account2Id(focusAccount);
 
-            if (tool.isPositive(fromId, toId))
+            if (BigIntUtils.isPositive(fromId, toId))
             {
                 int res = interaction.hideMsg(fromId, toId, time);
                 JSONObject result = new JSONObject();
                 result.put(account, res);
                 System.out.println(result);// debug
                 ret = result.toJSONString();
-            } // 结束：if (tool.isPositive(fromId, toId))
+            } // 结束：if (BigIntUtils.isPositive(fromId, toId))
         }
         catch (Exception e)
         {
@@ -320,14 +321,14 @@ public class UserInteractionController extends CommonController
             BigInteger fanId = userService.verify(account, pwd);
             BigInteger userId = userService.account2Id(focusAccount);
 
-            if (tool.isPositive(fanId, userId))
+            if (BigIntUtils.isPositive(fanId, userId))
             {
                 boolean res = interaction.addFocus(fanId, userId);
                 JSONObject result = new JSONObject();
                 result.put(account, res);
                 System.out.println(result);// debug
                 ret = result.toJSONString();
-            } // 结束：if (tool.isPositive(fanId, userId))
+            } // 结束：if (BigIntUtils.isPositive(fanId, userId))
         }
         catch (Exception e)
         {
@@ -363,14 +364,14 @@ public class UserInteractionController extends CommonController
             BigInteger fanId = userService.verify(account, pwd);
             BigInteger userId = userService.account2Id(focusAccount);
 
-            if (tool.isPositive(fanId, userId))
+            if (BigIntUtils.isPositive(fanId, userId))
             {
                 boolean res = interaction.deleteFocus(fanId, userId);
                 JSONObject result = new JSONObject();
                 result.put(account, res);
                 System.out.println(result);// debug
                 ret = result.toJSONString();
-            } // 结束：if (tool.isPositive(fanId, userId))
+            } // 结束：if (BigIntUtils.isPositive(fanId, userId))
         }
         catch (Exception e)
         {

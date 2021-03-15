@@ -2,7 +2,7 @@
  * 文件名：ArticleController.java
  * 描述：必要控制器
  * 修改人：刘可
- * 修改时间：2021-03-13
+ * 修改时间：2021-03-15
  */
 package com.example.demo.controller;
 
@@ -17,6 +17,7 @@ import javax.validation.constraints.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.service.*;
+import com.example.demo.util.StringUtils;
 import com.example.demo.vo.ArticleVO;
 import com.example.demo.constant.*;
 
@@ -28,7 +29,7 @@ import com.example.demo.constant.*;
  * @see initModel
  * @see updateArticle
  * @see deleteArticle
- * @since 2021-03-13
+ * @since 2021-03-15
  */
 @Controller
 @RequestMapping("/article")
@@ -84,12 +85,12 @@ public class ArticleController extends CommonController
         model.addAttribute(Constants.KEY_USER_ID, id);
         model.addAttribute(Constants.KEY_ARTICLE_ID, articleId);
 
-        if (!tool.containsNullOrEmpty(title, text))
+        if (StringUtils.hasText(title, text))
         {
             boolean draft = isDraft == null ? true : isDraft;
             ArticleVO articleVO = new ArticleVO(title, text, source, draft);
             model.addAttribute(Constants.SESSION_ARTICLE, articleVO);
-        } // 结束：if (!tool.containsNullOrEmpty(title, text))
+        } // 结束：if (StringUtils.hasText(title, text))
     }
 
     /**
